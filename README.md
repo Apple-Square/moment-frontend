@@ -28,3 +28,9 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+# moment-frontend
+
+#### 화면정의서
+
+https://www.figma.com/design/VZTt8TytO1u7LzDd2XtSEa/apple-square?node-id=10-631&t=ReevVEHdDBS5aVg6-1
