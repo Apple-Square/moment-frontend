@@ -1,0 +1,84 @@
+/*.kakaoButton {*/
+/*    background-color: yellow;*/
+/*    border: none;*/
+/*    color: black;*/
+/*    pointer-events: none;*/
+/*    cursor: default;*/
+/*}*/
+
+/*.kakaoButton:hover {*/
+/*    background-color: gold;*/
+/*}*/
+/*.noFocus {*/
+/*    pointer-events: none;*/
+/*    cursor: default;*/
+/*}*/
+
+.container {
+    background: linear-gradient(to right, #EBFBFF 0%, #EBFBFF 0%, #F6F6F6 30%, #F6F6F6 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto; /* 중앙 정렬을 위해 좌우 마진을 자동으로 설정 */
+    padding: 0 20px; /* 내부 패딩 설정 */
+}
+.momentLogoNTextImg img {
+    width: 100%;
+    display: block; /* 이미지가 컨테이너 내에서 블록처럼 동작하도록 */
+    height: 1%;
+}
+.kakaoButtonImg,
+.googleButtonImg {
+    max-height: 100%; /* 부모 요소(Row)의 100%를 넘지 않도록 제한 */
+    width: 100%; /* 비율을 유지하면서 크기를 조정 */
+    height: 100%; /* 부모 요소의 높이에 맞춤 */
+    display: block; /* 이미지가 부모 요소의 패딩, 마진 등에 영향을 받지 않도록 */
+}
+.buttonSIze {
+    width: 100%;
+}
+.emptyTopRow {
+    height: 5%;
+}
+.emptyMiddleRow {
+    width: 100%;
+    height: 5%;
+}
+.h100{
+    height: 80%;
+}
+.h1 {
+    height: 1%;
+}
+.h6 {
+    height: 6%;
+}
+.h8 {
+    height: 8%;
+}
+.h9 {
+    height: 9%;
+}
+.h10 {
+    height: 10%;
+}
+.h11 {
+    height: 11%;
+}
+.h15 {
+    height: 15%;
+}
+.borderRadius {
+    border-radius: 40px !important;
+}
+.loginButton {
+    background-color: #000000 !important;
+    font-weight: bold !important;
+    font-size:1rem !important;
+}
+.loginButton:hover {
+    background-color: #545454 !important;
+}
