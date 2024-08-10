@@ -1,6 +1,6 @@
 ---
 name: "\U0001F30F Environment"
-about: Describe this issu추가적인 환경설정이 필요한가요?e template's purpose here.
+about: Describe this issue 추가적인 환경설정이 필요한가요?e template's purpose here.
 title: ''
 labels: ''
 assignees: ''
