@@ -13,7 +13,24 @@
 /*    pointer-events: none;*/
 /*    cursor: default;*/
 /*}*/
+.backButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: transparent; /* 기본 배경색은 투명 */
+    width: 48px;
+    height: 48px;
+    transition: background-color 0.2s ease; /* 배경색 전환 효과 */
+}
 
+.backButton:active {
+    background-color: #eaeaea; /* 클릭 시 배경색 */
+}
 .container {
     background: linear-gradient(to right, #EBFBFF 0%, #EBFBFF 0%, #F6F6F6 30%, #F6F6F6 100%);
     display: flex;
