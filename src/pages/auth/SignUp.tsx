@@ -16,6 +16,7 @@ export const SignUp:React.FC = () => {
                                 className={`mb-3 ${st.h100}`}/>
                 </Col>
             </Row>
+            뿅
         </Container>
     );
 };
