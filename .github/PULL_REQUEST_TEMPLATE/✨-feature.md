@@ -1,6 +1,6 @@
 ---
 name: "✨ Feature"
-about: 새로운 기능 또는 명세가 있나요?
+about: 해결한 기능에 대한 설명을 적어주세요.
 title: ''
 labels: ''
 assignees: ''
@@ -11,7 +11,7 @@ assignees: ''
 새로운 기능에 대한 설명을 작성해 주세요.
 
 ### ✅ Tasks
-해야 하는 일에 대한 Tasks를 작성해 주세요.
+완료한 Task 또는 완료하지 못한 Task를 작성해 주세요.
 - [ ]
 - [ ]  
 
