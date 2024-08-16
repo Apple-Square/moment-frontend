@@ -4,6 +4,7 @@ import KakaoButtonImg from "./component/KakaoButtonImg.tsx";
 import GoogleLogoImg from "./component/GoogleLogoImg.tsx";
 import MomentLogoNTextImg from "./component/MomentLogoNTextImg.tsx";
 import React from "react";
+import {Link} from "react-router-dom";
 export const AuthMain: React.FC = () => {
 
 
@@ -38,7 +39,9 @@ export const AuthMain: React.FC = () => {
 
                 <Row className={`w-100 mb-4`} style={{fontSize:"10px", minWidth: "300px"}}>
                     <Col className="d-flex justify-content-end">
+                        <Link to="/auth/signUp">
                         <span>회원가입</span>
+                        </Link>
                         <span style={{marginLeft: "5px", marginRight: "5px"}}>|</span>
                         <span>아이디 찾기</span>
                         <span style={{marginLeft: "5px", marginRight: "5px"}}>|</span>

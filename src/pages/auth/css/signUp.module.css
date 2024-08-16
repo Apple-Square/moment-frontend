@@ -13,6 +13,14 @@
 /*    pointer-events: none;*/
 /*    cursor: default;*/
 /*}*/
+.emailButton {
+    background-color: #FFFFFF !important;
+    color: #989898 !important;
+    border: 1px solid #989898 !important;
+}
+.emailButton:active {
+    background-color: #e8e8e8 !important;
+}
 .backButton {
     display: flex;
     align-items: center;
