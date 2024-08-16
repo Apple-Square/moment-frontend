@@ -23,22 +23,18 @@ const EmailVerification:React.FC = () => {
     return (
         <Container className={`${st.container}`}>
             {/* "아이디 찾기" 텍스트를 오버레이로 상단에 배치 */}
-            <div style={{height: "10%"}}></div>
 
             <div style={{height: "10%"}}>
-                <div>
-                    <h4 className={`${st.h8}`}><strong>아이디 찾기 or 비밀번호 찾기</strong></h4>
-                </div>
             </div>
-            <div style={{height: "20%"}}></div>
-            <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
-                <Col xs={8}>
+            <div style={{height: "10%"}}></div>
+            <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px",maxWidth: "500px"}}>
+                <Col xs={9}>
                     <Form.Control type="text" placeholder="이메일"
                                   className={`mb-3 ${st.h100}`}/>
                 </Col>
-                <Col xs={4}>
+                <Col xs={3}>
                     <Button type="button" className={`w-100 mb-3 ${st.emailButton} ${st.h100}`}
-                            style={{minWidth: "50px"}}
+                            style={{minWidth: "30px"}}
                             onClick={sendEmail}
                     >
                         전송

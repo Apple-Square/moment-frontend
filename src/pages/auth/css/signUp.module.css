@@ -40,7 +40,6 @@
     background-color: #eaeaea; /* 클릭 시 배경색 */
 }
 .container {
-    background: linear-gradient(to right, #EBFBFF 0%, #EBFBFF 0%, #F6F6F6 30%, #F6F6F6 100%);
     display: flex;
     justify-content: center;
     align-items: center;

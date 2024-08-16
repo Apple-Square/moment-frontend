@@ -19,25 +19,25 @@ export const AuthMain: React.FC = () => {
                     </Col>
                 </Row>
                 <Row className={`${styles.emptyMiddleRow}`}/>
-                <Row className={`w-100 mb-3 ${styles.h8}`} style={{minWidth: "300px"}}>
+                <Row className={`w-100 mb-3 ${styles.h8}`} style={{minWidth: "300px", maxWidth: "300px"}}>
                     <Col className="d-flex justify-content-center">
                         <Form.Control type="text" placeholder="아이디"
                                       className={`mb-3 ${styles.h100}`} />
                     </Col>
                 </Row>
-                <Row className={`w-100 mb-3 ${styles.h8}`}  style={{minWidth: "300px"}}>
+                <Row className={`w-100 mb-3 ${styles.h8}`}  style={{minWidth: "300px", maxWidth: "300px"}}>
                     <Col className="d-flex justify-content-center">
                         <Form.Control type="password" placeholder="비밀번호" className={`mb-3 ${styles.h100}`} />
                     </Col>
                 </Row>
 
-                <Row className={`w-100 ${styles.h8}`}  style={{minWidth: "300px"}}>
+                <Row className={`w-100 ${styles.h8}`}  style={{minWidth: "300px", maxWidth: "300px"}}>
                     <Col className="d-flex justify-content-center">
                       <Button className={`w-100 ${styles.h100} ${styles.borderRadius} ${styles.loginButton}`}>로그인</Button>
                     </Col>
                 </Row>
 
-                <Row className={`w-100 mb-4`} style={{fontSize:"10px", minWidth: "300px"}}>
+                <Row className={`w-100 mb-4`} style={{fontSize:"10px", minWidth: "300px", maxWidth: "300px"}}>
                     <Col className="d-flex justify-content-end">
                         <Link to="/auth/signUp">
                         <span>회원가입</span>
