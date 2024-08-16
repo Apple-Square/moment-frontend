@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom";
+import {Outlet, Route, Routes} from "react-router-dom";
 import {AuthMain} from "../../pages/auth/AuthMain.tsx";
 import {SignUp} from "../../pages/auth/SignUp.tsx";
 import Postcode from "../../pages/auth/Postcode.tsx";
@@ -13,13 +13,20 @@ import FeedList from "../../pages/feed/FeedList.tsx";
 import ThreeColumnFeedList from "../../pages/feed/ThreeColumnFeedList.tsx";
 import AddFeed from "../../pages/feed/AddFeed.tsx";
 import EmailVerification from "../../pages/auth/EmailVerification.tsx";
+import BackgroundTemplate from "../../pages/common/components/BackgroundTemplate.tsx";
 
 
 export const AppRoutes: React.FC = () => {
 
+    const AuthLayout: React.FC = () => (
+        <BackgroundTemplate>
+            <Outlet />
+        </BackgroundTemplate>
+    );
+
     return (<Routes>
         <Route path="/" element={<FeedList/>}></Route>
-        <Route path="/auth">
+        <Route path="/auth" element={<AuthLayout />}>
             <Route path="authMain" element={<AuthMain/>}></Route>
             <Route path="findUserId" element={<FindUserId/>}></Route>
             <Route path="postcode" element={<Postcode/>}></Route>
