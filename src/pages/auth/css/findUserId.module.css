@@ -1,0 +1,12 @@
+
+.container {
+    background: linear-gradient(to right, #EBFBFF 0%, #EBFBFF 0%, #F6F6F6 30%, #F6F6F6 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto; /* 중앙 정렬을 위해 좌우 마진을 자동으로 설정 */
+    padding: 0 20px; /* 내부 패딩 설정 */
+}

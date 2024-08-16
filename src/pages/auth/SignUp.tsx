@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Form, Col, Container, Row, Button} from "react-bootstrap";
 import st from "./css/signUp.module.css"
 import MomentLogoNTextImg from "./component/MomentLogoNTextImg.tsx";
@@ -85,7 +85,8 @@ export const SignUp:React.FC = () => {
                                   className={`mb-3 ${st.h100}`}/>
                 </Col>
                 <Col xs={4}>
-                    <Button type="button" className={`w-100 mb-3 ${st.emailButton}`}
+                    <Button type="button" className={`w-100 mb-3 ${st.emailButton} ${st.h100}`}
+                    style={{minWidth: "50px"}}
                     onClick={sendEmail}
                     >
                         전송
