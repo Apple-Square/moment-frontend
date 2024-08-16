@@ -43,9 +43,13 @@ export const AuthMain: React.FC = () => {
                         <span>회원가입</span>
                         </Link>
                         <span style={{marginLeft: "5px", marginRight: "5px"}}>|</span>
+                        <Link to="/auth/emailVerification">
                         <span>아이디 찾기</span>
+                        </Link>
                         <span style={{marginLeft: "5px", marginRight: "5px"}}>|</span>
-                        <span>비밀번호 찾기</span>
+                        <Link to="/auth/emailVerification">
+                        <span>비밀번호 재설정</span>
+                        </Link>
                     </Col>
                 </Row>
 
