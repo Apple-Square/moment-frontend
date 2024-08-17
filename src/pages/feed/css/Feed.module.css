@@ -1,0 +1,28 @@
+.container {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.feedImg {
+    width: 100%;
+    padding-bottom: 100%;
+    position: relative;
+}
+
+.feedImg img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.contentsWrapper {
+    min-height: 10vh;
+    overflow-y: hidden;
+}

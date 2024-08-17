@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from "../css/Feed.module.css";
+import { Container } from 'react-bootstrap';
 
 interface FeedProps {
     author: string;
@@ -6,13 +8,21 @@ interface FeedProps {
     contents: string;
 }
 
-const Feed:React.FC<FeedProps> = ({author, img, contents}) => {
+const Feed: React.FC<FeedProps> = ({ author, img, contents }) => {
     return (
-        <div className="content">
+        <Container className={`${styles.container}`} >
             <h2>{author}</h2>
-            <img src={img} alt={author} />
-            <p>{contents}</p>
-        </div>
+            <div className={`${styles.feedImg}`}>
+                <img src={img} alt={author} />
+            </div>
+            {/* 댓글 갯수 */}
+            {/* 조회수 */}
+            {/* 좋아요 */}
+            {/* 1일전(쓴 시간) */}
+            <div className={`${styles.contentsWrapper}`}>
+                <p>{contents}</p>
+            </div>
+        </Container>
     );
 };
 
