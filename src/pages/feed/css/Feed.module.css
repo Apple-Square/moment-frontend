@@ -8,10 +8,17 @@
     padding: 0 20px;
 }
 
+.feedHeader {
+    min-height: 10vh;
+    overflow-x: hidden;
+    background-color: aqua;
+}
+
 .feedImg {
     width: 100%;
     padding-bottom: 100%;
     position: relative;
+    background-color: blueviolet;
 }
 
 .feedImg img {
@@ -25,4 +32,5 @@
 .contentsWrapper {
     min-height: 10vh;
     overflow-y: hidden;
+    background-color: chartreuse;
 }

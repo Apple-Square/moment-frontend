@@ -11,7 +11,9 @@ interface FeedProps {
 const Feed: React.FC<FeedProps> = ({ author, img, contents }) => {
     return (
         <Container className={`${styles.container}`} >
-            <h2>{author}</h2>
+            <div className={`${styles.feedHeader}`}>
+                <h2>{author}</h2>
+            </div>
             <div className={`${styles.feedImg}`}>
                 <img src={img} alt={author} />
             </div>
