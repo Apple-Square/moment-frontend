@@ -1,30 +1,46 @@
 import React from 'react';
 import styles from "../css/Feed.module.css";
-import { Container } from 'react-bootstrap';
+// import { Col, Container, Row } from 'react-bootstrap';
 
 interface FeedProps {
+    // user 객체
+    profileImg: string
     author: string;
+    //
+    location: string;
     img: string;
     contents: string;
+    likes: number;
+    comments: number;
+    shares: number;
+    timeAgo: string;
 }
 
-const Feed: React.FC<FeedProps> = ({ author, img, contents }) => {
+const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents, likes, comments, shares, timeAgo }) => {
     return (
-        <Container className={`${styles.container}`} >
-            <div className={`${styles.feedHeader}`}>
-                <h2>{author}</h2>
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <div className={styles.profile}>
+                    <img className={styles.profileImg} src={profileImg} alt="Profile" />
+                    <div className={styles.authorInfo}>
+                        <span className={styles.author}>{author}</span>
+                        <span className={styles.location}>{location}</span>
+                    </div>
+                </div>
             </div>
-            <div className={`${styles.feedImg}`}>
-                <img src={img} alt={author} />
+            <div className={styles.imageContainer}>
+                <img className={styles.contentImg} src={img} alt="contents" />
             </div>
-            {/* 댓글 갯수 */}
-            {/* 조회수 */}
-            {/* 좋아요 */}
-            {/* 1일전(쓴 시간) */}
+            <div className={styles.actions}>
+                <span className={styles.likes}>👍 {likes}</span>
+                <span className={styles.comments}>💬 {comments}</span>
+                <span className={styles.shares}>↗️ {shares}</span>
+                <span className={styles.timeAgo}>{timeAgo}</span>
+            </div>
             <div className={`${styles.contentsWrapper}`}>
                 <p>{contents}</p>
             </div>
-        </Container>
+        </div>
     );
 };
 
