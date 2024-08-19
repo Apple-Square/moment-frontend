@@ -66,7 +66,7 @@ const FeedList: React.FC = () => {
     return (
         <Container className={`${styles.container}`}>
             {feedData.map((feed, index) => (
-                <Row key={index} className={styles.feedRow}>
+                <Row key={index} className={`${styles.feedRow} p-0`}>
                     <Feed
                         profileImg={feed.profileImg}
                         author={feed.author}

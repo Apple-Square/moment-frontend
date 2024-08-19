@@ -8,8 +8,12 @@
     padding: 0 20px;
 }
 
-.row {
+.feedRow {
     display: flex;
-    /* flex-direction: column; */
+    flex-direction: column;
     margin-bottom: 20px;
+}
+
+.feedRow>* {
+    padding: 0;
 }
