@@ -20,7 +20,7 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <div className={styles.profile}>
+                <div className={`${styles.profile} p-2`}>
                     <img className={styles.profileImg} src={profileImg} alt="Profile" />
                     <div className={styles.authorInfo}>
                         <span className={styles.author}>{author}</span>

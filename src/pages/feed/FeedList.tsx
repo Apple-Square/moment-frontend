@@ -43,7 +43,7 @@ const feedData = [
         author: 'Emily White',
         location: 'Paris, France',
         img: 'https://images.unsplash.com/photo-1527261834078-9b37d0ed2e5f',
-        contents: 'Caught the most beautiful sunset at the Eiffel Tower.',
+        contents: 'The essence of true creativity lies not just in the ability to generate new and original ideas, but in the capacity to blend seemingly unrelated concepts in a way that sparks a deeper understanding or evokes a strong emotional response; it is a process that demands not only knowledge and skill, but also intuition and the courage to embrace uncertainty, as one navigates the complex and often unpredictable journey of bringing a vision to life, with the hope that it resonates meaningfully with others.',
         likes: 176,
         comments: 34,
         shares: 22,
