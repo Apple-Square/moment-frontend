@@ -21,17 +21,17 @@ const AddFeed: React.FC = () => {
     return (
         <Container className={`${styles.container} p-0`}>
             <Row className={`p-0 m-0 ${styles.row}`}>
-                <Col xs={12} md={8} lg={6} className="p-0">
+                <Col xs={12} md={8} lg={4} className="p-0">
                     <ImageUploader onImageChange={setImage} />
                 </Col>
             </Row>
             <Row className={`p-0 ${styles.row} ${styles.textArea}`}>
-                <Col xs={12} md={8} lg={6} className="p-0">
+                <Col xs={12} md={8} lg={4} className="p-0">
                     <TextInput value={text} onChange={setText} />
                 </Col>
             </Row>
             <Row className={`p-0 ${styles.row}`}>
-                <Col xs={12} md={8} lg={6} className={`p-2 ${styles.buttonBox}`}>
+                <Col xs={12} md={8} lg={4} className={`p-2 ${styles.buttonBox}`}>
                     <button className={styles.btn}>위치</button>
                     <button className={styles.btn} onSubmit={handleSubmit}>
                         완료하기
