@@ -3,10 +3,11 @@
     position: relative;
     padding-top: 100%;
     overflow: hidden;
-    background-color: brown;
+    background-color: gray;
 }
 
 .imageUploader>input {
+    /* display: none; */
     position: absolute;
     top: 0;
     left: 0;

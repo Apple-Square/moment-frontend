@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import styles from "../css/ImageUploader.module.css";
 
 interface ImageUploaderProps {
-    onImageChange: (file: File|null) => void;
+    onImageChange: (file: File | null) => void;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageChange }) => {
-    const [preview, setPreview] = useState<string|null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -24,9 +24,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageChange }) => {
 
     return (
         <div className={styles.imageUploader}>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            { preview && (
-                <img src={preview} alt="preview" className={styles.imagePreview} />
+            {!preview ? (
+                <input type="file" accept="image/*" onChange={handleFileChange}/>
+            ) : (
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{
+                        backgroundImage: `url(${preview})`,
+                    }}
+                />
             )}
         </div>
     );
