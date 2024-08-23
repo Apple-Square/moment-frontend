@@ -21,7 +21,7 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents
     const [visibleComment, setVisibleComment] = useState<boolean>(false);
 
     const handleClickComment = () => {
-        setVisibleComment(true);
+        setVisibleComment(!visibleComment);
     }
 
     return (
