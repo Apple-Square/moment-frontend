@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from "../css/Feed.module.css";
-import Comment from './Comment';
+import CommentList from './CommentList';
 // import { Col, Container, Row } from 'react-bootstrap';
 
 interface FeedProps {
@@ -16,13 +16,6 @@ interface FeedProps {
     shares: number;
     timeAgo: string;
 }
-
-
-const dummyComment = {      // comment test
-    profileImg: "https://via.placeholder.com/50", // Placeholder 이미지 URL
-    author: "John Doe",
-    contents: "This is a sample comment. It provides an example of how a comment might look in the UI."
-};
 
 const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents, likes, comments, shares, timeAgo }) => {
     const [visibleComment, setVisibleComment] = useState<boolean>(false);
@@ -55,11 +48,7 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents
                 <p>{contents}</p>
             </div>
             {visibleComment && (
-                <Comment
-                    profileImg={dummyComment.profileImg}
-                    author={dummyComment.author}
-                    contents={dummyComment.contents}
-                />
+                <CommentList />
             )}
         </div>
     );
