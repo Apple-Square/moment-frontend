@@ -16,14 +16,13 @@ const Comment: React.FC<CommentProps> = ({ profileImg, author, contents }) => {
             <div className={styles.header}>
                 <div className={`${styles.profile} p-1`}>
                     <img className={styles.profileImg} src={profileImg} alt="Profile" />
-                    <div className={styles.authorInfo}>
-                        <span className={styles.author}>{author}</span>
-                    </div>
-                </div>
-                <div className={`${styles.contentsWrapper}`}>
-                    <p>{contents}</p>
+                    <span className={styles.author}>{author}</span>
                 </div>
             </div>
+            <div className={`${styles.contentsWrapper}`}>
+                <p>{contents}</p>
+            </div>
+
         </div>
     );
 }
