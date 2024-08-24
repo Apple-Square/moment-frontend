@@ -1,14 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from '../slices/authSlice.ts';
+import {useDispatch, useSelector, useStore} from "react-redux";
 
-// const customMiddleware: Middleware<NonNullable<unknown>, never , Dispatch<Action>> = () => (next) => (action) => {
-//     console.log('Dispatching action:', action);
-//     return next(action);
-// };
-  
-  
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     auth: authReducer
   },
@@ -16,11 +11,10 @@ const store = configureStore({
 
 });
 
-// RootState와 AppDispatch 타입 정의
-// export type RootState = ReturnType<typeof store.getState>;
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+export type AppStore = typeof store;
 export type AppDispatch = typeof store.dispatch;
-
-
-
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 // useDispatch를 커스터마이징한 훅
-export default store;
+// export default store;

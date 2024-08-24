@@ -3,13 +3,13 @@ import styles from "./css/authMain.module.css";
 import KakaoButtonImg from "./component/KakaoButtonImg.tsx";
 import GoogleLogoImg from "./component/GoogleLogoImg.tsx";
 import MomentLogoNTextImg from "./component/MomentLogoNTextImg.tsx";
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
 import {useImmer} from "use-immer";
 import {LoginState, User} from "./interface/DomainInterface.ts";
 import {loginThunk, LoginThunkArgs} from "../../redux/slices/authSlice.ts";
-import {useAppDispatch} from "../common/hook/dispatch.ts";
+import {RootState} from "../../redux/store/store.ts";
+import {useAppDispatch, useAppSelector} from "../../redux/store/hooks.ts";
 
 export const AuthMain: React.FC = () => {
 
@@ -19,8 +19,13 @@ export const AuthMain: React.FC = () => {
             password: ''
         }
     );
+    const state = useAppSelector((state: RootState) => state);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    useEffect(()=> {
+        console.log("store :: "+JSON.stringify(state));
+    },[state]);
 
     const handleUsernameChange = <T extends HTMLInputElement>(e : ChangeEvent<T>) => {
         console.log(e);
@@ -42,11 +47,12 @@ export const AuthMain: React.FC = () => {
     }
 
     const handleLogin = () => {
+        console.log(`로그인 실행`);
         const loginThunkArgs : LoginThunkArgs = {
             loginState,
             navigate
         };
-        dispatch(loginThunk(loginThunkArgs))
+        dispatch(loginThunk(loginThunkArgs));
     }
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

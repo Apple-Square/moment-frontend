@@ -14,6 +14,7 @@ import ThreeColumnFeedList from "../../pages/feed/ThreeColumnFeedList.tsx";
 import AddFeed from "../../pages/feed/AddFeed.tsx";
 import EmailVerification from "../../pages/auth/EmailVerification.tsx";
 import BackgroundTemplate from "../../pages/common/components/BackgroundTemplate.tsx";
+import Test from "../../pages/auth/Test.tsx";
 
 
 export const AppRoutes: React.FC = () => {
@@ -26,6 +27,7 @@ export const AppRoutes: React.FC = () => {
 
     return (<Routes>
         <Route path="/" element={<FeedList/>}></Route>
+        <Route path="/test" element={<Test/>}></Route>
         <Route path="/auth" element={<AuthLayout />}>
             <Route path="authMain" element={<AuthMain/>}></Route>
             <Route path="findUserId" element={<FindUserId/>}></Route>

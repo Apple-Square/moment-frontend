@@ -1,4 +1,5 @@
 export interface User {
+    id : string
     nickname : string,
     username : string,
     password : string,
@@ -6,7 +7,7 @@ export interface User {
     gender : string,
     email : string,
     address : string,
-    profilePhotoUrl : string,
+    profileImage : string,
     profileIntro: string,
 }
 
