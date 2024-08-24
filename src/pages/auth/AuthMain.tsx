@@ -3,10 +3,57 @@ import styles from "./css/authMain.module.css";
 import KakaoButtonImg from "./component/KakaoButtonImg.tsx";
 import GoogleLogoImg from "./component/GoogleLogoImg.tsx";
 import MomentLogoNTextImg from "./component/MomentLogoNTextImg.tsx";
-import React from "react";
-import {Link} from "react-router-dom";
+import React, {ChangeEvent, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {useImmer} from "use-immer";
+import {LoginState, User} from "./interface/DomainInterface.ts";
+import {loginThunk, LoginThunkArgs} from "../../redux/slices/authSlice.ts";
+import {useAppDispatch} from "../common/hook/dispatch.ts";
+
 export const AuthMain: React.FC = () => {
 
+    const [loginState, updateLoginState]
+        = useImmer<(LoginState)>({
+            username: '',
+            password: ''
+        }
+    );
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const handleUsernameChange = <T extends HTMLInputElement>(e : ChangeEvent<T>) => {
+        console.log(e);
+        const { name, value } = e.target;
+        updateLoginState(draft => {
+            draft[name as keyof LoginState] = value;
+            console.log(`draft :: ${JSON.stringify(draft)}\nname :: ${name}\nvalue :: ${value}`);
+        })
+        //검사하고 메세지 보내기
+    }
+
+    const handlePasswordChange = (e : ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        updateLoginState(draft => {
+            draft[name as keyof LoginState] = value;
+            console.log(`draft :: ${JSON.stringify(draft)}\nname :: ${name}\nvalue :: ${value}`);
+        })
+
+    }
+
+    const handleLogin = () => {
+        const loginThunkArgs : LoginThunkArgs = {
+            loginState,
+            navigate
+        };
+        dispatch(loginThunk(loginThunkArgs))
+    }
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    };
 
     return (
             <Container className={`${styles.container}`}>
@@ -21,19 +68,34 @@ export const AuthMain: React.FC = () => {
                 <Row className={`${styles.emptyMiddleRow}`}/>
                 <Row className={`w-100 mb-3 ${styles.h8}`} style={{minWidth: "300px", maxWidth: "300px"}}>
                     <Col className="d-flex justify-content-center">
-                        <Form.Control type="text" placeholder="아이디"
-                                      className={`mb-3 ${styles.h100}`} />
+                        <Form.Control
+                            type="text"
+                            placeholder="아이디"
+                            className={`mb-3 ${styles.h100}`}
+                            name="username"
+                            onChange={handleUsernameChange}
+                        />
                     </Col>
                 </Row>
                 <Row className={`w-100 mb-3 ${styles.h8}`}  style={{minWidth: "300px", maxWidth: "300px"}}>
                     <Col className="d-flex justify-content-center">
-                        <Form.Control type="password" placeholder="비밀번호" className={`mb-3 ${styles.h100}`} />
+                        <Form.Control
+                            type="password"
+                            placeholder="비밀번호"
+                            name="password"
+                            className={`mb-3 ${styles.h100}`}
+                            onChange={handlePasswordChange}
+                        />
                     </Col>
                 </Row>
 
                 <Row className={`w-100 ${styles.h8}`}  style={{minWidth: "300px", maxWidth: "300px"}}>
                     <Col className="d-flex justify-content-center">
-                      <Button className={`w-100 ${styles.h100} ${styles.borderRadius} ${styles.loginButton}`}>로그인</Button>
+                      <Button
+                        type="button"
+                        className={`w-100 ${styles.h100} ${styles.borderRadius} ${styles.loginButton}`}
+                        onClick={handleLogin}
+                      >로그인</Button>
                     </Col>
                 </Row>
 
@@ -57,6 +119,7 @@ export const AuthMain: React.FC = () => {
                      style={{ height: "auto", minHeight: "40px", maxHeight: "40px", minWidth: "300px" }} >
                     <Col className="d-flex justify-content-center" style={{minHeight: "40px", maxHeight: "40px" }} >
                         <button
+                            type="button"
                             style={{
                                 padding: "0px", /* 패딩 제거 */
                                 border: "none", /* 보더 제거 */
@@ -82,6 +145,7 @@ export const AuthMain: React.FC = () => {
                      style={{ height: "auto", minHeight: "40px", maxHeight: "40px", minWidth: "300px" }}>
                     <Col className="d-flex justify-content-center" style={{ width:"30%", height: "auto", minHeight: "40px", maxHeight: "40px" }}>
                         <Button
+                            type="button"
                             variant="light"
                             style={{
                                 maxWidth: "266px", // 부모의 30%를 차지하도록 강제
