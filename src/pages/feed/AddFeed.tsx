@@ -19,7 +19,7 @@ const AddFeed: React.FC = () => {
     }
 
     return (
-        <Container className='pageContainer p-0'>
+        <Container className='pageContainer'>
             <Row className='justify-content-center p-0'>
                 <Col className='p-0' xs={12} md={8} lg={4}>
                     {/* main component */}
