@@ -5,7 +5,7 @@ import ImageUploader from './components/ImageUploader';
 import TextInput from './components/TextInput';
 
 const AddFeed: React.FC = () => {
-    const [image, setImage] = useState<File | null>(null);;
+    const [image, setImage] = useState<File[]>([]);;
     const [text, setText] = useState('');
 
     const handleSubmit = () => {
