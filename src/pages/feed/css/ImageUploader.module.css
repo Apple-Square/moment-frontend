@@ -3,15 +3,48 @@
     position: relative;
     padding-top: 100%;
     overflow: hidden;
-    background-color: gray;
+    background-color: whitesmoke;
 }
 
 .imageUploader>input {
-    /* display: none; */
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    opacity: 0%;
+    z-index: 10;
+}
+
+.imagePreview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     object-fit: cover;
+    background-position: center;
+    background-size: cover;
+    /* background-color: aquamarine; */
+}
+
+.uploadBtn {
+    padding: 10px 20px;
+    font-size: medium;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    background-color: lightgray;
+    color: black;
+    cursor: pointer;
+    margin: 0 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: auto;
+
 }

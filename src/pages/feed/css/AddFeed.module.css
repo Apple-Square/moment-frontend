@@ -5,6 +5,8 @@
     width: 100vw;
     height: 100vh;
     margin: 0 auto;
+    border: solid 1px;
+    border-color: whitesmoke;
 }
 
 .row {
@@ -41,7 +43,6 @@
     background-color: lightgray;
     color: black;
     cursor: pointer;
-    margin: 0 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: auto;
 }
