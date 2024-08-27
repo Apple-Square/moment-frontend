@@ -51,3 +51,14 @@
     width: auto;
 
 }
+
+.deleteBtn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 40px;
+    height: 40px;
+    z-index: 10;        /* top component 0-10*/
+    border-style: none;
+    
+}

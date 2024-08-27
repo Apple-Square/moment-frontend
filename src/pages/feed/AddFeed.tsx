@@ -26,7 +26,7 @@ const AddFeed: React.FC = () => {
                     <Container className={`${styles.container} p-0`}>
                         <Row className={`p-0 m-0 ${styles.row}`}>
                             <Col className="p-0">
-                                <ImageUploader onImageChange={setImage} />
+                                <ImageUploader contents={image} onImageChange={setImage} />
                             </Col>
                         </Row>
                         <Row className={`p-0 ${styles.row} ${styles.textArea}`}>
