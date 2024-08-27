@@ -20,20 +20,24 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
             fileInputRef.current.click();
         }
     }
-    const handleDeleteImage = () => {
+    const handleDeleteImage = (index: number) => {
         // close 버튼 누르면 이미지 삭제
         // contents(file[])에서 제외
+        const updatedContents = contents.filter((_, idx) => idx !== index);
+        onImageChange(updatedContents);
         // preview(string[])에서 제외
+        const updatedPreviewList = previewList.filter((_, idx) => idx !== index);
+        setPreviewList(updatedPreviewList);
     } 
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
-            const imgArray = Array.from(event.target.files).slice(0, 10);
+            const imgArray = [...contents, ...Array.from(event.target.files)];
 
-            if (event.target.files.length > 10) {
+            if (imgArray.length > 10) {
                 alert("이미지는 10개까지만 첨부 가능합니다.");
             }
-            onImageChange(imgArray);
+            onImageChange(imgArray.slice(0, 10));
 
             const newPreviews: string[] = [];
             imgArray.forEach((file) => {
@@ -45,17 +49,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
                         // after all loaded
                         if (newPreviews.length === imgArray.length) {
                             setPreviewList(newPreviews);
-                            if (swiperRef.current) {
-                                swiperRef.current.slideTo(0);
-                            }
+                            // if (swiperRef.current) {
+                            //     swiperRef.current.slideTo(0);
+                            // }
                         }
                     }
                 };
                 reader.readAsDataURL(file);
             });
         } else {
-            setPreviewList([]);
-            onImageChange([]);
+            setPreviewList(previewList);
+            onImageChange(contents);
             if (swiperRef.current) {
                 swiperRef.current.slideTo(0);
             }
@@ -91,7 +95,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
                                         backgroundImage: `url(${preview})`,
                                     }}
                                 ></div>
-                                <img src={DelImg} className={styles.deleteBtn} onClick={handleDeleteImage}/>
+                                <img src={DelImg} className={styles.deleteBtn} onClick={() => handleDeleteImage(index)} />
                             </SwiperSlide>
                         ))
                     )}
