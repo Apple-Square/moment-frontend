@@ -32,23 +32,23 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
-            const imgArray = [...contents, ...Array.from(event.target.files)];
+            const mediaArray = [...contents, ...Array.from(event.target.files)];
 
-            if (imgArray.length > 10) {
+            if (mediaArray.length > 10) {
                 alert("미디어는 10개까지만 첨부 가능합니다.");
             }
-            onMediaChange(imgArray.slice(0, 10));
+            onMediaChange(mediaArray.slice(0, 10));
 
             // bug: 용량이 큰 이미지가 뒤로 가게 됨
             const newPreviews: string[] = [];
-            imgArray.forEach((file) => {
+            mediaArray.forEach((file) => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
                     if (reader.result) {
                         newPreviews.push(reader.result as string);
 
                         // after all loaded
-                        if (newPreviews.length === imgArray.length) {
+                        if (newPreviews.length === mediaArray.length) {
                             setPreviewList(newPreviews);
                             // if (swiperRef.current) {
                             //     swiperRef.current.slideTo(0);
