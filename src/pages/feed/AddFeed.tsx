@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import styles from "./css/AddFeed.module.css";
 import { Col, Container, Row } from 'react-bootstrap';
-import ImageUploader from './components/ImageUploader';
+import MediaUploader from './components/MediaUploader';
 import TextInput from './components/TextInput';
 
 const AddFeed: React.FC = () => {
-    const [image, setImage] = useState<File[]>([]);;
+    const [image, setMedia] = useState<File[]>([]);;
     const [text, setText] = useState('');
 
     const handleSubmit = () => {
         if (image && text) {
             // server
-            console.log('Image:', image);
+            console.log('Media:', image);
             console.log('Text:', text);
         } else {
             alert('이미지와 내용을 모두 입력해주세요.');
@@ -26,7 +26,7 @@ const AddFeed: React.FC = () => {
                     <Container className={`${styles.container} p-0`}>
                         <Row className={`p-0 m-0 ${styles.row}`}>
                             <Col className="p-0">
-                                <ImageUploader contents={image} onImageChange={setImage} />
+                                <MediaUploader contents={image} onMediaChange={setMedia} />
                             </Col>
                         </Row>
                         <Row className={`p-0 ${styles.row} ${styles.textArea}`}>

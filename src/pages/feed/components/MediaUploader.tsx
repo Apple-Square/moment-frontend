@@ -1,16 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
-import styles from "../css/ImageUploader.module.css";
+import styles from "../css/MediaUploader.module.css";
 import DelImg from "../../../assets/close.svg";
 import 'swiper/css';
 
-interface ImageUploaderProps {
+interface MediaUploaderProps {
     contents: File[];
-    onImageChange: (contents: File[]) => void;
+    onMediaChange: (contents: File[]) => void;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }) => {
+const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }) => {
     const [previewList, setPreviewList] = useState<string[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const swiperRef = useRef<SwiperCore>();
@@ -20,11 +20,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
             fileInputRef.current.click();
         }
     }
-    const handleDeleteImage = (index: number) => {
+    const handleDeleteMedia = (index: number) => {
         // close 버튼 누르면 이미지 삭제
         // contents(file[])에서 제외
         const updatedContents = contents.filter((_, idx) => idx !== index);
-        onImageChange(updatedContents);
+        onMediaChange(updatedContents);
         // preview(string[])에서 제외
         const updatedPreviewList = previewList.filter((_, idx) => idx !== index);
         setPreviewList(updatedPreviewList);
@@ -35,9 +35,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
             const imgArray = [...contents, ...Array.from(event.target.files)];
 
             if (imgArray.length > 10) {
-                alert("이미지는 10개까지만 첨부 가능합니다.");
+                alert("미디어는 10개까지만 첨부 가능합니다.");
             }
-            onImageChange(imgArray.slice(0, 10));
+            onMediaChange(imgArray.slice(0, 10));
 
             // bug: 용량이 큰 이미지가 뒤로 가게 됨
             const newPreviews: string[] = [];
@@ -60,7 +60,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
             });
         } else {
             setPreviewList(previewList);
-            onImageChange(contents);
+            onMediaChange(contents);
             // if (swiperRef.current) {
             //     swiperRef.current.slideTo(0);
             // }
@@ -68,10 +68,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
     };
 
     return (
-        <div className={styles.imageUploader}>
+        <div className={styles.mediaUploader}>
             <input  // hidden tag
                 type="file"
-                accept="image/*"
+                accept="image/*, video/*"
                 multiple
                 ref={fileInputRef}
                 onChange={handleFileChange}
@@ -91,20 +91,20 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
                     previewList.map((preview, index) => (
                         <SwiperSlide key={index}>
                             <div
-                                className={styles.imagePreview}
+                                className={styles.mediaPreview}
                                 style={{
                                     backgroundImage: `url(${preview})`,
                                 }}
                             ></div>
                             {/* svg 이미지 변경 필요 */}
-                            <img src={DelImg} className={styles.deleteBtn} onClick={() => handleDeleteImage(index)} />
+                            <img src={DelImg} className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)} />
                         </SwiperSlide>
                     ))
                 )}
                 {(previewList.length < 10) && (
                     <SwiperSlide>
-                        <div className={styles.imagePreview}>
-                            <button className={styles.uploadBtn} onClick={handleUploadClick}>이미지 업로드</button>
+                        <div className={styles.mediaPreview}>
+                            <button className={styles.uploadBtn} onClick={handleUploadClick}>미디어 업로드</button>
                         </div>
                     </SwiperSlide>
                 )}
@@ -113,4 +113,4 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
     );
 };
 
-export default ImageUploader;
+export default MediaUploader;

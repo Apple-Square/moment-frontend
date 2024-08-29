@@ -1,4 +1,4 @@
-.imageUploader {
+.mediaUploader {
     width: 100%;
     position: relative;
     padding-top: 100%;
@@ -6,7 +6,7 @@
     background-color: whitesmoke;
 }
 
-.imageUploader>input {
+.mediaUploader>input {
     display: none;
     position: absolute;
     top: 0;
@@ -25,7 +25,7 @@
     height: 100%;
 }
 
-.imagePreview {
+.mediaPreview {
     width: 100%;
     height: 100%;
     display: flex;
