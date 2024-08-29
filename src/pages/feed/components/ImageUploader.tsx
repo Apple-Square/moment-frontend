@@ -60,9 +60,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ contents, onImageChange }
         } else {
             setPreviewList(previewList);
             onImageChange(contents);
-            if (swiperRef.current) {
-                swiperRef.current.slideTo(0);
-            }
+            // if (swiperRef.current) {
+            //     swiperRef.current.slideTo(0);
+            // }
         }
     };
 
