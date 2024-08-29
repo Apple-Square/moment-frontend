@@ -1,20 +1,20 @@
 import {Outlet, Route, Routes} from "react-router-dom";
-import {AuthMain} from "../../pages/auth/AuthMain.tsx";
-import {SignUp} from "../../pages/auth/SignUp.tsx";
-import Postcode from "../../pages/auth/Postcode.tsx";
-import Profile from "../../pages/user/Profile.tsx";
-import FindUserId from "../../pages/auth/FindUserId.tsx";
-import FollowList from "../../pages/user/FollowList.tsx";
-import PersonalInfo from "../../pages/user/PersonalInfo.tsx";
-import UpdatePwd from "../../pages/auth/UpdatePwd.tsx";
-import ChatroomList from "../../pages/chat/ChatroomList.tsx";
-import Chatroom from "../../pages/chat/Chatroom.tsx";
-import FeedList from "../../pages/feed/FeedList.tsx";
-import ThreeColumnFeedList from "../../pages/feed/ThreeColumnFeedList.tsx";
-import AddFeed from "../../pages/feed/AddFeed.tsx";
-import EmailVerification from "../../pages/auth/EmailVerification.tsx";
-import BackgroundTemplate from "../../pages/common/components/BackgroundTemplate.tsx";
-import Test from "../../pages/auth/Test.tsx";
+import {AuthMain} from "./pages/auth/AuthMain.tsx";
+import {SignUp} from "./pages/auth/SignUp.tsx";
+import Postcode from "./pages/auth/Postcode.tsx";
+import Profile from "./pages/user/Profile.tsx";
+import FindUserId from "./pages/auth/FindUserId.tsx";
+import FollowList from "./pages/user/FollowList.tsx";
+import PersonalInfo from "./pages/user/PersonalInfo.tsx";
+import UpdatePwd from "./pages/auth/UpdatePwd.tsx";
+import ChatroomList from "./pages/chat/ChatroomList.tsx";
+import Chatroom from "./pages/chat/Chatroom.tsx";
+import FeedList from "./pages/feed/FeedList.tsx";
+import ThreeColumnFeedList from "./pages/feed/ThreeColumnFeedList.tsx";
+import AddFeed from "./pages/feed/AddFeed.tsx";
+import EmailVerification from "./pages/auth/EmailVerification.tsx";
+import BackgroundTemplate from "./pages/common/components/BackgroundTemplate.tsx";
+import Test from "./pages/auth/Test.tsx";
 
 
 export const AppRoutes: React.FC = () => {

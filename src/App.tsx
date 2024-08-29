@@ -1,5 +1,5 @@
 import './App.css'
-import {AppRoutes} from "./redux/routes/AppRoutes.tsx";
+import {AppRoutes} from "./AppRoutes.tsx";
 
 
 

@@ -1,24 +1,14 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import axiosInstance from '../../lib/axiosInstance.ts';
-import {LoginState, User} from "../../pages/auth/interface/DomainInterface.ts";
+import {axiosInstance} from '../../lib/axiosInstance.ts';
 import {loginRequest} from "../../pages/auth/function/userAxios.ts"
 import {NavigateFunction} from "react-router-dom";
 import _ from "lodash";
+import {AuthState, LoginThunkArgs} from "../../interface/OtherInterface.ts";
+import {JSONColor} from "../../lib/deepLog.ts";
 
 
-export interface LoginThunkArgs {
-    loginState: LoginState | null;
-    navigate: NavigateFunction;
-}
 
-export interface AuthState {
-    user: User | null;
-    token : string;
-    isAuthenticated: boolean;
-    isRedirected : boolean;
-    loading: boolean;
-    error: unknown;
-}
+
 /**
  * ```
  * export interface LoginThunkArgs {
@@ -38,7 +28,7 @@ export interface AuthState {
  */
 export const loginThunk
     = createAsyncThunk("auth/login",
-    async ({ loginState, navigate }: LoginThunkArgs, thunkAPI) => {
+    async ({ loginState }: LoginThunkArgs, thunkAPI) => {
         try{
             console.log("loginState :: "+ JSON.stringify(loginState));
             let reformedResponse : any = {};
@@ -47,11 +37,18 @@ export const loginThunk
                     username : loginState.username,
                     password : loginState.password
                 });
-                reformedResponse = _.merge(response, {data: {user: loginState}});
+                console.log(JSONColor.stringify(response));
+                console.log(JSON.stringify(response));
+                if(response?.data?.user){
+                    loginState = _.merge(loginState, response?.data?.user);//response.data.user 우선시 됨
+                    reformedResponse = _.merge(response, {data: {user: loginState}});
+                }
             }
-            console.log(`reformedResponse :: ${JSON.stringify(reformedResponse)}`);
+            console.log(`reformedResponse :: ${JSONColor.stringify(reformedResponse)}`);
 
-            return thunkAPI.fulfillWithValue(reformedResponse);
+            if(reformedResponse?.data?.user){
+                return thunkAPI.fulfillWithValue(reformedResponse);
+            }
 
         } catch (error) {
             console.log(JSON.stringify(error, null, 2));

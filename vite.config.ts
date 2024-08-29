@@ -8,7 +8,5 @@ export default defineConfig({
     port: 5173,
   },
   plugins: [react()],
-  define: {
-    'process.env': process.env
-  }
+  publicDir: 'public', // Ensure this is correct if you have a custom public directory
 })

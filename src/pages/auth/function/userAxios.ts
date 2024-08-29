@@ -1,17 +1,18 @@
-import axiosInstance from "../../../lib/axiosInstance.ts";
-import {LoginRequestDto, LogoutRequestDto} from "../interface/AxiosInterface.ts";
+import {axiosInstance} from "../../../lib/axiosInstance.ts";
+import {LoginRequestDto, LogoutRequestDto} from "../../../interface/AxiosInterface.ts";
 import {clearAllCookies} from "../../common/function/cookie.ts";
+import {JSONColor} from "../../../lib/deepLog.ts";
 export const loginRequest = async (loginRequestDto : LoginRequestDto) => {
     try {
-        console.log("login 요청 :: " + JSON.stringify(loginRequestDto,null,2));
-        const response = await axiosInstance.post(`/api/auth/login`, loginRequestDto);
-        console.log("login 응답 :: " + JSON.stringify(response,null,2));
+        console.log("login 요청 :: " + JSONColor.stringify(loginRequestDto,null,2));
+        const response = await axiosInstance.post(`/auth/login`, loginRequestDto);
+        console.log("login 응답 :: " + JSONColor.stringify(response,null,2));
         return {
             data: response.data,
             token: response.headers['authorization'], // 필요한 정보만 추출
         }
     } catch (error) {
-        console.log("login 요청 에러 :: "+ JSON.stringify(error));
+        console.log("login 요청 에러 :: "+ JSONColor.stringify(error));
     }
 }
 /*
@@ -27,9 +28,9 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) => {
 */
 export const logoutRequest = async (logoutRequestDto : LogoutRequestDto) => {
     try{
-        console.log("logout 요청 :: " + logoutRequestDto);
-        const response = await axiosInstance.post(`/api/auth/logout`, logoutRequestDto);
-        console.log("logout 응답 :: " + response);
+        console.log("logout 요청 :: " + JSONColor.stringify(logoutRequestDto));
+        const response = await axiosInstance.post(`/auth/logout`, logoutRequestDto);
+        console.log("logout 응답 :: " + JSONColor.stringify(response));
         clearAllCookies();
         return response;
     } catch (error) {

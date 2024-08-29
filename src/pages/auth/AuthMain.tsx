@@ -6,10 +6,13 @@ import MomentLogoNTextImg from "./component/MomentLogoNTextImg.tsx";
 import React, {ChangeEvent, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useImmer} from "use-immer";
-import {LoginState, User} from "./interface/DomainInterface.ts";
-import {loginThunk, LoginThunkArgs} from "../../redux/slices/authSlice.ts";
+import {loginThunk} from "../../redux/slices/authSlice.ts";
 import {RootState} from "../../redux/store/store.ts";
 import {useAppDispatch, useAppSelector} from "../../redux/store/hooks.ts";
+import {LoginState} from "../../interface/DomainInterface.ts";
+import {LoginThunkArgs} from "../../interface/OtherInterface.ts";
+import {JSONColor} from "../../lib/deepLog.ts";
+import {showToast} from "../../lib/ToastNotification.ts";
 
 export const AuthMain: React.FC = () => {
 
@@ -19,20 +22,22 @@ export const AuthMain: React.FC = () => {
             password: ''
         }
     );
-    const state = useAppSelector((state: RootState) => state);
+    const auth = useAppSelector((state: RootState) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     useEffect(()=> {
-        console.log("store :: "+JSON.stringify(state));
-    },[state]);
+        console.log("store :: "+JSON.stringify(auth));
+        if(auth.isAuthenticated){
+            navigate('/user/profile');
+        }
+    },[auth, navigate]);
 
     const handleUsernameChange = <T extends HTMLInputElement>(e : ChangeEvent<T>) => {
-        console.log(e);
         const { name, value } = e.target;
         updateLoginState(draft => {
             draft[name as keyof LoginState] = value;
-            console.log(`draft :: ${JSON.stringify(draft)}\nname :: ${name}\nvalue :: ${value}`);
+            console.log(`유저네임 onChange\ndraft :: ${JSON.stringify(draft)}\nname :: ${name}\nvalue :: ${value}`);
         })
         //검사하고 메세지 보내기
     }
@@ -41,18 +46,21 @@ export const AuthMain: React.FC = () => {
         const { name, value } = e.target;
         updateLoginState(draft => {
             draft[name as keyof LoginState] = value;
-            console.log(`draft :: ${JSON.stringify(draft)}\nname :: ${name}\nvalue :: ${value}`);
+            console.log(`패스워드 onChange\ndraft :: ${JSON.stringify(draft)}\nname :: ${name}\nvalue :: ${value}`);
         })
-
     }
 
-    const handleLogin = () => {
-        console.log(`로그인 실행`);
-        const loginThunkArgs : LoginThunkArgs = {
-            loginState,
-            navigate
-        };
-        dispatch(loginThunk(loginThunkArgs));
+    const handleLogin = async () => {
+        try {
+            console.log(`로그인 실행`);
+            const loginThunkArgs: LoginThunkArgs = {
+                loginState
+            };
+            await dispatch(loginThunk(loginThunkArgs));
+        } catch (error) {
+            console.log(`로그인 에러 캐치했음 :: ${JSONColor.stringify(error)}`);
+            showToast("로그인에 실패하였습니다",)
+        }
     }
 
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
