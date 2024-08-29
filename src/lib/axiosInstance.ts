@@ -20,7 +20,7 @@ let refreshingAvailable : boolean = true;
  */
 axiosInstance.interceptors.response.use(
     function(response) {
-        console.log(JSONColor.stringify(`서버로부터 2xx번호의 응답이 왔습니다\n인터셉터 작동 - response :: ${response}\n`));
+        console.log(JSON.stringify(`서버로부터 2xx번호의 응답이 왔습니다\n인터셉터 작동 - response :: ${response}\n`,null,2));
         return response;
     }, async function (error) {
         if (error.response && error.response.status === 403){

@@ -5,6 +5,7 @@ import {NavigateFunction} from "react-router-dom";
 import _ from "lodash";
 import {AuthState, LoginThunkArgs} from "../../interface/OtherInterface.ts";
 import {JSONColor} from "../../lib/deepLog.ts";
+import {produce} from "immer";
 
 
 
@@ -31,28 +32,38 @@ export const loginThunk
     async ({ loginState }: LoginThunkArgs, thunkAPI) => {
         try{
             console.log("loginState :: "+ JSON.stringify(loginState));
-            let reformedResponse : any = {};
-            if(loginState){
-                const response = await loginRequest({
-                    username : loginState.username,
-                    password : loginState.password
-                });
-                console.log(JSONColor.stringify(response));
-                console.log(JSON.stringify(response));
-                if(response?.data?.user){
-                    loginState = _.merge(loginState, response?.data?.user);//response.data.user 우선시 됨
-                    reformedResponse = _.merge(response, {data: {user: loginState}});
-                }
-            }
-            console.log(`reformedResponse :: ${JSONColor.stringify(reformedResponse)}`);
 
-            if(reformedResponse?.data?.user){
-                return thunkAPI.fulfillWithValue(reformedResponse);
+            if (!loginState?.username || !loginState?.password) {
+                return thunkAPI.rejectWithValue("아이디와 비밀번호를 입력해주세요.");
             }
+
+            const response = await loginRequest({
+                username: loginState.username,
+                password: loginState.password,
+            });
+
+            if(!response?.data?.user) {
+                return thunkAPI.rejectWithValue("아이디 또는 비밀번호가 틀렸습니다");
+            }
+
+            //나는 지금 response와 loginState를 합치고 싶다.
+            //response를 바꿀거야. 불변하게
+            //response.data.user 이쪽을 바꿔야해.
+
+            const updatedResponse = produce(response, draft => {
+                draft.data.user = produce( draft.data.user, draftUser => {
+                    _.merge(draftUser, loginState);
+                })
+            })
+
+            console.log(JSON.stringify(updatedResponse, null, 2));
+            // return thunkAPI.fulfillWithValue(updatedResponse);
 
         } catch (error) {
             console.log(JSON.stringify(error, null, 2));
-            return thunkAPI.rejectWithValue(error);
+            console.log("loginThunk에서 에러");
+            // return thunkAPI.rejectWithValue(error instanceof Error ? error.message : "Unknown error occurred");
+
         }
 })
 
@@ -65,7 +76,7 @@ export const logoutThunk = createAsyncThunk(
             return thunkAPI.fulfillWithValue(response);
         } catch (error) {
             console.error("로그아웃 실패 :: ", error);
-            return thunkAPI.rejectWithValue(error || "Unknown error");
+            return thunkAPI.rejectWithValue(error || "알 수 없는 에러");
         }
     }
 );

@@ -1,10 +1,16 @@
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import styles from '../component/css/ToastNotification.module.css';
+import styles from './css/ToastNotification.module.css';
 
 
 const MySwal = withReactContent(Swal);
 
+/**
+ *
+ * @param type : "success" | "error" | "warning" | "info" | "question"
+ * @param title : string
+ * @param milisecondtimer : number
+ */
 export const showToast = (type, title, milisecondtimer) => {
     MySwal.fire({
         toast: true,

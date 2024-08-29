@@ -27,7 +27,7 @@ export const AuthMain: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(()=> {
-        console.log("store :: "+JSON.stringify(auth));
+        console.log("store :: "+JSON.stringify(auth,null,2));
         if(auth.isAuthenticated){
             navigate('/user/profile');
         }
@@ -59,7 +59,7 @@ export const AuthMain: React.FC = () => {
             await dispatch(loginThunk(loginThunkArgs));
         } catch (error) {
             console.log(`로그인 에러 캐치했음 :: ${JSONColor.stringify(error)}`);
-            showToast("로그인에 실패하였습니다",)
+            showToast("error","로그인에 실패하였습니다",1000);
         }
     }
 
