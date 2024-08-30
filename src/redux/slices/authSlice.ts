@@ -31,7 +31,7 @@ import {merge} from "chart.js/helpers";
  */
 export const loginThunk
     = createAsyncThunk("auth/login",
-    async ({ loginState }: LoginThunkArgs, thunkAPI) => {
+    async ( loginState : LoginThunkArgs, thunkAPI) => {
         try{
             console.log("loginState :: "+ JSON.stringify(loginState));
 

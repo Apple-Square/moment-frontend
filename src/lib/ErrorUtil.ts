@@ -21,7 +21,15 @@ export const getErrorName = (error: unknown): string => {
     }
     return "알 수 없는 에러";
 };
-
+// export const getErrorState = (error: unknown): string => {
+//     if (isError(error)) {
+//         return error.state;
+//     }
+//     if (error && typeof error === "object" && "name" in error && typeof error.name === "string") {
+//         return error.state;
+//     }
+//     return "알 수 없는 에러";
+// }
 export const setErrorMessage = (error: unknown, message: string): void => {
     if (isError(error)) {
         error.message = message;

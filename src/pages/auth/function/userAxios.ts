@@ -14,6 +14,9 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<
         }
     } catch (error : unknown) {
         console.log(`loginRequest에서 에러 :: ${JSONColor.stringify(error)}`);
+        // if(getErrorState(error) === "401"){
+        //     setErrorMessage(error, "아이디와 비밀번호를 확인해주세요.");
+        // }
         if(getErrorName(error) === "AxiosError"){
             setErrorMessage(error, "네트워크 오류");
         }

@@ -12,5 +12,7 @@ export interface User {
 }
 
 export interface LoginState extends Pick<User, 'username' | 'password'> {
-    // LoginData는 User의 username과 password만 포함
+    usernameError : string,
+    passwordError : string,
 }
+
