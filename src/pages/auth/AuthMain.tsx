@@ -30,6 +30,7 @@ export const AuthMain: React.FC = () => {
         console.log("store :: "+JSON.stringify(auth,null,2));
         if(auth.isAuthenticated){
             navigate('/user/profile');
+            showToast("success","로그인에 성공하였습니다",1000);
         }
     },[auth, navigate]);
 
@@ -56,9 +57,16 @@ export const AuthMain: React.FC = () => {
             const loginThunkArgs: LoginThunkArgs = {
                 loginState
             };
-            await dispatch(loginThunk(loginThunkArgs));
+            const data = await dispatch(loginThunk(loginThunkArgs));
+
+            console.log(`data :: ${JSONColor.stringify(data)}`);
+            if(data?.type ==="auth/login/rejected"){
+                console.log(`data :: ${JSONColor.stringify(data.payload)}`);
+                showToast("error",data.payload,1000);
+                return;
+            }
         } catch (error) {
-            console.log(`로그인 에러 캐치했음 :: ${JSONColor.stringify(error)}`);
+            console.log(`AuthMain에서 에러 :: ${JSONColor.stringify(error)}`);
             showToast("error","로그인에 실패하였습니다",1000);
         }
     }

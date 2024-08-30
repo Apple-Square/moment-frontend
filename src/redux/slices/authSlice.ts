@@ -5,7 +5,9 @@ import {NavigateFunction} from "react-router-dom";
 import _ from "lodash";
 import {AuthState, LoginThunkArgs} from "../../interface/OtherInterface.ts";
 import {JSONColor} from "../../lib/deepLog.ts";
-import {produce} from "immer";
+import {produce, WritableDraft} from "immer";
+import {getErrorMessage, isError} from "../../lib/ErrorUtil.ts";
+import {merge} from "chart.js/helpers";
 
 
 
@@ -34,22 +36,21 @@ export const loginThunk
             console.log("loginState :: "+ JSON.stringify(loginState));
 
             if (!loginState?.username || !loginState?.password) {
-                return thunkAPI.rejectWithValue("아이디와 비밀번호를 입력해주세요.");
+                return thunkAPI.rejectWithValue("아이디와 비밀번호를 \n입력해주세요.");
             }
 
             const response = await loginRequest({
                 username: loginState.username,
                 password: loginState.password,
             });
+            console.log("loginThunk에서 response :: "+ JSON.stringify(response, null, 2));
 
-            if(!response?.data?.user) {
-                return thunkAPI.rejectWithValue("아이디 또는 비밀번호가 틀렸습니다");
+            if(isError(response)){
+                return thunkAPI.rejectWithValue(getErrorMessage(response));
             }
 
-            //나는 지금 response와 loginState를 합치고 싶다.
-            //response를 바꿀거야. 불변하게
-            //response.data.user 이쪽을 바꿔야해.
-
+            //response와 loginState를 합쳐야 한다.
+            //response를 바꿔야 한다. response.data.user는 불변유지해야하는데
             const updatedResponse = produce(response, draft => {
                 draft.data.user = produce( draft.data.user, draftUser => {
                     _.merge(draftUser, loginState);
@@ -57,13 +58,12 @@ export const loginThunk
             })
 
             console.log(JSON.stringify(updatedResponse, null, 2));
-            // return thunkAPI.fulfillWithValue(updatedResponse);
+            return thunkAPI.fulfillWithValue(updatedResponse);
 
         } catch (error) {
-            console.log(JSON.stringify(error, null, 2));
             console.log("loginThunk에서 에러");
-            // return thunkAPI.rejectWithValue(error instanceof Error ? error.message : "Unknown error occurred");
-
+            console.log(JSON.stringify(error, null, 2));
+            return thunkAPI.rejectWithValue(getErrorMessage(error));
         }
 })
 
@@ -135,7 +135,10 @@ const authSlice = createSlice({
             .addCase(loginThunk.fulfilled, (state, action) => {
                 state.loading = false;
                 state.isAuthenticated = true;
-                state.user = action.payload.data.user;
+                state.user = {
+                    ...state.user,
+                    ...action.payload.data.user
+                };
                 state.token = action.payload.token;
             })
             .addCase(loginThunk.rejected, (state, action) => {
@@ -150,7 +153,18 @@ const authSlice = createSlice({
             .addCase(logoutThunk.fulfilled, (state) => {
                 state.loading = false;
                 state.isAuthenticated = false;
-                state.user = null;
+                state.user = {
+                    id : "",
+                    nickname : "",
+                    username : "",
+                    password : "",
+                    birth : "",
+                    gender : "",
+                    email : "",
+                    address : "",
+                    profileImage : "",
+                    profileIntro: "",
+                };
             })
             .addCase(logoutThunk.rejected, (state, action) => {
                 state.loading = false;

@@ -1,8 +1,9 @@
 import {axiosInstance} from "../../../lib/axiosInstance.ts";
-import {LoginRequestDto, LogoutRequestDto} from "../../../interface/AxiosInterface.ts";
+import {LoginRequestDto, LoginResponseDto, LogoutRequestDto} from "../../../interface/AxiosInterface.ts";
 import {clearAllCookies} from "../../common/function/cookie.ts";
 import {JSONColor} from "../../../lib/deepLog.ts";
-export const loginRequest = async (loginRequestDto : LoginRequestDto) => {
+import {getErrorName, setErrorMessage} from "../../../lib/ErrorUtil.ts";
+export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<LoginResponseDto | Error> => {
     try {
         console.log("login 요청 :: " + JSONColor.stringify(loginRequestDto,null,2));
         const response = await axiosInstance.post(`/auth/login`, loginRequestDto);
@@ -11,8 +12,12 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) => {
             data: response.data,
             token: response.headers['authorization'], // 필요한 정보만 추출
         }
-    } catch (error) {
-        console.log("login 요청 에러 :: "+ JSONColor.stringify(error));
+    } catch (error : unknown) {
+        console.log(`loginRequest에서 에러 :: ${JSONColor.stringify(error)}`);
+        if(getErrorName(error) === "AxiosError"){
+            setErrorMessage(error, "네트워크 오류");
+        }
+        return error as Error;
     }
 }
 /*
