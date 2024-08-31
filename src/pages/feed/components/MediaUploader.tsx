@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import styles from "../css/MediaUploader.module.css";
-import DelImg from "../../../assets/close.svg";
+import SvgDel from "./SvgDel";
 import 'swiper/css';
 
 interface MediaUploaderProps {
@@ -109,7 +109,8 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
                                 }}
                             ></div>
                             {/* svg 이미지 변경 필요 */}
-                            <img src={DelImg} className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)} />
+                                <SvgDel className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)}/>
+                            {/* <img src={DelImg} className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)} /> */}
                         </SwiperSlide>
                     ))
                 )}
