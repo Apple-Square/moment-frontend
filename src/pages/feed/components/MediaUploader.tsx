@@ -24,7 +24,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
         // contents(file[])에서 제외
         const updatedContents = contents.filter((_, idx) => idx !== index);
         onMediaChange(updatedContents);
-        
+
         // preview(string[])에서 제외
         const updatedPreviewList = previewList.filter((_, idx) => idx !== index);
         setPreviewList(updatedPreviewList);
@@ -58,11 +58,11 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
             const preview = await readFile(file);
             filePreviews.push(preview);
         }
-        
+
         setPreviewList(filePreviews);
     }
 
-    const readFile = (file:File): Promise<string> => {
+    const readFile = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -108,9 +108,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
                                     backgroundImage: `url(${preview})`,
                                 }}
                             ></div>
-                            {/* svg 이미지 변경 필요 */}
-                                <SvgDel className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)}/>
-                            {/* <img src={DelImg} className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)} /> */}
+                            <SvgDel className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)} fill='white' fillOpacity={0.7} />
                         </SwiperSlide>
                     ))
                 )}

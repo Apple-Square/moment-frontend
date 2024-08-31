@@ -60,5 +60,5 @@
     height: 40px;
     z-index: 10;        /* top component 0-10*/
     border-style: none;
-    
+    background-blend-mode: multiply;
 }
