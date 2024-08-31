@@ -2,7 +2,7 @@ import ThumbnailFeed from "./components/ThumbnailFeed";
 import styles from './css/ThreeColumnFeedList.module.css';
 import { Col, Container, Row } from "react-bootstrap";
 
-// 10 dummy
+// 20 dummy
 const dummyData = [
     {
         img: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fGZvcmVzdHxlbnwwfHx8fDE2MjcxMzY4MjA&ixlib=rb-1.2.1&q=80&w=400',
@@ -51,6 +51,60 @@ const dummyData = [
         likes: 210,
         comments: 65,
         shares: 30,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fHdpbnRlciUyMHNub3clMjBmb3Jlc3R8ZW58MHx8fHwxNjI3MTM2ODIw&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 130,
+        comments: 38,
+        shares: 10,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1532361140589-8eb35fe5afeb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDEwfHxtb3VudGFpbiUyMHJpdmVyfGVufDB8fHx8MTYyNzEzNjgyMA&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 85,
+        comments: 25,
+        shares: 7,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGJlYWNoJTIwYXQlMjBzdW5zZXR8ZW58MHx8fHwxNjI3MTM2ODIw&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 95,
+        comments: 34,
+        shares: 8,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fHdpbnRlciUyMHNub3clMjBmb3Jlc3R8ZW58MHx8fHwxNjI3MTM2ODIw&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 130,
+        comments: 38,
+        shares: 10,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1532361140589-8eb35fe5afeb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDEwfHxtb3VudGFpbiUyMHJpdmVyfGVufDB8fHx8MTYyNzEzNjgyMA&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 85,
+        comments: 25,
+        shares: 7,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGJlYWNoJTIwYXQlMjBzdW5zZXR8ZW58MHx8fHwxNjI3MTM2ODIw&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 95,
+        comments: 34,
+        shares: 8,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fHdpbnRlciUyMHNub3clMjBmb3Jlc3R8ZW58MHx8fHwxNjI3MTM2ODIw&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 130,
+        comments: 38,
+        shares: 10,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1532361140589-8eb35fe5afeb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDEwfHxtb3VudGFpbiUyMHJpdmVyfGVufDB8fHx8MTYyNzEzNjgyMA&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 85,
+        comments: 25,
+        shares: 7,
+    },
+    {
+        img: 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGJlYWNoJTIwYXQlMjBzdW5zZXR8ZW58MHx8fHwxNjI3MTM2ODIw&ixlib=rb-1.2.1&q=80&w=400',
+        likes: 95,
+        comments: 34,
+        shares: 8,
     },
     {
         img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fHdpbnRlciUyMHNub3clMjBmb3Jlc3R8ZW58MHx8fHwxNjI3MTM2ODIw&ixlib=rb-1.2.1&q=80&w=400',

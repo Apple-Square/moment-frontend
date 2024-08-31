@@ -9,10 +9,15 @@ interface ThumbnailFeedProps {
 }
 
 const ThumbnailFeed: React.FC<ThumbnailFeedProps> = ({ img, likes, comments, shares }) => {
+    const handleClickThumbnail = () => {
+        // getPoint
+        // goto detailPost
+        console.log("click the feed")
+    }
 
     return (
         <div className={styles.thumbFeedContainer}>
-            <div className={styles.imageContainer}>
+            <div className={styles.imageContainer} onClick={handleClickThumbnail}>
                 <img className={styles.thumbnailImg} src={img} alt="thumbnail" />
             </div>
             <div className={styles.hoverBar}>
