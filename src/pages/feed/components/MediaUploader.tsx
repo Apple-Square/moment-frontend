@@ -4,6 +4,7 @@ import SwiperCore from 'swiper';
 import styles from "../css/MediaUploader.module.css";
 import SvgDel from "./SvgDel";
 import 'swiper/css';
+import SvgVideo from './SvgVideo';
 
 interface MediaUploaderProps {
     contents: File[];
@@ -11,7 +12,7 @@ interface MediaUploaderProps {
 }
 
 const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }) => {
-    const [previewList, setPreviewList] = useState<string[]>([]);
+    const [previewList, setPreviewList] = useState<{ src: string; type: string }[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const swiperRef = useRef<SwiperCore>();
 
@@ -43,6 +44,8 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
                 onMediaChange(fileArray);
                 await updatePreviewList(fileArray);
             }
+
+            console.log(contents)
         } else {
             setPreviewList(previewList);
             onMediaChange(contents);    // 업로드 없을 시 변화 없음
@@ -53,10 +56,10 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
     };
 
     const updatePreviewList = async (files: File[]) => {
-        const filePreviews: string[] = [];
+        const filePreviews: { src: string; type: string }[] = [];
         for (const file of files) {
-            const preview = await readFile(file);
-            filePreviews.push(preview);
+            const preview = await (file.type.startsWith('video/') ? readVideo(file) : readFile(file));
+            filePreviews.push({ src: preview, type: file.type });
         }
 
         setPreviewList(filePreviews);
@@ -76,6 +79,36 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
                 reject(new Error('Failed to read file'));
             };
             reader.readAsDataURL(file);
+        });
+    }
+
+    const readVideo = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            video.src = URL.createObjectURL(file);
+
+            video.onloadeddata = () => {
+                video.currentTime = Math.min(video.duration / 2, 1); // Get thumbnail from mid
+            };
+
+            video.onseeked = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL());
+                } else {
+                    reject(new Error('Failed to get video thumbnail'));
+                }
+                video.src = ''; // Clean up
+            };
+
+            video.onerror = () => {
+                reject(new Error('Failed to process video'));
+            };
         });
     }
 
@@ -105,10 +138,13 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
                             <div
                                 className={styles.mediaPreview}
                                 style={{
-                                    backgroundImage: `url(${preview})`,
+                                    backgroundImage: `url(${preview.src})`,
                                 }}
                             ></div>
-                            <SvgDel className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)} fill='white' fillOpacity={0.7} />
+                            {preview.type.startsWith("video/") && (
+                                <SvgVideo className={styles.videoBanner} />
+                            )}
+                            <SvgDel className={styles.deleteBtn} onClick={() => handleDeleteMedia(index)} />
                         </SwiperSlide>
                     ))
                 )}

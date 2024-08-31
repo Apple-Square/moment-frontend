@@ -62,3 +62,14 @@
     border-style: none;
     background-blend-mode: multiply;
 }
+
+.videoBanner {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 30px;
+    height: 30px;
+    z-index: 10;        /* top component 0-10*/
+    border-style: none;
+    background-blend-mode: multiply;
+}
