@@ -21,51 +21,63 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
         }
     }
     const handleDeleteMedia = (index: number) => {
-        // close 버튼 누르면 이미지 삭제
         // contents(file[])에서 제외
         const updatedContents = contents.filter((_, idx) => idx !== index);
         onMediaChange(updatedContents);
+        
         // preview(string[])에서 제외
         const updatedPreviewList = previewList.filter((_, idx) => idx !== index);
         setPreviewList(updatedPreviewList);
     }
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
-            const imgArray = [...contents, ...Array.from(event.target.files)];
+            const fileArray = [...contents, ...Array.from(event.target.files)];
 
-            if (imgArray.length > 10) {
+            if (fileArray.length > 10) {
                 alert("미디어는 10개까지만 첨부 가능합니다.");
+                const limitedArray = fileArray.slice(0, 10);
+                onMediaChange(limitedArray);
+                await updatePreviewList(limitedArray);
+            } else {
+                onMediaChange(fileArray);
+                await updatePreviewList(fileArray);
             }
-            onMediaChange(imgArray.slice(0, 10));
-
-            // bug: 용량이 큰 이미지가 뒤로 가게 됨
-            const newPreviews: string[] = [];
-            imgArray.forEach((file) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    if (reader.result) {
-                        newPreviews.push(reader.result as string);
-
-                        // after all loaded
-                        if (newPreviews.length === imgArray.length) {
-                            setPreviewList(newPreviews);
-                            // if (swiperRef.current) {
-                            //     swiperRef.current.slideTo(0);
-                            // }
-                        }
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
         } else {
             setPreviewList(previewList);
-            onMediaChange(contents);
+            onMediaChange(contents);    // 업로드 없을 시 변화 없음
             // if (swiperRef.current) {
             //     swiperRef.current.slideTo(0);
             // }
         }
     };
+
+    const updatePreviewList = async (files: File[]) => {
+        const filePreviews: string[] = [];
+        for (const file of files) {
+            const preview = await readFile(file);
+            filePreviews.push(preview);
+        }
+        
+        setPreviewList(filePreviews);
+    }
+
+    const readFile = (file:File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (reader.result) {
+                    resolve(reader.result as string);
+                } else {
+                    reject(new Error('Failed to read file'));
+                }
+            };
+            reader.onerror = () => {
+                reject(new Error('Failed to read file'));
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     return (
         <div className={styles.mediaUploader}>
