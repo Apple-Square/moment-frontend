@@ -1,7 +1,6 @@
-.thumbContainer {
+.container {
     display: flex;
     flex-wrap: wrap;
-    align-content: flex-start;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -9,15 +8,10 @@
     margin: 0 auto;
 }
 
-.thumbRow {
+.container>* {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     width: 100%;
-    height: fit-content;
-    margin-bottom: 20px;
-}
-
-.emptyCol {
-    height: 100%;
-    background-color: red;
 }

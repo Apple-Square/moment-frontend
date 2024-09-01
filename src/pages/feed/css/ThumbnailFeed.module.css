@@ -1,6 +1,8 @@
 .thumbFeedContainer {
+    margin: 0;
+    padding: 0;
     position: relative;
-    display: inline-block;
+    display: block;
     width: 100%;
     /* border-radius: 5px; */
 }
@@ -8,6 +10,8 @@
 .imageContainer {
     width: 100%;
     position: relative;
+    margin: 0;
+    padding: 0;
     padding-top: 100%;
     overflow: hidden;
     background-color: darkgray;
@@ -36,6 +40,7 @@
     opacity: 0;
     visibility: hidden;
 }
+
 
 /* hover 시 hoverBar 보여주기 */
 .thumbFeedContainer:hover .hoverBar {
