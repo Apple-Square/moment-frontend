@@ -68,21 +68,21 @@ const FeedList: React.FC = () => {
             {feedData.map((feed, index) => (
                 <Row key={index} className={`${styles.feedRow} mb-3 px-0`}>
                     <Col xs={12} md={8} lg={4} className='p-0'>
-                    <Feed
-                        profileImg={feed.profileImg}
-                        author={feed.author}
-                        location={feed.location}
-                        img={feed.img}
-                        contents={feed.contents}
-                        likes={feed.likes}
-                        comments={feed.comments}
-                        shares={feed.shares}
-                        timeAgo={feed.timeAgo}
-                    />
+                        <Feed
+                            profileImg={feed.profileImg}
+                            author={feed.author}
+                            location={feed.location}
+                            img={feed.img}
+                            contents={feed.contents}
+                            likes={feed.likes}
+                            comments={feed.comments}
+                            shares={feed.shares}
+                            timeAgo={feed.timeAgo}
+                        />
                     </Col>
                 </Row>
             )
-    )}
+            )}
         </Container>
 
     );

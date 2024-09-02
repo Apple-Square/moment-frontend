@@ -12,3 +12,7 @@
     border-color: lightgray;
     resize: none; /* 크기 조절 방지 */
 }
+
+.textInput textarea:focus {
+    outline: none;
+}
