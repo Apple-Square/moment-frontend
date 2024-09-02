@@ -34,6 +34,7 @@ const commentData = [
 const CommentList = () => {
     return (
         <>
+        <AddComment />
         <Container className={`${styles.container} p-0`}>
             {commentData.map((comment, index) => (
                 <Row key={index} className={`${styles.commentRow} mb-3 px-0`}>
@@ -47,7 +48,6 @@ const CommentList = () => {
                 </Row>
             ))}
         </Container>
-        <AddComment />
         </>
     )
 }

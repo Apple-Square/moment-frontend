@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "../css/Feed.module.css";
 import CommentList from './CommentList';
+import { useNavigate, useLocation } from 'react-router-dom';
 // import { Col, Container, Row } from 'react-bootstrap';
 
 interface FeedProps {
-    // user 객체
     profileImg: string
     author: string;
-    //
     location: string;
     img: string;
     contents: string;
@@ -19,9 +18,20 @@ interface FeedProps {
 
 const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents, likes, comments, shares, timeAgo }) => {
     const [visibleComment, setVisibleComment] = useState<boolean>(false);
+    const navi = useNavigate();
+    const locationPath = useLocation();
+
+    useEffect(() => {
+        if (locationPath.pathname === '/feed/FeedDetail') {
+            setVisibleComment(true);
+        } else {
+            setVisibleComment(false);
+        }
+    }, [locationPath]);
 
     const handleClickComment = () => {
-        setVisibleComment(!visibleComment);
+        // setVisibleComment(!visibleComment);
+        navi('/feed/FeedDetail');
     }
 
     return (
