@@ -15,7 +15,7 @@ import {JSONColor} from "../../lib/deepLog.ts";
 import {showToast} from "../../lib/ToastNotification.ts";
 import {debounce} from "lodash";
 import {userValidator} from "./function/userValidator.ts";
-
+import {axiosInstance} from "../../lib/axiosInstance.ts";
 
 const debouncedUpdateLoginState = debounce((updateLoginState : Updater<LoginState>,name : string, value : string) => {
         updateLoginState(draft => {
@@ -110,6 +110,10 @@ const LoginArea: React.FC<{
         }
     },[auth, navigate]);
 
+    useEffect(() => {
+        console.log("계속 로그 찍기"+JSON.stringify(loginState, null, 2));
+    });
+
 
 
     const handleUsernameChange = useCallback(<T extends HTMLInputElement>(e: ChangeEvent<T>) => {
@@ -151,7 +155,7 @@ const LoginArea: React.FC<{
             console.log(`AuthMain에서 에러 :: ${JSONColor.stringify(error)}`);
             showToast("error","로그인에 실패하였습니다",1000);
         }
-    },[]);
+    },[loginState]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -159,7 +163,7 @@ const LoginArea: React.FC<{
         }
     };
 
-    /**
+    /**`
      *LoginArea의 props가 LoginButton이고,
      *LoginButton은 handleLogin을 props로 받는다.
      *하지만 handleLogin은 LoginArea의 state를 사용한다.

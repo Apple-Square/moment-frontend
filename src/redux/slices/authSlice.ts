@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {axiosInstance} from '../../lib/axiosInstance.ts';
-import {loginRequest} from "../../pages/auth/function/userAxios.ts"
+import {loginRequest, logoutRequest} from "../../pages/auth/function/authAxios.ts"
 import {NavigateFunction} from "react-router-dom";
 import _ from "lodash";
 import {AuthState, LoginThunkArgs} from "../../interface/OtherInterface.ts";
@@ -49,16 +49,8 @@ export const loginThunk
                 return thunkAPI.rejectWithValue(getErrorMessage(response));
             }
 
-            //response와 loginState를 합쳐야 한다.
-            //response를 바꿔야 한다. response.data.user는 불변유지해야하는데
-            const updatedResponse = produce(response, draft => {
-                draft.data.user = produce( draft.data.user, draftUser => {
-                    _.merge(draftUser, loginState);
-                })
-            })
-
-            console.log(JSON.stringify(updatedResponse, null, 2));
-            return thunkAPI.fulfillWithValue(updatedResponse);
+            console.log(JSON.stringify(response, null, 2));
+            return thunkAPI.fulfillWithValue(response);
 
         } catch (error) {
             console.log("loginThunk에서 에러");
@@ -71,7 +63,7 @@ export const logoutThunk = createAsyncThunk(
     "auth/logout",
     async (_, thunkAPI) => {
         try {
-            const response = await axiosInstance.post('/auth/logout');
+            const response = await logoutRequest();
 
             return thunkAPI.fulfillWithValue(response);
         } catch (error) {
@@ -96,7 +88,7 @@ const initialState : AuthState = {
     },
     token : "",
     isAuthenticated: false,
-    isRedirected: true, // 리다이렉트 한 번 하면 false가 됨.
+    isRedirected: false, // 리다이렉트 한 번 하면 true가 됨.
     loading: false,
     error: null,
 }

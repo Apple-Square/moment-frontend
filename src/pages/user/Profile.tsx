@@ -1,27 +1,27 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Footer from "../common/components/Footer.tsx";
 import {Container} from "react-bootstrap";
 import st from "../user/css/profile.module.css";
 import {axiosTestInstance} from "../../lib/axiosInstance.ts";
 import axios from "axios";
 import {objectDeepDigger} from "../../lib/deepLog.ts";
+import {logoutThunk} from "../../redux/slices/authSlice.ts";
+import {useAppDispatch, useAppSelector} from "../../redux/store/hooks.ts";
 const Profile:React.FC = () => {
 
-    const handleClick = () => {
-        const fetchData = async () => {
-            try {
-                const response = await axiosTestInstance.get('/protected-route');
-                console.log(objectDeepDigger(response.data));
-            } catch (error) {
-                if (axios.isAxiosError(error)) {
-                    console.log(objectDeepDigger(`Error: ${error}`));
-                } else {
-                    console.log(('Unexpected error'));
-                }
-            }
-        };
-        fetchData();
+
+    const auth = useAppSelector((state) => state.auth);
+    const dispatch = useAppDispatch();
+
+
+    const handleClick = async () => {
+        //로그아웃 - 디스패치 loginThunk 사용
+        await dispatch(logoutThunk());
     }
+    console.log("auth보자" + JSON.stringify(auth, null, 2));
+    useEffect(() => {
+
+    }, []);
 
     return (
         <Container className={`${st.container}`}>
