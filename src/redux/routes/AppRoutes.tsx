@@ -10,6 +10,7 @@ import UpdatePwd from "../../pages/auth/UpdatePwd.tsx";
 import ChatroomList from "../../pages/chat/ChatroomList.tsx";
 import Chatroom from "../../pages/chat/Chatroom.tsx";
 import FeedList from "../../pages/feed/FeedList.tsx";
+import FeedDetail from "../../pages/feed/FeedDetail.tsx";
 import ThreeColumnFeedList from "../../pages/feed/ThreeColumnFeedList.tsx";
 import AddFeed from "../../pages/feed/AddFeed.tsx";
 import EmailVerification from "../../pages/auth/EmailVerification.tsx";
@@ -46,6 +47,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/feed">
             <Route path="threeColumnFeedList" element={<ThreeColumnFeedList/>}></Route>
             <Route path="addFeed" element={<AddFeed/>}></Route>
+            <Route path="FeedDetail" element={<FeedDetail/>}></Route>
         </Route>
     </Routes>)
 }
