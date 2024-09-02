@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from '../css/ThumbnailFeed.module.css';
 
 interface ThumbnailFeedProps {
@@ -9,10 +10,12 @@ interface ThumbnailFeedProps {
 }
 
 const ThumbnailFeed: React.FC<ThumbnailFeedProps> = ({ img, likes, comments, shares }) => {
+    const navi = useNavigate();
+
     const handleClickThumbnail = () => {
         // getPoint
         // goto detailPost
-        console.log("click the feed")
+        navi('/feed/FeedDetail'); // navi point
     }
 
     return (

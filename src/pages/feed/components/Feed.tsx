@@ -31,7 +31,7 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents
 
     const handleClickComment = () => {
         // setVisibleComment(!visibleComment);
-        navi('/feed/FeedDetail');
+        navi('/feed/FeedDetail');   // navi point
     }
 
     return (
