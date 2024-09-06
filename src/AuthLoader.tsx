@@ -51,6 +51,10 @@ export const AuthLoader = ({children}) => {
                         dispatch(setUserAndToken({
                             user: (userResponse as AxiosResponse).data.user,
                             token: response.headers.authorization,
+                            isAuthenticated : true,
+                            isRedirected : true,
+                            loading : false,
+                            error : null,
                         }));
                     } else {
                         console.error("AuthLoader :: 유효하지 않은 사용자 데이터:", userResponse);

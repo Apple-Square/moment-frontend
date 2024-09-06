@@ -15,6 +15,7 @@ import AddFeed from "./pages/feed/AddFeed.tsx";
 import EmailVerification from "./pages/auth/EmailVerification.tsx";
 import BackgroundTemplate from "./pages/common/components/BackgroundTemplate.tsx";
 import Test from "./pages/auth/Test.tsx";
+import PrivateRoute from "./PrivateRoute.tsx";
 
 
 export const AppRoutes: React.FC = () => {
@@ -38,8 +39,9 @@ export const AppRoutes: React.FC = () => {
         </Route>
         <Route path="/user">
             <Route path="profile" element={<Profile/>}></Route>
-            <Route path="FollowList" element={<FollowList/>}></Route>
-            <Route path="PersonalInfo" element={<PersonalInfo/>}></Route>
+            <Route path="followList" element={<FollowList/>}></Route>
+
+            <Route path="personalInfo" element={<PrivateRoute><PersonalInfo/></PrivateRoute>}></Route>
         </Route>
         <Route path="/chat">
             <Route path="chatroomList" element={<ChatroomList/>}></Route>

@@ -43,10 +43,6 @@ export const axiosInstanceWithAccessToken = axios.create({
         'Content-Type': 'application/json',
     },
 });
-
-/**
- *
- */
 export const axiosInstanceWithFormData = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
@@ -66,7 +62,6 @@ export const axiosInstanceWithFormDataAndToken = axios.create({
 });
 
 let refreshingAvailable : boolean = true;
-
 
 axiosInstanceWithAccessToken.interceptors.request.use(
     function (config) {
@@ -92,7 +87,6 @@ axiosInstanceWithFormDataAndToken.interceptors.request.use(
         return Promise.reject(error);
     }
 )
-
 /**
  * 엔드포인트가 403에러만 내보낼 시 refreshingAvailable을 즉시 true로 만들면, 순환오류에 빠진다.
  * 그러므로 0.1초 뒤에 리프레시 요청 권한을 부여한다.

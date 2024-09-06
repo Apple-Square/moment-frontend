@@ -73,6 +73,9 @@ export const logoutThunk = createAsyncThunk(
     }
 );
 
+/**
+ * isRedirected는 로그인 안한 사람을 로그인페이지로 이동시킬 때 사용
+ */
 const initialState : AuthState = {
     user : {
         id : "",
@@ -117,7 +120,7 @@ const authSlice = createSlice({
         setAuthentication : (state , action) => {
             state.isAuthenticated = action.payload;
         },
-        setIsRedirect: (state, action) => {
+        setIsRedirected: (state, action) => {
             state.isRedirected = action.payload;
         },
         setLoading: (state, action) => {
@@ -175,5 +178,5 @@ const authSlice = createSlice({
             });
     }
 })
-export const { setUser, setToken,setUserAndToken, setAuthentication, setIsRedirect, setLoading, setError } = authSlice.actions;
+export const { setUser, setToken,setUserAndToken, setAuthentication, setIsRedirected, setLoading, setError } = authSlice.actions;
 export default authSlice.reducer;

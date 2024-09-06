@@ -2,9 +2,6 @@ import React, {useEffect} from 'react';
 import Footer from "../common/components/Footer.tsx";
 import {Container} from "react-bootstrap";
 import st from "../user/css/profile.module.css";
-import {axiosTestInstance} from "../../lib/axiosInstance.ts";
-import axios from "axios";
-import {objectDeepDigger} from "../../lib/deepLog.ts";
 import {logoutThunk} from "../../redux/slices/authSlice.ts";
 import {useAppDispatch, useAppSelector} from "../../redux/store/hooks.ts";
 const Profile:React.FC = () => {

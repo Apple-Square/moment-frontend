@@ -87,7 +87,7 @@ export const followCancelRequest = async (followeeId : string) : Promise<AxiosRe
 export const getProfileRequest = async (userId : string) : Promise<AxiosResponse<any, any> | AxiosError | Error> => {
     try {
         let response;
-        if(tokenManager().getToken() !== ""){
+        if(tokenManager.getToken() !== ""){
             response = await axiosInstanceWithAccessToken.get(`users/${userId}`);
         } else {
             response = await axiosInstance.get(`users/${userId}`);
@@ -103,7 +103,7 @@ export const getProfileRequest = async (userId : string) : Promise<AxiosResponse
 export const getFollowersRequest = async (userId : string) : Promise<AxiosResponse<any, any> | AxiosError | Error> => {
     try {
         let response;
-        if(tokenManager().getToken() !== ""){
+        if(tokenManager.getToken() !== ""){
             response = await axiosInstanceWithAccessToken.get(`users/${userId}/followers`);
         } else {
             response = await axiosInstance.get(`users/${userId}/followers`);
@@ -119,7 +119,7 @@ export const getFollowersRequest = async (userId : string) : Promise<AxiosRespon
 export const getFollowingsRequest = async (userId : string) : Promise<AxiosResponse<any, any> | AxiosError | Error> => {
     try {
         let response;
-        if(tokenManager().getToken() !== "") {
+        if(tokenManager.getToken() !== "") {
             response = await axiosInstanceWithAccessToken.get(`users/${userId}/followings`);
         } else {
             response = await axiosInstance.get(`users/${userId}/followings`);
