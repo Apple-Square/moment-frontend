@@ -4,7 +4,14 @@ import {refreshRequest} from "./pages/auth/function/authAxios.ts";
 import {getMeRequest} from "./pages/user/function/userAxios.tsx";
 import {setUserAndToken} from "./redux/slices/authSlice.ts";
 import {merge} from "chart.js/helpers";
+import {AxiosError, AxiosResponse} from "axios";
 
+/**
+ * 얘는 리로드했을 때 즉, AccessToken이 만료되었을때 즉시 RefreshToken으로부터 AccessToken을 받아오는 역할을 한다.
+ *
+ * @param children
+ * @constructor
+ */
 export const AuthLoader = ({children}) => {
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.auth);
@@ -16,17 +23,30 @@ export const AuthLoader = ({children}) => {
                 console.log(JSON.stringify(response, null, 2));
 
                 if (response?.status === 200 && response?.headers?.authorization) {
+                    // getMeRequest 호출
                     const userResponse = await getMeRequest();
                     console.log(JSON.stringify(userResponse, null, 2));
 
-                    if(userResponse === undefined){
-                        return;
+                    // 에러 객체 처리
+                    if (userResponse instanceof Error) {
+                        // 에러를 발생시킨 것이 AxiosError인 경우
+                        if (userResponse instanceof AxiosError) {
+                            console.error("AuthLoader :: AxiosError 발생:", userResponse.response);
+                        } else {
+                            console.error("AuthLoader :: Error 발생:", userResponse.message);
+                        }
+                        return; // 에러 발생 시 실행 중단
                     }
 
-                    dispatch(setUserAndToken({
-                        user: userResponse.data.user,
-                        token: response.headers.authorization,
-                    }));
+                    // userResponse가 AxiosResponse인지 확인
+                    if ((userResponse as AxiosResponse).data?.user) {
+                        dispatch(setUserAndToken({
+                            user: (userResponse as AxiosResponse).data.user,
+                            token: response.headers.authorization,
+                        }));
+                    } else {
+                        console.error("AuthLoader :: 유효하지 않은 사용자 데이터:", userResponse);
+                    }
                 }
             }
         };

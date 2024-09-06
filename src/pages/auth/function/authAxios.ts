@@ -1,4 +1,4 @@
-import {axiosInstance} from "../../../lib/axiosInstance.ts";
+import {axiosInstance, axiosInstanceWithAccessToken} from "../../../lib/axiosInstance.ts";
 import {LoginRequestDto, LoginResponseDto} from "../../../interface/AxiosInterface.ts";
 import {clearAllCookies} from "../../common/function/cookie.ts";
 import {JSONColor} from "../../../lib/deepLog.ts";
@@ -38,7 +38,7 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<
 */
 export const logoutRequest = async () : Promise<AxiosResponse<any, any> | undefined> => {
     try{
-        const response = await axiosInstance.post(`/auth/logout`);
+        const response = await axiosInstanceWithAccessToken.post(`/auth/logout`);
         console.log("logout 응답 :: " + JSONColor.stringify(response));
         clearAllCookies();
         return response;

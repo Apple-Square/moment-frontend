@@ -1,3 +1,7 @@
+import {AxiosError, isAxiosError} from "axios";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
+
 export const isError = (error: unknown): error is Error => {
     return error instanceof Error;
 };
@@ -45,3 +49,12 @@ export const setErrorName = (error: unknown, name: string): void => {
         (error as Record<string, unknown>).name = name;
     }
 };
+export const castError = (error: unknown): AxiosError | Error => {
+    if (isAxiosError(error)) {
+        return error;
+    }
+    if ((error as any) instanceof Error) {
+        return error as Error;  // Error로 반환
+    }
+    return new Error(String(error));
+}

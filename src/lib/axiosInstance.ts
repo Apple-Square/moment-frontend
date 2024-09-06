@@ -63,7 +63,9 @@ let refreshingAvailable : boolean = true;
 /**
  * 엔드포인트가 403에러만 내보낼 시 refreshingAvailable을 즉시 true로 만들면, 순환오류에 빠진다.
  * 그러므로 0.1초 뒤에 리프레시 요청 권한을 부여한다.
- *
+ * 인터셉터는 response가 왔을 때 작동한다.
+ * 403에러가 왔다면 리프레시 토큰을 요청하고, 리프레시 토큰을 성공적으로 받았다면 원래 요청을 다시 보낸다.
+ * 언제 403에러가 오느냐. 요청 도중에 액세스 토큰이 만료될 경우에 올 것이다. 그 상황에 대처한다.
  */
 axiosInstance.interceptors.response.use(
     function(response) {
@@ -87,13 +89,14 @@ axiosInstance.interceptors.response.use(
 
                     setTimeout(() => {
                         refreshingAvailable = true;
-                    }, 100); // 0.1초
+                    }, 60); // 0.06초
 
                     return axiosInstance.request(originalRequestConfig);
 
                 } catch (err) {
                     // window.location.href = `/auth/authMain`;
                     refreshingAvailable = true;
+                    //원래 요청이 실패했음을 호출한 곳으로 전달
                     return Promise.reject(error);
                 }
             }
