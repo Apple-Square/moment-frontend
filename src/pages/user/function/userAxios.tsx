@@ -12,6 +12,7 @@ import {castError} from "../../../lib/ErrorUtil.ts";
 
 export const getMeRequest = async () : Promise<AxiosResponse<any, any> | AxiosError | Error> => {
     try {
+        console.log("getMeRequest\n"+tokenManager.getToken());
         const response = await axiosInstanceWithAccessToken.get(`users/me`);
         console.log(`meRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
@@ -23,6 +24,7 @@ export const getMeRequest = async () : Promise<AxiosResponse<any, any> | AxiosEr
 
 export const updateMeRequest = async (key : string, value : string) : Promise<AxiosResponse<any, any> | AxiosError | Error> => {
     try {
+
         const response = await axiosInstanceWithAccessToken.patch(`users?${key}=${value}}`);
         console.log(`updateMeRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;

@@ -5,6 +5,7 @@ import {getMeRequest} from "./pages/user/function/userAxios.tsx";
 import {setUserAndToken} from "./redux/slices/authSlice.ts";
 import {merge} from "chart.js/helpers";
 import {AxiosError, AxiosResponse} from "axios";
+import {tokenManager} from "./lib/axiosInstance.ts";
 
 /**
  * 얘는 리로드했을 때 즉, AccessToken이 만료되었을때 즉시 RefreshToken으로부터 AccessToken을 받아오는 역할을 한다.
@@ -18,12 +19,19 @@ export const AuthLoader = ({children}) => {
 
     useEffect(() => {
         const fetchData = async () => {
+            console.log("AuthLoader :: 1");
+            console.log(JSON.stringify(auth, null, 2));
             if (!auth.isAuthenticated && !auth.token && !auth.loading) {
+                console.log("AuthLoader :: 2");
                 const response = await refreshRequest();
                 console.log(JSON.stringify(response, null, 2));
 
                 if (response?.status === 200 && response?.headers?.authorization) {
+
+                    console.log(response.headers.authorization);
+                    tokenManager.setToken(response.headers.authorization);
                     // getMeRequest 호출
+                    console.log(tokenManager.getToken());
                     const userResponse = await getMeRequest();
                     console.log(JSON.stringify(userResponse, null, 2));
 
