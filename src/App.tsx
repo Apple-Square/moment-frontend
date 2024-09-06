@@ -1,5 +1,6 @@
 import './App.css'
 import {AppRoutes} from "./AppRoutes.tsx";
+import {AuthLoader} from "./AuthLoader.tsx";
 
 
 
@@ -8,7 +9,9 @@ function App() {
 
   return (
     <>
+        <AuthLoader>
         <AppRoutes />
+        </AuthLoader>
     </>
   )
 }

@@ -1,8 +1,9 @@
 import {axiosInstance} from "../../../lib/axiosInstance.ts";
-import {LoginRequestDto, LoginResponseDto, LogoutRequestDto} from "../../../interface/AxiosInterface.ts";
+import {LoginRequestDto, LoginResponseDto} from "../../../interface/AxiosInterface.ts";
 import {clearAllCookies} from "../../common/function/cookie.ts";
 import {JSONColor} from "../../../lib/deepLog.ts";
 import {getErrorName, setErrorMessage} from "../../../lib/ErrorUtil.ts";
+import {AxiosResponse} from "axios";
 export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<LoginResponseDto | Error> => {
     try {
         console.log("login 요청 :: " + JSONColor.stringify(loginRequestDto,null,2));
@@ -35,7 +36,7 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<
             }
         }
 */
-export const logoutRequest = async () => {
+export const logoutRequest = async () : Promise<AxiosResponse<any, any> | undefined> => {
     try{
         const response = await axiosInstance.post(`/auth/logout`);
         console.log("logout 응답 :: " + JSONColor.stringify(response));
@@ -47,7 +48,7 @@ export const logoutRequest = async () => {
 
 }
 //아직 API가 제작이 안되었음
-export const refreshRequest = async () => {
+export const refreshRequest = async () : Promise<AxiosResponse<any, any> | undefined> => {
     try {
         const response = await axiosInstance.post("/auth/refresh");
         console.log("refresh 응답 :: " + JSONColor.stringify(response));

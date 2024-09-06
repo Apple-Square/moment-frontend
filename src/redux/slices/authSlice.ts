@@ -99,10 +99,20 @@ const authSlice = createSlice({
     //동기작업
     reducers: {
         setUser : (state, action) => {
-            state.user = action.payload;
+            state.user = {
+                ...state.user,
+                ...action.payload,
+            }
         },
         setToken : (state, action) => {
             state.token = action.payload;
+        },
+        setUserAndToken : (state, action) => {
+            state.user = {
+                ...state.user,
+                ...action.payload.user,
+            }
+            state.token = action.payload.token;
         },
         setAuthentication : (state , action) => {
             state.isAuthenticated = action.payload;
@@ -165,5 +175,5 @@ const authSlice = createSlice({
             });
     }
 })
-
+export const { setUser, setToken,setUserAndToken, setAuthentication, setIsRedirect, setLoading, setError } = authSlice.actions;
 export default authSlice.reducer;

@@ -14,7 +14,3 @@ export interface LoginResponseDto {
     },
     token : string
 }
-//아직 안정해짐
-export interface LogoutRequestDto {
-    refreshToken : string
-}

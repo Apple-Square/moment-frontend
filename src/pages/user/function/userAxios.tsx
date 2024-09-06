@@ -1,13 +1,17 @@
-import {axiosInstance, axiosInstanceWithFormData} from "../../../lib/axiosInstance.ts";
+import {
+    axiosInstance, axiosInstanceWithAccessToken,
+    axiosInstanceWithFormData,
+    axiosInstanceWithFormDataAndToken, tokenManager
+} from "../../../lib/axiosInstance.ts";
 import {objectDeepDigger} from "../../../lib/deepLog.ts";
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 
 
 
 
-export const getMeRequest = async () => {
+export const getMeRequest = async () : Promise<AxiosResponse<any, any> | undefined> => {
     try {
-        const response = await axiosInstance.get(`users/me`);
+        const response = await axiosInstanceWithAccessToken.get(`users/me`);
         console.log(`meRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -16,9 +20,9 @@ export const getMeRequest = async () => {
     }
 }
 
-export const updateMeRequest = async (key : string, value : string) => {
+export const updateMeRequest = async (key : string, value : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
-        const response = await axiosInstance.patch(`users?${key}=${value}}`);
+        const response = await axiosInstanceWithAccessToken.patch(`users?${key}=${value}}`);
         console.log(`updateMeRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -31,11 +35,11 @@ export const updateMeRequest = async (key : string, value : string) => {
  * @param file
  * @param userId 나의 아이디
  */
-export const updateProfileImageRequest = async (file : string | Blob, userId : string) => {
+export const updateProfileImageRequest = async (file : string | Blob, userId : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
         const formData = new FormData();
         formData.append('profileImage', file);
-        const response = await axiosInstanceWithFormData.put(`users/${userId}/profile-image`, formData);
+        const response = await axiosInstanceWithFormDataAndToken.put(`users/${userId}/profile-image`, formData);
         console.log(`updateProfileImageRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -44,9 +48,9 @@ export const updateProfileImageRequest = async (file : string | Blob, userId : s
     }
 }
 
-export const deleteProfileImageRequest = async (userId : string) => {
+export const deleteProfileImageRequest = async (userId : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
-        const response = await axiosInstanceWithFormData.delete(`users/${userId}/profile-image`);
+        const response = await axiosInstanceWithFormDataAndToken.delete(`users/${userId}/profile-image`);
         console.log(`deleteProfileImageRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -55,9 +59,9 @@ export const deleteProfileImageRequest = async (userId : string) => {
     }
 }
 
-export const followRequest = async (followeeId : string) => {
+export const followRequest = async (followeeId : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
-        const response = await axiosInstance.post(`users/${followeeId}/follow`);
+        const response = await axiosInstanceWithAccessToken.post(`users/${followeeId}/follow`);
         console.log(`followRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -66,9 +70,9 @@ export const followRequest = async (followeeId : string) => {
     }
 }
 
-export const followCancelRequest = async (followeeId : string) => {
+export const followCancelRequest = async (followeeId : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
-        const response = await axiosInstance.delete(`users/${followeeId}/follow`);
+        const response = await axiosInstanceWithAccessToken.delete(`users/${followeeId}/follow`);
         console.log(`followCancelRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -77,9 +81,14 @@ export const followCancelRequest = async (followeeId : string) => {
     }
 }
 
-export const getProfileRequest = async (userId : string) => {
+export const getProfileRequest = async (userId : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
-        const response = await axiosInstance.get(`users/${userId}`);
+        let response;
+        if(tokenManager().getToken() !== ""){
+            response = await axiosInstanceWithAccessToken.get(`users/${userId}`);
+        } else {
+            response = await axiosInstance.get(`users/${userId}`);
+        }
         console.log(`getUserInfoRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -88,9 +97,14 @@ export const getProfileRequest = async (userId : string) => {
     }
 }
 
-export const getFollowersRequest = async (userId : string) => {
+export const getFollowersRequest = async (userId : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
-        const response = await axiosInstance.get(`users/${userId}/followers`);
+        let response;
+        if(tokenManager().getToken() !== ""){
+            response = await axiosInstanceWithAccessToken.get(`users/${userId}/followers`);
+        } else {
+            response = await axiosInstance.get(`users/${userId}/followers`);
+        }
         console.log(`getFollowersRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -99,9 +113,14 @@ export const getFollowersRequest = async (userId : string) => {
     }
 }
 
-export const getFollowingsRequest = async (userId : string) => {
+export const getFollowingsRequest = async (userId : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
-        const response = await axiosInstance.get(`users/${userId}/followings`);
+        let response;
+        if(tokenManager().getToken() !== "") {
+            response = await axiosInstanceWithAccessToken.get(`users/${userId}/followings`);
+        } else {
+            response = await axiosInstance.get(`users/${userId}/followings`);
+        }
         console.log(`getFollowingsRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -110,8 +129,8 @@ export const getFollowingsRequest = async (userId : string) => {
     }
 }
 
-//미완성
-export const getUserPostsRequest = async (userId : string) => {
+//미완성 아직 없음!!!!!!!
+export const getUserPostsRequest = async (userId : string) : Promise<AxiosResponse<any, any> | undefined | unknown> => {
     try {
         const response = await axiosInstance.get(`users/${userId}/posts`);
         console.log(`getUserPostsRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
