@@ -9,7 +9,7 @@ import PersonalInfo from "../../pages/user/PersonalInfo.tsx";
 import UpdatePwd from "../../pages/auth/UpdatePwd.tsx";
 import ChatroomList from "../../pages/chat/ChatroomList.tsx";
 import Chatroom from "../../pages/chat/Chatroom.tsx";
-import FeedList from "../../pages/feed/FeedList.tsx";
+import MainFeed from "../../pages/feed/MainFeed.tsx";
 import FeedDetail from "../../pages/feed/FeedDetail.tsx";
 import ThreeColumnFeedList from "../../pages/feed/ThreeColumnFeedList.tsx";
 import AddFeed from "../../pages/feed/AddFeed.tsx";
@@ -26,7 +26,7 @@ export const AppRoutes: React.FC = () => {
     );
 
     return (<Routes>
-        <Route path="/" element={<FeedList/>}></Route>
+        <Route path="/" element={<MainFeed/>}></Route>
         <Route path="/auth" element={<AuthLayout />}>
             <Route path="authMain" element={<AuthMain/>}></Route>
             <Route path="findUserId" element={<FindUserId/>}></Route>

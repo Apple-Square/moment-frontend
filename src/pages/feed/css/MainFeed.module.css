@@ -1,0 +1,39 @@
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 12vh;
+}
+
+.viewer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.headerRow,
+.navRow {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    z-index: 100;
+    flex-shrink: 0;
+}
+
+.headerRow {
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.navRow {
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
