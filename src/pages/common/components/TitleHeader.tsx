@@ -8,7 +8,7 @@ const TitleHeader = () => {
                 <h1>monent</h1>
             </div>
             <div className={`${styles.searchBtn}`}>
-                <SvgSearch className={`${styles.SearchBtnPath}`} fill='gray' />
+                <SvgSearch fill='gray' />
             </div>
         </div>
     );

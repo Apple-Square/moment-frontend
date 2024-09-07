@@ -24,7 +24,6 @@ const MainFeed: React.FC = () => {
                 </Col>
             </Row>
         </Container>
-
     );
 };
 

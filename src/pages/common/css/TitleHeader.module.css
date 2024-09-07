@@ -4,13 +4,14 @@
     display: flex;
     justify-content: space-between; /* 좌우 배치 조정 */
     align-items: center;
-    padding: 0 5%;
+    /* padding: 0 5%; */
     z-index: 100;
     background-color: white;
     /* box-shadow: 0 0 px 5px rgba(0, 0, 0, 0.1); */
 }
 
 .title h1 {
+    padding: 0 1rem;
     margin: 0;
     font-family: 'Praise', cursive;
     font-size: 2.5rem;
@@ -19,10 +20,14 @@
 }
 
 .searchBtn {
-    width: 10%;
-    aspect-ratio: 1/1;
+    width: 20%;
+    height: 12vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .searchBtn>* {
-    width: 100%;
+    max-width: 50%;
+    max-height: 50%;
 }

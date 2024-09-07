@@ -1,22 +1,47 @@
+import React from 'react';
 import styles from '../css/NaviBar.module.css';
+import SvgChat from './SvgChat';
+import SvgHome from './SvgHome';
+import SvgNew from './SvgNew';
+import SvgProfile from './SvgProfile';
+import SvgVideopost from './SvgVideopost';
+import { useNavigate } from 'react-router-dom';
 
-const NaviBar = () => {
+const NaviBar:React.FC = () => {
+    const navi = useNavigate();
+
+    const handleClickHome = () => {
+        navi('/');        
+    }
+    const handleClickChat = () => {
+        navi('/chat/');
+    }
+    const handleClickNewPost = () => {
+        navi('/feed/AddFeed');
+    }
+    const handleClickVideo = () => {
+        navi('/');
+    }
+    const handleClickProfile = () => {
+        navi('auth/');
+    }
+
     return (
         <div className={`${styles.naviBar}`}>
             <div>
-                home
+                <SvgHome fill='gray' onClick={handleClickHome} />
             </div>
             <div>
-                chat
+                <SvgChat fill='gray' onClick={handleClickChat} />
             </div>
             <div>
-                add
+                <SvgNew fill='gray' onClick={handleClickNewPost} />
             </div>
             <div>
-                video
+                <SvgVideopost stroke='gray' onClick={handleClickVideo} />
             </div>
             <div>
-                profile
+                <SvgProfile fill='gray' onClick={handleClickProfile} />
             </div>
         </div>
     );
