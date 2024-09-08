@@ -4,6 +4,8 @@
     align-items: center;
     flex-direction: column;
     padding-top: 12vh;
+    max-width: 768px !important;
+    width: 100%;
 }
 
 .viewer {
@@ -26,7 +28,7 @@
     flex-shrink: 0;
 }
 
-.headerRow {
+.headerRow {        
     top: 0;
     left: 0;
     right: 0;
