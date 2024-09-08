@@ -8,9 +8,19 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {castError} from "../../../lib/ErrorUtil.ts";
 
 
+interface UserProfile {
+    id: string;
+    nickname: string;
+    profileImage: string;
+}
 
+interface GetMeResponse {
+    timeStamp: string;
+    message: string;
+    user: UserProfile;
+}
 
-export const getMeRequest = async () : Promise<AxiosResponse<any, any> | AxiosError | Error> => {
+export const getMeRequest = async () : Promise<AxiosResponse<GetMeResponse> | AxiosError | Error> => {
     try {
         console.log("getMeRequest\n"+tokenManager.getToken());
         const response = await axiosInstanceWithAccessToken.get(`users/me`);

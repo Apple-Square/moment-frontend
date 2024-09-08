@@ -1,7 +1,7 @@
 import {useAppDispatch, useAppSelector} from "./redux/store/hooks.ts";
 import {useEffect} from "react";
 import {refreshRequest} from "./pages/auth/function/authAxios.ts";
-import {getMeRequest} from "./pages/user/function/userAxios.tsx";
+import {getMeRequest} from "./pages/user/function/userAxiosRequest.tsx";
 import {setUserAndToken} from "./redux/slices/authSlice.ts";
 import {merge} from "chart.js/helpers";
 import {AxiosError, AxiosResponse} from "axios";
