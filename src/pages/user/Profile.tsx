@@ -41,10 +41,11 @@ const Profile: React.FC = () => {
 
 
     return (
-        <Container style={styles.container}>
+        // <Container style={styles.container}>
+        <>
             <ProfileNavBar />
             <ProfileHeader
-                style={styles.headerWrapper}
+                // style={styles.headerWrapper}
                 username={userData.username}
                 name={userData.name}
                 bio={userData.bio}
@@ -55,25 +56,26 @@ const Profile: React.FC = () => {
             />
             <ProfilePostType onSelect={handleSelectType} />
             <ProfilePostGrid posts={getPostData()} selectedType={selectedType} />
-            <Footer />
-        </Container>
+        </>
+        // </Container>
     );
 };
 
 export default Profile;
 
-const styles: {[key : string] : React.CSSProperties} = {
-    container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
-    flexDirection: 'column',
-    width: '100vw',
-    height: '100%',
-    padding: '0 0px', /* 내부 패딩 설정 */
-    overflowY: 'visible',
-    overflowX: 'visible',
-    boxSizing: "border-box",
-    position:"static",
-    },
-}
+// const styles: {[key : string] : React.CSSProperties} = {
+//     container: {
+//     display: 'flex',
+//     justifyContent: 'space-between',
+//     alignItems: 'stretch',
+//     flexDirection: 'column',
+//     maxWidth: "768px",
+//     width: '100vw',
+//     height: '100%',
+//     padding: '0 0px', /* 내부 패딩 설정 */
+//     overflowY: 'visible',
+//     overflowX: 'visible',
+//     boxSizing: "border-box",
+//     position:"static",
+//     },
+// }

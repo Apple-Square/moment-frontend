@@ -16,13 +16,19 @@ import EmailVerification from "./pages/auth/EmailVerification.tsx";
 import BackgroundTemplate from "./pages/common/components/BackgroundTemplate.tsx";
 import Test from "./pages/auth/Test.tsx";
 import PrivateRoute from "./PrivateRoute.tsx";
+import {Footer} from "./pages/common/components/Footer.tsx";
+import {Container} from "react-bootstrap";
+import React from "react";
 
 
 export const AppRoutes: React.FC = () => {
 
     const AuthLayout: React.FC = () => (
         <BackgroundTemplate>
-            <Outlet />
+            <Container style={styles.container}>
+                <Outlet />
+                <Footer/>
+            </Container>
         </BackgroundTemplate>
     );
 
@@ -52,4 +58,21 @@ export const AppRoutes: React.FC = () => {
             <Route path="addFeed" element={<AddFeed/>}></Route>
         </Route>
     </Routes>)
+}
+
+const styles: {[key : string] : React.CSSProperties} = {
+    container: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        flexDirection: 'column',
+        maxWidth: "768px",
+        width: '100vw',
+        height: '100%',
+        padding: '0 0px', /* 내부 패딩 설정 */
+        overflowY: 'visible',
+        overflowX: 'visible',
+        boxSizing: "border-box",
+        position:"static",
+    },
 }
