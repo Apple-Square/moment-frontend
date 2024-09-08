@@ -22,8 +22,8 @@ const Profile: React.FC = () => {
         posts: 4,
         followers: 106,
         following: 441,
-        profilePicUrl: 'path_to_profile_picture.jpg', // Replace with actual URL
-        postImages: ['cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg'], // Replace with actual post images
+        profilePicUrl: 'path_to_profile_picture.jpg',
+        postImages: ['cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg','cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg','cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg','cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg','cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg','cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg','cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg','cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg','cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg'],
         videos: ['video1.mp4', 'video2.mp4'], // 비디오 데이터 추가
         favorites: ['fav1.jpg', 'fav2.jpg'], // 즐겨찾기 데이터 추가
     };

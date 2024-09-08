@@ -73,6 +73,6 @@ const styles: {[key : string] : React.CSSProperties} = {
         overflowY: 'visible',
         overflowX: 'visible',
         boxSizing: "border-box",
-        position:"static",
+        position:"relative",
     },
 }
