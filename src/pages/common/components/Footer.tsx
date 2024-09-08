@@ -3,11 +3,11 @@ import {Col, Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {FaHome, FaComments, FaUser, FaPlus, FaVideo} from "react-icons/fa";
 import st from "../css/footer.module.css";
-const Footer:React.FC = () => {
+export const Footer:React.FC = () => {
 
     return (
         <footer id="footer" className={`${st.footer}`}>
-            <Container>
+            <Container fluid>
                 <Row>
                    <Col>
                        <Link to="/">
@@ -40,5 +40,3 @@ const Footer:React.FC = () => {
     );
 
 };
-
-export default Footer;
