@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    margin: 0 auto;
+    border: solid 1px;
+    border-color: whitesmoke;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.col {
+    width: 100%;
+}
+
+.textArea {
+    flex: 1;
+}
+
+.textArea>* {
+    height: 100%;
+}
+
+.buttonBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: medium;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    background-color: lightgray;
+    color: black;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: auto;
+}

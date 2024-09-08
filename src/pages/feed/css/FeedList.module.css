@@ -1,0 +1,27 @@
+.container {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center; 
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+}
+
+.feedRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.feedRow>* {
+    width: 100%;
+}
+
+.listMargin {
+    width: 100vw;
+    height: 12vh;
+}

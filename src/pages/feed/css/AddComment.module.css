@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border-top: solid lightgray 1px;
+    border-bottom: solid lightgray 1px;     
+}
+
+.container>* {
+    width: 100%;
+    align-items: center;
+}
+
+.commentInput {
+    width: 100%;
+}
+
+.commentInput>* {
+    display: flex;
+    width: 100%;
+    resize: none;
+    border: none;
+    font-size: small;
+}
+
+.commentInput>textarea:focus {
+    outline: none;
+}
+
+.submitBtn {
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+    white-space: nowrap;
+    border: none;
+    background: none;
+}
