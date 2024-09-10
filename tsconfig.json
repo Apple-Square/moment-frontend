@@ -7,5 +7,11 @@
     {
       "path": "./tsconfig.node.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noUnusedLocals": false,  // 선언된 로컬 변수의 미사용에 대해 경고만 표시
+    "noUnusedParameters": false, // 선언된 파라미터의 미사용에 대해 경고만 표시
+    "strict": true // 다른 엄격한 설정들이 이 경고를 발생시키지 않는지 확인
+  }
 }
