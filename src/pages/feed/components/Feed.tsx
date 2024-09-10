@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import styles from "../css/Feed.module.css";
 import CommentList from './CommentList';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+// import SwiperCore from 'swiper';
+import 'swiper/css';
 // import { Col, Container, Row } from 'react-bootstrap';
 
 interface FeedProps {
     profileImg: string
     author: string;
     location: string;
-    img: string;
+    images: string[];
     contents: string;
     likes: number;
     comments: number;
@@ -16,7 +19,7 @@ interface FeedProps {
     timeAgo: string;
 }
 
-const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents, likes, comments, shares, timeAgo }) => {
+const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, contents, likes, comments, shares, timeAgo }) => {
     const [visibleComment, setVisibleComment] = useState<boolean>(false);
     const navi = useNavigate();
     const locationPath = useLocation();
@@ -46,7 +49,23 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents
                 </div>
             </div>
             <div className={styles.imageContainer}>
-                <img className={styles.contentImg} src={img} alt="contents" />
+                {/* <img className={styles.contentImg} src={img} alt="contents" /> */}
+                <Swiper
+                    className={styles.imgSlide}
+                    style={{ position: 'absolute' }}      // css bug point
+                    slidesPerView={1}
+                    onSlideChange={() => console.log('slide change')}
+                    onSwiper={(swiper) => {
+                        console.log(swiper);
+                    }}
+                >
+                    {images && images.map((img, index) => (
+                        <SwiperSlide key={index}>
+                        <img className={styles.contentImg} src={img} />
+                    </SwiperSlide>
+                    ))}
+                    
+                </Swiper>
             </div>
             <div className={styles.actions}>
                 <span className={styles.likes}>👍 {likes}</span>
