@@ -14,7 +14,7 @@ type ProfileHeaderProps = {
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ username, name, bio, posts, followers, following, profilePicUrl,style }) => {
     return (
         <div style={{ ...styles.profileHeader, ...style }}>
-            <img src={profilePicUrl} alt="Profile" style={styles.profilePic} />
+            <img src={`${import.meta.env.BASE_URL}images/pikachu.jpg`} alt="Profile" style={styles.profilePic} />
             <div>
                 <h2>{username}</h2>
                 <p>{name}</p>

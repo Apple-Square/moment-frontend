@@ -14,6 +14,7 @@ interface UserProfile {
     profileImage: string;
 }
 
+
 interface GetMeResponse {
     timeStamp: string;
     message: string;

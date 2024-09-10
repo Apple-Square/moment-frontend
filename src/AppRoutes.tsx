@@ -63,10 +63,11 @@ export const AppRoutes: React.FC = () => {
 const styles: {[key : string] : React.CSSProperties} = {
     container: {
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'start',
         alignItems: 'stretch',
         flexDirection: 'column',
         maxWidth: "768px",
+        minHeight: '100vh',
         width: '100vw',
         height: '100%',
         padding: '0 0px', /* 내부 패딩 설정 */
