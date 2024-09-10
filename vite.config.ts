@@ -11,5 +11,6 @@ export default defineConfig({
   plugins: [react(), svgr()],
   define: {
     'process.env': process.env
-  }
+  },
+  publicDir: 'public', // Ensure this is correct if you have a custom public directory
 })

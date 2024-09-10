@@ -14,7 +14,9 @@ module.exports = {
       'warn',
       { allowConstantExport: true }
     ],
-    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',//any 사용 가능
+    '@typescript-eslint/no-unused-vars': 'warn',//unused vars 감지 X
+
 
   },
 }
