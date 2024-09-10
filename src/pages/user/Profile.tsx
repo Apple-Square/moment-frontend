@@ -1,67 +1,71 @@
 import React, {useEffect, useState} from 'react';
 import {ProfileHeader} from "./component/ProfileHeader.tsx";
 import {ProfilePostGrid} from "./component/ProfilePostGrid.tsx";
-import {Container} from "react-bootstrap";
 import {ProfileNavBar} from "./component/ProfileNavBar.tsx";
-import {Footer} from "../common/components/Footer.tsx";
 import {ProfilePostType} from "./component/ProfilePostType.tsx";
 import {useLocation} from "react-router-dom";
 import {useAppSelector} from "../../redux/store/hooks.ts";
-import {getProfileRequest, UserPage} from "./function/userAxiosRequest.tsx";
+import {getProfileRequest, UserPage, UserPagePocket} from "./function/userAxiosRequest.tsx";
 import {useImmer} from "use-immer";
-import {AxiosError, AxiosResponse} from "axios";
 import {JSONColor} from "../../lib/deepLog.ts";
 
 
 const Profile: React.FC = () => {
 
-    const [selectedType, setSelectedType] = useState<string>('posts'); // 선택된 타입 저장
+    const [selectedType, setSelectedType] = useState<string>('posts'); // 보여줄 리스트의 타입 저장
+    const [profileImage, setProfileImage] = useState<string | null>(null); // 크롭 후 프로필 이미지 저장
+    const [isCropping, setIsCropping] = useState(false); // 크롭 모드 제어
+    const [uploadedImage, setUploadedImage] = useState<string | null>(null); // 업로드된 이미지
 
     const location = useLocation();
     const viewerId = location.state as string || "X03EPGPnrqM34he";
     const myId = useAppSelector(state => state.auth.user.id);
 
-    const [userPage,updateUserPage] = useImmer({
-        user : {
-            id : "",
-            nickname : "",
-            regDate : "",
-            birth : "",
-            gender : "",
-            address : "",
-            intro : "",
-            profileImage : "",
-        },
-        postCount : "",
-        followerCount : "",
-        followingCount : "",
-        followed: false
-    })
+    const [userPagePocket,updateUserPagePocket] = useImmer({
+        userPage : {
+            user : {
+                id : "",
+                nickname : "",
+                regDate : "",
+                birth : "",
+                gender : "",
+                address : "",
+                intro : "",
+                profileImage : "",
+            },
+            postCount : "",
+            followerCount : "",
+            followingCount : "",
+            followed: false
+        }
+    });
 
-    const fetchUserData = async () => {
-
-        const response : AxiosResponse<UserPage> | AxiosError | Error = await getProfileRequest(viewerId);
-        if (response instanceof Error || response instanceof AxiosError) {
-            console.error("프로필 정보를 가져오는 중 에러 발생:", response.message);
+    const fetchAndSetUserData = async () : Promise<void> => {
+    try{
+        const data : UserPagePocket | Error = await getProfileRequest(viewerId);
+        if (data instanceof Error) {
+            console.error("프로필 정보를 가져오는 중 에러 발생:", data.message);
             return;
         }
-        console.log(`프로필 정보를 가져오는 중 성공: ${JSONColor.stringify(response, null, 2)}`);
-        updateUserPage(draft => {
-            draft.user = response.data.user;
-            draft.postCount = response.data.postCount;
-            draft.followerCount = response.data.followerCount;
-            draft.followingCount = response.data.followingCount;
-            draft.followed = response.data.followed;
-        })
+        console.log(`프로필 정보를 가져오는 중 성공: ${JSONColor.stringify(data, null, 2)}`);
+        updateUserPagePocket(draft => {
+            draft.userPage = data.userPage;
+        });
+    } catch (error) {
+        console.error("프로필 정보를 가져오는 중 에러 발생:", error);
+    }
     }
 
+    useEffect(()=>{
+        console.log(JSON.stringify(userPagePocket, null, 2));
+    })
     useEffect(() => {
         //유저 페이지가 있거나 내가 없으면 탈출
-        if(userPage.user.id !== "" || myId === ""){
+        if(userPagePocket?.userPage?.user?.id !== "" || myId === ""){
             return;
         }
-        fetchUserData();
-    }, [userPage,myId]);
+        void fetchAndSetUserData();
+    }, [userPagePocket,myId]);
 
     const handleSelectType = (type: string) => {
         setSelectedType(type); // 선택된 타입 업데이트
@@ -125,13 +129,7 @@ const Profile: React.FC = () => {
             <ProfileNavBar />
             <ProfileHeader
                 // style={styles.headerWrapper}
-                username={userData.username}
-                name={userData.name}
-                bio={userData.bio}
-                posts={userData.posts}
-                followers={userData.followers}
-                following={userData.following}
-                profilePicUrl={userData.profilePicUrl}
+                userPage={userPagePocket?.userPage}
             />
             <ProfilePostType onSelect={handleSelectType} />
             <ProfilePostGrid posts={getPostData()} selectedType={selectedType} />

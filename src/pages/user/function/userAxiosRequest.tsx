@@ -95,6 +95,9 @@ export const followCancelRequest = async (followeeId : string) : Promise<AxiosRe
     }
 }
 
+export interface UserPagePocket {
+    userPage : UserPage;
+}
 export interface UserPage {
     user : {
         id : string,
@@ -112,7 +115,7 @@ export interface UserPage {
     followed : boolean
 }
 
-export const getProfileRequest = async (userId : string) : Promise<AxiosResponse<UserPage> | Error> => {
+export const getProfileRequest = async (userId : string) : Promise<UserPagePocket | Error> => {
     try {
         let response;
         if(tokenManager.getToken() !== ""){
@@ -121,7 +124,7 @@ export const getProfileRequest = async (userId : string) : Promise<AxiosResponse
             response = await axiosInstance.get(`users/${userId}`);
         }
         console.log(`getUserInfoRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
-        return response;
+        return response.data;
     } catch (error) {
         console.error(`getUserInfoRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
