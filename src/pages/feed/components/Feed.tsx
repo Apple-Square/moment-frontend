@@ -32,15 +32,15 @@ interface FeedProps {
 
 const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, contents, likes, comments, shares, timeAgo }) => {
     const [visibleComment, setVisibleComment] = useState<boolean>(false);
-    const [liked, setLiked] = useState<boolean>(false);
     const [slidePosition, setSlidePosition] = useState<number>(0);
+    const [liked, setLiked] = useState<boolean>(false);
 
     const navi = useNavigate();
     const locationPath = useLocation();
     const pagination = {
         clickable: false,
         renderBullet: function (index:number, className:string) {
-          return `<span className="${className}"></span>`;
+          return `<span class="${className}"></span>`;
         },
     };
 
@@ -55,12 +55,6 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
     const handleClickComment = () => {
         // setVisibleComment(!visibleComment);
         navi('/feed/FeedDetail');   // navi point
-    }
-
-    const handleClickLike = () => {
-        setLiked(!liked);
-        // post like (liked ? 1 : -1)
-        // get like
     }
 
     const handleTouchStart = (e: React.TouchEvent) => {
@@ -96,6 +90,11 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
             }
         }
     };
+    const handleClickLike = () => {
+        setLiked(!liked);
+        // post like (liked ? 1 : -1)
+        // get like
+    }
 
     return (
         <div className={styles.container}>
@@ -116,7 +115,7 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
                     pagination={pagination}
                     modules={[Pagination]}
                     slidesPerView={1}
-                    onSlideChange={() => console.log('slide change')}
+                    // onSlideChange={() => console.log('slide change')}
                     onSwiper={(swiper) => {
                         console.log(swiper);
                     }}
@@ -130,10 +129,15 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
                 </Swiper>
             </div>
             <div className={`${styles.actions} px-1`}>
-                <span className={styles.likes}><SvgLike className={styles.likeBtn} onClick={handleClickLike} style={{
-                                                                                        "width": "1rem",
-                                                                                        "height": "auto"
-                                                                                    }} fill={liked ? "blue" : "black"}/> {likes}</span>
+                <span className={styles.likes}>
+                    <SvgLike 
+                        className={styles.likeBtn} 
+                        onClick={handleClickLike} 
+                        style={{ "width": "1rem", "height": "auto" }} 
+                        fill={liked ? "blue" : "black"}
+                    /> 
+                    {likes}
+                </span>
                 <span className={styles.comments} onClick={handleClickComment}>💬 {comments}</span>
                 <span className={styles.shares}>↗️ {shares}</span>
                 <span className={styles.timeAgo}>{timeAgo}</span>
