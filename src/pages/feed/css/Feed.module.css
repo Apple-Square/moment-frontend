@@ -7,7 +7,8 @@
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* shadow */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    /* shadow */
 }
 
 .header {
@@ -47,9 +48,18 @@
 .imageContainer {
     width: 100%;
     position: relative;
-    padding-top: 100%; /* 1:1 Aspect Ratio */
+    padding-top: 100%;
+    /* 1:1 Aspect Ratio */
     overflow: hidden;
     background-color: darkgray;
+}
+
+.imgSlide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .contentImg {
@@ -61,12 +71,16 @@
     object-fit: cover;
 }
 
-.likes, .comments, .shares, .timeAgo {
+.likes,
+.comments,
+.shares,
+.timeAgo {
     margin-right: 15px;
 }
 
 .timeAgo {
-    margin-left: auto; /* 오른쪽 끝으로 정렬 */
+    margin-left: auto;
+    /* 오른쪽 끝으로 정렬 */
     color: gray;
 }
 
@@ -75,4 +89,19 @@
     font-size: 1em;
     width: 100%;
     /* background-color: chartreuse; */
+}
+
+:global(.swiper-pagination-bullet) {
+    width: calc(100% / 3);
+    margin: 0;
+    line-height: 40px;
+    width: 12px;
+    height: 12px;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+:global(.swiper-pagination-bullet-active) {
+    background-color: rgba(255,255,255,0.5 ) !important;
+    /* 활성화된 dot의 색상 */
 }
