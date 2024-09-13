@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Select, {SingleValue} from "react-select";
 import { Col } from "react-bootstrap";
 import "../css/bithDaySelector.css";
-interface Option {
+
+// 연도 생성 함수
+interface OptionType {
     value: number;
     label: string;
 }
-// 연도 생성 함수
 const generateYears = () => {
     const currentYear = new Date().getFullYear();
     return Array.from({ length: 100 }, (_, i) => ({
@@ -33,19 +34,19 @@ const generateDays = () => {
 
 
 const BirthdaySelector: React.FC = () => {
-    const [selectedYear, setSelectedYear] = useState<SingleValue<Option>>(null);
-    const [selectedMonth, setSelectedMonth] = useState<SingleValue<Option>>(null);
-    const [selectedDay, setSelectedDay] = useState<SingleValue<Option>>(null);
+    const [selectedYear, setSelectedYear] = useState<SingleValue<OptionType>>(null);
+    const [selectedMonth, setSelectedMonth] = useState<SingleValue<OptionType>>(null);
+    const [selectedDay, setSelectedDay] = useState<SingleValue<OptionType>>(null);
 
-    const handleYearChange = (selectedOption: SingleValue<Option>) => {
+    const handleYearChange = (selectedOption: SingleValue<OptionType>) => {
         setSelectedYear(selectedOption);
     };
 
-    const handleMonthChange = (selectedOption: SingleValue<Option>) => {
+    const handleMonthChange = (selectedOption: SingleValue<OptionType>) => {
         setSelectedMonth(selectedOption);
     };
 
-    const handleDayChange = (selectedOption: SingleValue<Option>) => {
+    const handleDayChange = (selectedOption: SingleValue<OptionType>) => {
         setSelectedDay(selectedOption);
     };
 

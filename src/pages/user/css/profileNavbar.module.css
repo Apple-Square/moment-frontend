@@ -1,0 +1,24 @@
+.navbarTop {
+    position: static !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right : 10px;
+}
+
+@media (min-width: 768px) {
+    .navbarTop {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbarTop {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+}

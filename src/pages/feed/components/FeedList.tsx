@@ -1,6 +1,6 @@
 import React from 'react';
-import Feed from './components/Feed';
-import styles from "./css/FeedList.module.css";
+import Feed from './Feed';
+import styles from "../css/FeedList.module.css";
 import { Col, Container, Row } from "react-bootstrap";
 
 //dummy data
@@ -64,10 +64,10 @@ const feedData = [
 
 const FeedList: React.FC = () => {
     return (
-        <Container className={`${styles.container} p-0`}>
+        <Container className={`${styles.container} px-0`}>
             {feedData.map((feed, index) => (
-                <Row key={index} className={`${styles.feedRow} mb-3 px-0`}>
-                    <Col xs={12} md={8} lg={4} className='p-0'>
+                <Row key={index} className={`${styles.feedRow} px-0`}>
+                    <Col className='p-0'>
                         <Feed
                             profileImg={feed.profileImg}
                             author={feed.author}
@@ -83,6 +83,7 @@ const FeedList: React.FC = () => {
                 </Row>
             )
             )}
+            <div className={`${styles.listMargin}`}></div>
         </Container>
 
     );

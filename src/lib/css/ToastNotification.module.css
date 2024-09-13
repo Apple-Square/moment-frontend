@@ -1,0 +1,26 @@
+.popup {
+    /* 스타일을 여기에 추가 */
+}
+
+.icon {
+    /* 스타일을 여기에 추가 */
+}
+
+.swal2HtmlContainer {
+    /* 스타일을 여기에 추가 */
+}
+
+.swal2Actions {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*margin-left: 10% !important;*/
+}
+
+.swal2ConfirmButton {
+    /*margin-right: 10% !important;*/
+    /*margin-left: 10% !important;*/
+}
+
+.swal2CancelButton {
+    /*margin-right: 10% !important;*/
+}
