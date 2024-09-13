@@ -3,6 +3,8 @@ import styles from "../css/Feed.module.css";
 import CommentList from './CommentList';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules'; 
+import 'swiper/css/pagination';
 // import SwiperCore from 'swiper';
 import 'swiper/css';
 // import { Col, Container, Row } from 'react-bootstrap';
@@ -23,6 +25,12 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
     const [visibleComment, setVisibleComment] = useState<boolean>(false);
     const navi = useNavigate();
     const locationPath = useLocation();
+    const pagination = {
+        clickable: false,
+        renderBullet: function (index:number, className:string) {
+          return '<span class="' + className + '"></span>';
+        },
+    };
 
     useEffect(() => {
         if (locationPath.pathname === '/feed/FeedDetail') {
@@ -53,6 +61,8 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
                 <Swiper
                     className={styles.imgSlide}
                     style={{ position: 'absolute' }}      // css bug point
+                    pagination={pagination}
+                    modules={[Pagination]}
                     slidesPerView={1}
                     onSlideChange={() => console.log('slide change')}
                     onSwiper={(swiper) => {
