@@ -34,13 +34,13 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
     const [visibleComment, setVisibleComment] = useState<boolean>(false);
     const [liked, setLiked] = useState<boolean>(false);
     const [slidePosition, setSlidePosition] = useState<number>(0);
-    
+
     const navi = useNavigate();
     const locationPath = useLocation();
     const pagination = {
         clickable: false,
         renderBullet: function (index:number, className:string) {
-          return `<span className="${className}">${index}</span>`;
+          return `<span className="${className}"></span>`;
         },
     };
 
