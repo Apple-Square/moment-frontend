@@ -3,22 +3,25 @@
   justify-content: center; /* 가로 방향 중앙 정렬 */
   align-items: center; /* 세로 방향 중앙 정렬 */
   min-width: 375px;
-  min-height: 667px;
-  width:100vw;
-  height:100vh;
+  min-height: 100vh;
+  width:100%;
+  height: auto;
+  max-width: 768px;
 }
 
 html, body {
   min-width: 375px;
-  min-height: 667px;
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  max-width: 768px;
+  width: 100%;
+  height: auto;
   margin: 0 auto; /* 수평 중앙 정렬 */
-  padding: 0;
   box-sizing: border-box;
 
   display: flex;
   justify-content: center; /* 가로 방향 중앙 정렬 */
   align-items: center; /* 세로 방향 중앙 정렬 */
-  overflow: auto; /* 내용이 넘칠 경우 스크롤바 표시 */
+}
+body {
+  padding: 0 0 10vh 0;
 }

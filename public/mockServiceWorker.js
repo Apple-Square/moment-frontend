@@ -8,7 +8,11 @@
  * - Please do NOT serve this file on production.
  */
 
+<<<<<<< HEAD
 const PACKAGE_VERSION = '2.3.5'
+=======
+const PACKAGE_VERSION = '2.4.3'
+>>>>>>> a5ef63165aba40a42afd1a8e88ba31fdb012ee3e
 const INTEGRITY_CHECKSUM = '26357c79639bfa20d64c0efca2a87423'
 const IS_MOCKED_RESPONSE = Symbol('isMockedResponse')
 const activeClientIds = new Set()

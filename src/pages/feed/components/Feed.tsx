@@ -3,6 +3,12 @@ import styles from "../css/Feed.module.css";
 import CommentList from './CommentList';
 import Comment from './Comment';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules'; 
+import 'swiper/css/pagination';
+// import SwiperCore from 'swiper';
+import 'swiper/css';
+import SvgLike from './SvgLike';
 // import { Col, Container, Row } from 'react-bootstrap';
 
 // dummy
@@ -16,7 +22,7 @@ interface FeedProps {
     profileImg: string
     author: string;
     location: string;
-    img: string;
+    images: string[];
     contents: string;
     likes: number;
     comments: number;
@@ -24,11 +30,19 @@ interface FeedProps {
     timeAgo: string;
 }
 
-const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents, likes, comments, shares, timeAgo }) => {
+const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, contents, likes, comments, shares, timeAgo }) => {
     const [visibleComment, setVisibleComment] = useState<boolean>(false);
+    const [liked, setLiked] = useState<boolean>(false);
     const [slidePosition, setSlidePosition] = useState<number>(0);
+    
     const navi = useNavigate();
     const locationPath = useLocation();
+    const pagination = {
+        clickable: false,
+        renderBullet: function (index:number, className:string) {
+          return `<span className="${className}">${index}</span>`;
+        },
+    };
 
     // useEffect(() => {
     //     if (locationPath.pathname === '/feed/FeedDetail') {
@@ -41,6 +55,12 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents
     const handleClickComment = () => {
         // setVisibleComment(!visibleComment);
         navi('/feed/FeedDetail');   // navi point
+    }
+
+    const handleClickLike = () => {
+        setLiked(!liked);
+        // post like (liked ? 1 : -1)
+        // get like
     }
 
     const handleTouchStart = (e: React.TouchEvent) => {
@@ -89,10 +109,31 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, img, contents
                 </div>
             </div>
             <div className={styles.imageContainer}>
-                <img className={styles.contentImg} src={img} alt="contents" />
+                {/* <img className={styles.contentImg} src={img} alt="contents" /> */}
+                <Swiper
+                    className={styles.imgSlide}
+                    style={{ position: 'absolute' }}      // css bug point
+                    pagination={pagination}
+                    modules={[Pagination]}
+                    slidesPerView={1}
+                    onSlideChange={() => console.log('slide change')}
+                    onSwiper={(swiper) => {
+                        console.log(swiper);
+                    }}
+                >
+                    {images && images.map((img, index) => (
+                        <SwiperSlide key={index}>
+                        <img className={styles.contentImg} src={img} />
+                    </SwiperSlide>
+                    ))}
+                    
+                </Swiper>
             </div>
-            <div className={styles.actions}>
-                <span className={styles.likes}>👍 {likes}</span>
+            <div className={`${styles.actions} px-1`}>
+                <span className={styles.likes}><SvgLike className={styles.likeBtn} onClick={handleClickLike} style={{
+                                                                                        "width": "1rem",
+                                                                                        "height": "auto"
+                                                                                    }} fill={liked ? "blue" : "black"}/> {likes}</span>
                 <span className={styles.comments} onClick={handleClickComment}>💬 {comments}</span>
                 <span className={styles.shares}>↗️ {shares}</span>
                 <span className={styles.timeAgo}>{timeAgo}</span>

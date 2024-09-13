@@ -44,6 +44,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="updatePwd" element={<UpdatePwd/>}></Route>
             <Route path="emailVerification" element={<EmailVerification/>}></Route>
         </Route>
+
         <Route path="/user" element={<AuthLayout />}>
             <Route path="profile" element={<Profile/>}></Route>
             <Route path="followList" element={<FollowList/>}></Route>

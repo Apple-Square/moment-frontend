@@ -7,7 +7,7 @@ const dummy = {
     profileImg: 'https://randomuser.me/api/portraits/men/1.jpg',
     author: 'John Doe',
     location: 'New York, USA',
-    img: 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0',
+    images: ['https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0', 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0'],
     contents: 'Exploring the beautiful streets of New York City!',
     likes: 120,
     comments: 24,
@@ -25,7 +25,7 @@ const FeedDetail: React.FC = () => {
                         profileImg={dummy.profileImg}
                         author={dummy.author}
                         location={dummy.location}
-                        img={dummy.img}
+                        images={dummy.images}
                         contents={dummy.contents}
                         likes={dummy.likes}
                         comments={dummy.comments}
