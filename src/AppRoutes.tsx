@@ -20,6 +20,7 @@ import {Footer} from "./pages/common/components/Footer.tsx";
 import {Container} from "react-bootstrap";
 import React from "react";
 import {FooterLayout} from "./pages/common/layoutComponents/FooterLayout.tsx";
+import FeedDetail from "./pages/feed/FeedDetail.tsx";
 
 
 export const AppRoutes: React.FC = () => {
@@ -68,6 +69,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/feed">
             <Route path="threeColumnFeedList" element={<ThreeColumnFeedList/>}></Route>
             <Route path="addFeed" element={<AddFeed/>}></Route>
+            <Route path="feedDetail" element={<FeedDetail />}></Route>
         </Route>
     </Routes>)
 }
