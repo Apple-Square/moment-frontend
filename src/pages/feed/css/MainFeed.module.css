@@ -1,4 +1,4 @@
-.container {
+/* .container {
     height: 100vh;
     display: flex;
     align-items: center;
@@ -6,6 +6,21 @@
     padding-top: 12vh;
     max-width: 768px !important;
     width: 100%;
+} */
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-direction: column;
+    max-width: 768px;
+    width: 100vw;
+    height: 100%;
+    padding: 0 0;
+    overflow-y: visible;
+    overflow-x: visible;
+    box-sizing: border-box;
+    position: static;
 }
 
 .viewer {
@@ -28,7 +43,7 @@
     flex-shrink: 0;
 }
 
-.headerRow {        
+.headerRow {
     top: 0;
     left: 0;
     right: 0;
@@ -36,6 +51,4 @@
 
 .navRow {
     bottom: 0;
-    left: 0;
-    right: 0;
 }

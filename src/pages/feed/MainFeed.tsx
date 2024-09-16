@@ -3,7 +3,8 @@ import FeedList from './components/FeedList';
 import styles from "./css/MainFeed.module.css";
 import { Col, Container, Row } from "react-bootstrap";
 import TitleHeader from '../common/components/TitleHeader';
-import NaviBar from '../common/components/NaviBar';
+import { Footer } from '../common/components/Footer';
+// import NaviBar from '../common/components/NaviBar';
 
 const MainFeed: React.FC = () => {
     return (
@@ -20,7 +21,8 @@ const MainFeed: React.FC = () => {
             </Row>
             <Row className={`${styles.navRow} p-0 m-0`}>
                 <Col className='p-0'>
-                    <NaviBar />
+                    {/* <NaviBar /> */}
+                    <Footer />
                 </Col>
             </Row>
         </Container>

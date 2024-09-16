@@ -28,7 +28,7 @@ export const AppRoutes: React.FC = () => {
         <BackgroundTemplate>
             <Container style={styles.container}>
                 <Outlet />
-                <Footer/>
+                <Footer />
             </Container>
         </BackgroundTemplate>
     );
@@ -51,11 +51,11 @@ export const AppRoutes: React.FC = () => {
 
             <Route path="personalInfo" element={<PrivateRoute><PersonalInfo/></PrivateRoute>}></Route>
         </Route>
-        <Route path="/chat">
+        <Route path="/chat" element={<AuthLayout />}>
             <Route path="chatroomList" element={<ChatroomList/>}></Route>
             <Route path="chatroom" element={<Chatroom/>}></Route>
         </Route>
-        <Route path="/feed">
+        <Route path="/feed" element={<AuthLayout />}>
             <Route path="threeColumnFeedList" element={<ThreeColumnFeedList/>}></Route>
             <Route path="addFeed" element={<AddFeed/>}></Route>
             <Route path="feedDetail" element={<FeedDetail />}></Route>
