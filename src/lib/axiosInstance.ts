@@ -47,18 +47,19 @@ export const axiosInstanceWithFormData = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
     timeout : 10000,
-    headers: {
-        'Content-Type': 'multipart/form-data'
-    },
+    // headers: {
+    //     'Content-Type': 'multipart/form-data'
+    // },
 });
 
 export const axiosInstanceWithFormDataAndToken = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
     timeout : 10000,
-    headers: {
-        'Content-Type': 'multipart/form-data',
-    },
+    // 자동으로 설정되고, 수정으로 설정할 경우 boundary를 설정하지 않아 문제가 발생
+    // headers: {
+    //     'Content-Type': 'multipart/form-data',
+    // },
 });
 
 let refreshingAvailable : boolean = true;

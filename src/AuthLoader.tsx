@@ -6,6 +6,7 @@ import {setUserAndToken} from "./redux/slices/authSlice.ts";
 import {merge} from "chart.js/helpers";
 import {AxiosError, AxiosResponse} from "axios";
 import {tokenManager} from "./lib/axiosInstance.ts";
+import {showToast} from "./lib/ToastNotification.ts";
 
 /**
  * 얘는 리로드했을 때 즉, AccessToken이 만료되었을때 즉시 RefreshToken으로부터 AccessToken을 받아오는 역할을 한다.
@@ -48,6 +49,7 @@ export const AuthLoader = ({children}) => {
 
                     // userResponse가 AxiosResponse인지 확인
                     if ((userResponse as AxiosResponse).data?.user) {
+                        showToast("success","로그인 되었습니다. 테스트용", 1000);
                         dispatch(setUserAndToken({
                             user: (userResponse as AxiosResponse).data.user,
                             token: response.headers.authorization,

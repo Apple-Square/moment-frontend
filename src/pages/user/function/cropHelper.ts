@@ -2,7 +2,7 @@ export const getCroppedImg = (imageSrc: string, pixelCrop: any) => {
     const image = new Image();
     image.src = imageSrc;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<Blob | Error>((resolve, reject) => {
         image.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -27,14 +27,14 @@ export const getCroppedImg = (imageSrc: string, pixelCrop: any) => {
                 pixelCrop.height
             );
 
+            // Blob으로 생성 후 resolve
             canvas.toBlob(blob => {
                 if (blob) {
-                    const croppedImageUrl = URL.createObjectURL(blob);
-                    resolve(croppedImageUrl);
+                    resolve(blob); // Blob 객체를 resolve
                 } else {
                     reject(new Error('Canvas is empty'));
                 }
-            }, 'image/jpeg');
+            }, 'image/jpeg'); // 이미지의 MIME 타입
         };
 
         image.onerror = reject;

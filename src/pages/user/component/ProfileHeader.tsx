@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {UserPage} from "../function/userAxiosRequest.tsx";
 import {Image} from "react-bootstrap";
 
@@ -18,11 +18,43 @@ type ProfileHeaderProps = {
         followerCount : string,
         followingCount : string,
         followed : boolean
-    }
+    };
+    profileImage: string;//추가
+    onProfileImageChange: (imageDataUrl: string) => void;//추가
     style?: React.CSSProperties;
 };
+//추가
+export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage,profileImage, onProfileImageChange , style }) => {
 
-export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage, style }) => {
+    //추가
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    /**
+     * 이미지를 클릭하면 input type='file'을 클릭하도록 하는 함수
+     */
+    const handleImageClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    }
+
+    /**
+     * input type='file'이 클릭되었을때 실행된다.
+     * 파일을 읽을 시 onload가 실행된다. 여기서 상태(uploadedImage)에 저장하고, 크롭중으로 만든다.
+     * @param e
+     */
+    const handleFileChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (reader.result) {
+                    onProfileImageChange(reader.result as string);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
     const handleImageError = (e) => {
         e.target.src = `${import.meta.env.BASE_URL}images/defaultProfileImage.jpg`;
@@ -31,10 +63,20 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage, style })
     return (
         <div style={{ ...styles.profileHeader, ...style }}>
             <Image
-                src={userPage?.user?.profileImage || `${import.meta.env.BASE_URL}images/pikachu.jpg`}
+                src={userPage?.user?.profileImage || `${import.meta.env.BASE_URL}images/defaultProfileImage.jpg`}
                 roundedCircle
                 onError={handleImageError}
-                alt="Profile" style={styles.profilePic} />
+                alt="Profile"
+                style={styles.profilePic}
+                onClick={handleImageClick}
+            />
+            <input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+            />
             <div>
                 <h2>{userPage?.user?.nickname}</h2>
                 <p>Intro: {userPage?.user?.intro}</p>
@@ -61,6 +103,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         width: '80px',
         height: '80px',
         borderRadius: '50%',
+        cursor : 'pointer', //추가
     },
     stats: {
         display: 'flex',

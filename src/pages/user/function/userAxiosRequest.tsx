@@ -20,7 +20,14 @@ interface GetMeResponse {
     message: string;
     user: UserProfile;
 }
-
+interface updateProfileImageResponse {
+    timeStamp: string;
+    message: string;
+    userId: string;
+}
+/**
+ * 나의 프로필 조회
+ */
 export const getMeRequest = async () : Promise<AxiosResponse<GetMeResponse> | Error> => {
     try {
         console.log("getMeRequest\n"+tokenManager.getToken());
@@ -32,7 +39,11 @@ export const getMeRequest = async () : Promise<AxiosResponse<GetMeResponse> | Er
         return castError(error);
     }
 }
-
+/**
+ * 유저 정보 수정
+ * @param key
+ * @param value
+ */
 export const updateMeRequest = async (key : string, value : string) : Promise<AxiosResponse<any, any> | Error> => {
     try {
 
@@ -45,22 +56,30 @@ export const updateMeRequest = async (key : string, value : string) : Promise<Ax
     }
 }
 /**
- *
+ * 프로필 사진 설정
+ * Blob은 File의 부모임
  * @param file
  * @param userId 나의 아이디
  */
-export const updateProfileImageRequest = async (file : string | Blob, userId : string) : Promise<AxiosResponse<any, any> | Error> => {
+export const updateProfileImageRequest = async (file: Blob, userId: string): Promise<AxiosResponse<updateProfileImageResponse> | Error> => {
     try {
         const formData = new FormData();
-        formData.append('profileImage', file);
-        const response = await axiosInstanceWithFormDataAndToken.put(`users/${userId}/profile-image`, formData);
+        const fileObj = new File([file], 'profileImage.jpg', { type: 'image/jpeg' }); // Blob을 File로 변환
+        formData.append('profileImage', fileObj); // FormData에 File 객체 추가
+
+
+        formData.forEach((value, key) => {
+            console.log(`FormData에 담긴 데이터 - key: ${key}, value:`, value);
+        });
+
+        const response = await axiosInstanceWithFormDataAndToken.put(`/users/${userId}/profile-image`, formData);
         console.log(`updateProfileImageRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
         console.error(`updateProfileImageRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
     }
-}
+};
 
 export const deleteProfileImageRequest = async (userId : string) : Promise<AxiosResponse<any, any> | Error> => {
     try {
