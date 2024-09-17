@@ -8,7 +8,8 @@ import SearchPlace from './components/PlaceSearch';
 const AddFeed: React.FC = () => {
     const [media, setMedia] = useState<File[]>([]);;
     const [text, setText] = useState('');
-    const [placeTag, setPlaceTag] = useState<Boolean>(false);
+    const [placeTag, setPlaceTag] = useState<Boolean>(false);       // '위치'버튼을 눌렀을 때 창 처리 state
+    const [now, setNow] = useState<string>('');     // 게시글에 붙는 장소 태그
 
     const handleSubmit = () => {
         if (media && text) {
@@ -41,7 +42,7 @@ const AddFeed: React.FC = () => {
                                 <button className={styles.btn} onClick={() => setPlaceTag(!placeTag)}>위치</button>
                                 {placeTag && (
                                     <div className={styles.searchPlaceContainer}>
-                                        <SearchPlace setPlaceTag={setPlaceTag}/>
+                                        <SearchPlace setPlaceTag={setPlaceTag} setNow={setNow}/>
                                     </div>
                                 )}
                                 <button className={styles.btn} onSubmit={handleSubmit}>

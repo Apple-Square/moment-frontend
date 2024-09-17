@@ -3,10 +3,16 @@ import styles from "../css/PlaceSearch.module.css";
 
 interface SearchPlaceProps {
     setPlaceTag: React.Dispatch<React.SetStateAction<Boolean>>;
+    setNow: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceTag }) => {  // 계단식 액션 -> 상위에서 적용
+const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceTag, setNow }) => {  // 계단식 액션 -> 상위에서 적용
     const [place, setPlace] = useState('');
+
+    const handlePlaceClick = (event: React.MouseEvent<HTMLLIElement>) => {
+        const placeName = event.currentTarget.textContent;
+        (placeName) ? setPlace(placeName) : setPlace(place);
+    };
 
     return (
         <div className={styles.container}>
@@ -18,20 +24,21 @@ const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceTag }) => {  // 계�
                     onChange={(e) => { setPlace(e.target.value) }}
                 />
                 <button
-                    onClick={() => {}}
+                    onClick={() => { }}
                 >
                     검색
                 </button>
             </div>
             <div className={styles.placeList}>
                 <ul>
-                    <li>유토피아</li>
+                    {/* getPoint */}
+                    <li onClick={handlePlaceClick}>유토피아</li>
                     <li>버그없는세상</li>
                     <li>놀고먹는데돈이계속늘어나는세상</li>
                 </ul>
             </div>
             <div className={styles.buttonBox}>
-            <button
+                <button
                     onClick={() => {
                         setPlace('');
                         setPlaceTag(false);
@@ -41,6 +48,8 @@ const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceTag }) => {  // 계�
                 </button>
                 <button
                     onClick={() => {
+                        setNow(place);
+                        console.log(place);
                         setPlaceTag(false);
                     }}
                 >
