@@ -1,13 +1,13 @@
 .container {
     display: flex;
+    position: relative;
     flex-direction: column;
     width: 90%;
     height: auto;
     margin: 5% auto;
     padding: 5% 0;
     border-radius: 5px;
-    overflow: auto;
-    background-color: white;
+    background-color: white
 }
 
 .searchBar {
@@ -18,14 +18,36 @@
 
 .searchBar>input {
     width: 80%;
+    height: 3rem;
+    border: none;
+    border-bottom: solid 1px lightgray;
+}
+
+.searchBar>input:focus {
+    outline: none;
 }
 
 .searchBar>button {
     width: 20%;
+    height: 3rem;
+    border: none;
+    font-size: medium;
+    font-weight: 600;
+    background-color: white;
+}
+
+.searchBar>button:focus {
+    outline: none;
+}
+
+.searchBar>button:hover {
+    background-color: whitesmoke
 }
 
 .placeList {
     width: 100%;
+    margin-bottom: 3rem;
+    overflow: auto;
 }
 
 .placeList>ul {
@@ -47,13 +69,25 @@ li {
 
 li:hover {
     cursor: pointer;
-    background-color: whitesmoke;
+    background-color: whitesmoke
 }
 
 .buttonBox {
+    position: absolute;
+    bottom: 0;
     display: flex;
     justify-content: space-between;
     width: 100%;
     padding: 5%;
-    padding-bottom: 0;
+    /* padding-bottom: 0; */
+}
+
+.buttonBox>* {
+    width: 20%;
+    height: 2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: large;
+    font-weight: 700;
+    background-color: white;
 }

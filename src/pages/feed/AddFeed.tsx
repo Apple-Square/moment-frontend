@@ -41,7 +41,7 @@ const AddFeed: React.FC = () => {
                                 <button className={styles.btn} onClick={() => setPlaceTag(!placeTag)}>위치</button>
                                 {placeTag && (
                                     <div className={styles.searchPlaceContainer}>
-                                        <SearchPlace />
+                                        <SearchPlace setPlaceTag={setPlaceTag}/>
                                     </div>
                                 )}
                                 <button className={styles.btn} onSubmit={handleSubmit}>

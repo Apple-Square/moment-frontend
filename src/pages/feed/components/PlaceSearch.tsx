@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import styles from "../css/PlaceSearch.module.css";
 
-const SearchPlace: React.FC = () => {
+interface SearchPlaceProps {
+    setPlaceTag: React.Dispatch<React.SetStateAction<Boolean>>;
+}
+
+const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceTag }) => {  // 계단식 액션 -> 상위에서 적용
     const [place, setPlace] = useState('');
 
     return (
@@ -28,12 +32,17 @@ const SearchPlace: React.FC = () => {
             </div>
             <div className={styles.buttonBox}>
             <button
-                    onClick={() => {/*place 삭제*/}}
+                    onClick={() => {
+                        setPlace('');
+                        setPlaceTag(false);
+                    }}
                 >
                     취소
                 </button>
                 <button
-                    onClick={() => {/*place 확정*/}}
+                    onClick={() => {
+                        setPlaceTag(false);
+                    }}
                 >
                     선택
                 </button>
