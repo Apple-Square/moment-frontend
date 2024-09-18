@@ -16,13 +16,14 @@ export const ProfileNavBar: React.FC = () => {
                 {/* 왼쪽 아이콘 */}
                 <Navbar.Brand
                     href="#home"
+                    className="mx-auto"
                     style={styles.navbarBrand}
                 >
-                    guswnsrn527
+                    프로필 탭
                 </Navbar.Brand>
 
 
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle aria-controls="basic-navbar-nav" style={styles.navbarToggle} />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto mx-auto">
                         <Nav.Link href="#profile">즐겨찾기</Nav.Link>
@@ -43,5 +44,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     container : {
         padding: '0',
+    },
+    navbarToggle : {
+        position : 'fixed',
+        inset: '10px 10px auto auto',
+        // top:"10px",
+        // right : '10px',
     }
 }

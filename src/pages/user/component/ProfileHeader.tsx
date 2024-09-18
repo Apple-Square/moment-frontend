@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {UserPage} from "../function/userAxiosRequest.tsx";
-import {Image} from "react-bootstrap";
+import {Col, Image, Row} from "react-bootstrap";
 
 type ProfileHeaderProps = {
     userPage : {
@@ -61,34 +61,54 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage,profileIm
     }
 
     return (
-        <div style={{ ...styles.profileHeader, ...style }}>
-            <Image
-                src={userPage?.user?.profileImage || `${import.meta.env.BASE_URL}images/defaultProfileImage.jpg`}
-                roundedCircle
-                onError={handleImageError}
-                alt="Profile"
-                style={styles.profilePic}
-                onClick={handleImageClick}
-            />
+        <>
+            <Row className="align-items-center w-100">
+                <Col xs={4} style={{...styles.profileHeader, ...style}}>
+                    <div className="d-flex flex-column align-items-center w-100">
+                        <div className="mb-3 w-100 d-flex flex-column align-items-center">
+                            <Image
+                                src={userPage?.user?.profileImage || `${import.meta.env.BASE_URL}images/defaultProfileImage.jpg`}
+                                roundedCircle
+                                onError={handleImageError}
+                                alt="Profile"
+                                style={styles.profilePic}
+                                onClick={handleImageClick}
+                            />
+                        </div>
+                        <div>
+                            <p style={styles.nickname}>{userPage?.user?.nickname}</p>
+                        </div>
+                    </div>
+                </Col>
+                <Col xs={8} className="d-flex align-items-center justify-content-center p-0">
+                    <Row className="text-center w-100" style={{ padding: '0' }}>
+                        <Col xs={4}>
+                            <p className="fw-bold mb-0">{userPage?.postCount}</p>
+                            <p className="text-muted">posts</p>
+                        </Col>
+                        <Col xs={4}>
+                            <p className="fw-bold mb-0">{userPage?.followerCount}</p>
+                            <p className="text-muted">followers</p>
+                        </Col>
+                        <Col xs={4}>
+                            <p className="fw-bold mb-0">{userPage?.followingCount}</p>
+                            <p className="text-muted">following</p>
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+            <Row style={styles.intro}>
+                <p>Intro: {userPage?.user?.intro}</p>
+                <p>{userPage?.followed ? "팔로잉중" : "팔로우안하는중"}</p>
+            </Row>
             <input
                 type="file"
                 accept="image/*"
                 ref={fileInputRef}
-                style={{ display: 'none' }}
+                style={{display: 'none'}}
                 onChange={handleFileChange}
             />
-            <div>
-                <h2>{userPage?.user?.nickname}</h2>
-                <p>Intro: {userPage?.user?.intro}</p>
-                <p>Address: {userPage?.user?.address}</p>
-                <div style={styles.stats}>
-                    <p>{userPage?.postCount}개의 posts</p>
-                    <p>{userPage?.followerCount}개의 followers</p>
-                    <p>{userPage?.followingCount}개의 following</p>
-                    <p>{userPage?.followed ? "팔로잉중" : "팔로우안하는중"}</p>
-                </div>
-            </div>
-        </div>
+        </>
     );
 };
 
@@ -96,8 +116,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     profileHeader: {
         display: 'flex',
         alignItems: 'center',
-        gap: '1rem',
-        padding: '1rem',
+        justifyContent: 'center',
+        padding: '0',
+        margin : '0 0 0 0px',
+        width : '33.33%',
     },
     profilePic: {
         width: '80px',
@@ -110,4 +132,13 @@ const styles: { [key: string]: React.CSSProperties } = {
         gap: '1rem',
         marginTop: '0.5rem',
     },
+    nickname: {
+        fontSize: '1.3rem',
+        fontWeight : '500',
+        margin: '0',
+    },
+    intro: {
+        padding : '1rem',
+        margin: '0',
+    }
 };
