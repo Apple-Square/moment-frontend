@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from "../css/Feed.module.css";
-import CommentList from './CommentList';
+// import CommentList from './CommentList';
 import Comment from './Comment';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -9,6 +9,7 @@ import 'swiper/css/pagination';
 // import SwiperCore from 'swiper';
 import 'swiper/css';
 import SvgLike from './SvgLike';
+import { CommentModalContext } from '../../../context/CommentModalContext';
 // import { Col, Container, Row } from 'react-bootstrap';
 
 // dummy
@@ -31,12 +32,13 @@ interface FeedProps {
 }
 
 const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, contents, likes, comments, shares, timeAgo }) => {
-    const [visibleComment, setVisibleComment] = useState<boolean>(false);
-    const [slidePosition, setSlidePosition] = useState<number>(0);
+    // const [visibleComment, setVisibleComment] = useState<boolean>(false);
+    // const [slidePosition, setSlidePosition] = useState<number>(0);
+    const { commentOpen, setCommentOpen } = useContext(CommentModalContext);
     const [liked, setLiked] = useState<boolean>(false);
 
     const navi = useNavigate();
-    const locationPath = useLocation();
+    // const locationPath = useLocation();
     const pagination = {
         clickable: false,
         renderBullet: function (index:number, className:string) {
@@ -53,43 +55,44 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
     // }, [locationPath]);
 
     const handleClickComment = () => {
+        setCommentOpen(true);
         // setVisibleComment(!visibleComment);
-        navi('/feed/FeedDetail');   // navi point
+        // navi('/feed/FeedDetail');   // navi point
     }
 
-    const handleTouchStart = (e: React.TouchEvent) => {
-        setSlidePosition(e.touches[0].clientY);
-    };
+    // const handleTouchStart = (e: React.TouchEvent) => {
+    //     setSlidePosition(e.touches[0].clientY);
+    // };
 
-    const handleTouchMove = (e: React.TouchEvent) => {
-        const newPosition = e.touches[0].clientY;
-        if (newPosition < slidePosition) {
-            setVisibleComment(true); // 위로 끌어올리면 댓글 표시
-        }
+    // const handleTouchMove = (e: React.TouchEvent) => {
+    //     const newPosition = e.touches[0].clientY;
+    //     if (newPosition < slidePosition) {
+    //         setVisibleComment(true); // 위로 끌어올리면 댓글 표시
+    //     }
 
-        if (newPosition > slidePosition) {
-            setVisibleComment(false);
-        }
-    };
+    //     if (newPosition > slidePosition) {
+    //         setVisibleComment(false);
+    //     }
+    // };
 
-    // 마우스 클릭 및 드래그 시작 이벤트 핸들러 (PC)
-    const handleMouseDown = (e: React.MouseEvent) => {
-        setSlidePosition(e.clientY);
-    };
+    // // 마우스 클릭 및 드래그 시작 이벤트 핸들러 (PC)
+    // const handleMouseDown = (e: React.MouseEvent) => {
+    //     setSlidePosition(e.clientY);
+    // };
 
-    // 마우스 움직임 이벤트 핸들러 (PC)
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (e.buttons === 1) {  // 왼쪽 마우스 버튼이 눌렸을 때만 처리
-            const newPosition = e.clientY;
-            if (newPosition < slidePosition) {
-                setVisibleComment(true);  // 위로 드래그하면 댓글 표시
-            }
+    // // 마우스 움직임 이벤트 핸들러 (PC)
+    // const handleMouseMove = (e: React.MouseEvent) => {
+    //     if (e.buttons === 1) {  // 왼쪽 마우스 버튼이 눌렸을 때만 처리
+    //         const newPosition = e.clientY;
+    //         if (newPosition < slidePosition) {
+    //             setVisibleComment(true);  // 위로 드래그하면 댓글 표시
+    //         }
 
-            if (newPosition > slidePosition) {
-                setVisibleComment(false);
-            }
-        }
-    };
+    //         if (newPosition > slidePosition) {
+    //             setVisibleComment(false);
+    //         }
+    //     }
+    // };
     const handleClickLike = () => {
         setLiked(!liked);
         // post like (liked ? 1 : -1)
@@ -150,19 +153,20 @@ const Feed: React.FC<FeedProps> = ({ profileImg, author, location, images, conte
                     profileImg={trandingComment.profileImg} 
                     author={trandingComment.author}
                     contents={trandingComment.contents}
+                    onClick={handleClickComment}
                 />
             </div>
 
-            <div
+            {/* <div
                 className={`${styles.commentModal} ${visibleComment ? styles.open : ''}`}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
             >
-                <div className={styles.bar}></div> {/* 끌어올릴 바 */}
+                <div className={styles.bar}></div>
                 {visibleComment && <CommentList />}
-            </div>
+            </div> */}
         </div>
     );
 };

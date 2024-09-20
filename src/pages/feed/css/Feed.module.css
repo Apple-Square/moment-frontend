@@ -90,31 +90,6 @@
     /* background-color: chartreuse; */
 }
 
-.commentModal {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3vh;
-    background-color: #f0f0f0;
-    transition: height 0.3s ease;
-    overflow: hidden;
-    z-index: 50;
-}
-
-.commentModal.open {
-    height: 70%;
-}
-
-.commentModal>.bar {
-    width: 50px;
-    height: 3px;
-    background-color: lightgray;
-    margin: 10px auto;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
 :global(.swiper-pagination-bullet) {
     width: calc(100% / 3);
     margin: 0;

@@ -7,12 +7,13 @@ interface CommentProps {
     author: string;
     //
     contents: string;
+    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-const Comment: React.FC<CommentProps> = ({ profileImg, author, contents }) => {
+const Comment: React.FC<CommentProps> = ({ profileImg, author, contents, onClick = () => { } }) => {
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} onClick={onClick}>
             <div className={styles.header}>
                 <div className={`${styles.profile} px-2 py-1`}>
                     <img className={styles.profileImg} src={profileImg} alt="Profile" />
