@@ -80,7 +80,6 @@
 
 .timeAgo {
     margin-left: auto;
-    /* 오른쪽 끝으로 정렬 */
     color: gray;
 }
 
@@ -89,6 +88,31 @@
     font-size: 1em;
     width: 100%;
     /* background-color: chartreuse; */
+}
+
+.commentModal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3vh;
+    background-color: #f0f0f0;
+    transition: height 0.3s ease;
+    overflow: hidden;
+    z-index: 50;
+}
+
+.commentModal.open {
+    height: 70%;
+}
+
+.commentModal>.bar {
+    width: 50px;
+    height: 3px;
+    background-color: lightgray;
+    margin: 10px auto;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 :global(.swiper-pagination-bullet) {
@@ -103,5 +127,4 @@
 
 :global(.swiper-pagination-bullet-active) {
     background-color: rgba(255,255,255,0.5 ) !important;
-    /* 활성화된 dot의 색상 */
 }
