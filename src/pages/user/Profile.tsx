@@ -34,10 +34,14 @@ const Profile: React.FC = () => {
             followed: false
         }
     });
-
-    const location = useLocation();
-    const viewerId = location.state as string || "X03EPGPnrqM34he";
     const myId = useAppSelector(state => state.auth.user.id);
+    const location = useLocation();
+    //테스트용으로 Bq8WIhU5eYNwler는 타인의 프로필 X03EPGPnrqM34he는 나의 프로필
+    const subjectId = "Bq8WIhU5eYNwler";
+    // const subjectId = "X03EPGPnrqM34he";
+    // const subjectId = location.state as string || myId;
+    
+
 
     const handleProfileImageChange = (imageDataUrl: string) => {
         setUploadedImage(imageDataUrl);
@@ -84,9 +88,9 @@ const Profile: React.FC = () => {
 
 
 
-    const fetchAndSetUserData = async () : Promise<void> => {
+    const fetchAndUpdateUserData = async () : Promise<void> => {
     try{
-        const data : UserPagePocket | Error = await getProfileRequest(viewerId);
+        const data : UserPagePocket | Error = await getProfileRequest(subjectId);
         if (data instanceof Error) {
             console.error("프로필 정보를 가져오는 중 에러 발생:", data.message);
             return;
@@ -106,10 +110,12 @@ const Profile: React.FC = () => {
     })
     useEffect(() => {
         //유저 페이지가 있거나 내가 없으면 탈출
-        if(userPagePocket?.userPage?.user?.id !== "" || myId === ""){
+        // if(userPagePocket?.userPage?.user?.id !== "" || myId === ""){
+        if(userPagePocket?.userPage?.user?.id !== ""){
+            console.log("유저페이지가 이미 있습니다.");
             return;
         }
-        void fetchAndSetUserData();
+        void fetchAndUpdateUserData();
     }, [userPagePocket,myId]);
 
     const handleSelectType = (type: string) => {
@@ -174,7 +180,9 @@ const Profile: React.FC = () => {
             <ProfileNavBar />
             <ProfileHeader
                 // style={styles.headerWrapper}
+                myId={myId}
                 userPage={userPagePocket?.userPage}
+                fetchAndUpdateUserData={fetchAndUpdateUserData}
                 profileImage={userPagePocket?.userPage?.user?.profileImage}
                 onProfileImageChange={handleProfileImageChange}
             />

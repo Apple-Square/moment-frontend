@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {axiosInstance} from '../../lib/axiosInstance.ts';
+import {axiosInstance, tokenManager} from '../../lib/axiosInstance.ts';
 import {loginRequest, logoutRequest} from "../../pages/auth/function/authAxios.ts"
 import {NavigateFunction} from "react-router-dom";
 import _ from "lodash";
@@ -43,11 +43,13 @@ export const loginThunk
                 username: loginState.username,
                 password: loginState.password,
             });
-            console.log("loginThunk에서 response :: "+ JSON.stringify(response, null, 2));
 
             if(isError(response)){
                 return thunkAPI.rejectWithValue(getErrorMessage(response));
             }
+            console.log("loginThunk에서 response :: "+ JSON.stringify(response, null, 2));
+            tokenManager.setToken(response.token);
+            console.log("로그인요청중 :: 베어러 토큰 - "+tokenManager.getToken());
 
             console.log(JSON.stringify(response, null, 2));
             return thunkAPI.fulfillWithValue(response);

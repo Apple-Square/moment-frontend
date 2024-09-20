@@ -1,30 +1,42 @@
 import React, {useRef} from 'react';
-import {UserPage} from "../function/userAxiosRequest.tsx";
+import {followCancelRequest, followRequest, UserPage, UserPagePocket} from "../function/userAxiosRequest.tsx";
 import {Col, Image, Row} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import {castError} from "../../../lib/ErrorUtil.ts";
+import {Updater} from "use-immer";
 
 type ProfileHeaderProps = {
-    userPage : {
-        user : {
-            id : string,
-            nickname : string,
-            regDate : string,
-            birth : string,
-            gender : string,
-            address : string,
-            intro : string,
-            profileImage : string,
+    myId: string;
+    userPage: {
+        user: {
+            id: string,
+            nickname: string,
+            regDate: string,
+            birth: string,
+            gender: string,
+            address: string,
+            intro: string,
+            profileImage: string,
         },
-        postCount : string,
-        followerCount : string,
-        followingCount : string,
-        followed : boolean
+        postCount: string,
+        followerCount: string,
+        followingCount: string,
+        followed: boolean
     };
+    fetchAndUpdateUserData: () => Promise<void>
     profileImage: string;//추가
     onProfileImageChange: (imageDataUrl: string) => void;//추가
     style?: React.CSSProperties;
 };
 //추가
-export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage,profileImage, onProfileImageChange , style }) => {
+export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
+                                                                myId,
+                                                                userPage,
+                                                                fetchAndUpdateUserData,
+                                                                profileImage,
+                                                                onProfileImageChange,
+                                                                style
+                                                            }) => {
 
     //추가
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +55,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage,profileIm
      * 파일을 읽을 시 onload가 실행된다. 여기서 상태(uploadedImage)에 저장하고, 크롭중으로 만든다.
      * @param e
      */
-    const handleFileChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
             const reader = new FileReader();
@@ -60,9 +72,37 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage,profileIm
         e.target.src = `${import.meta.env.BASE_URL}images/defaultProfileImage.jpg`;
     }
 
+    //api요청 날리고 성공하면 userPage.followed = true로 바꿔주기
+    const handleFollow = async () => {
+        console.log('팔로우');
+        try{
+            const id = await followRequest(userPage?.user?.id);
+            if(id){
+                void fetchAndUpdateUserData();
+            }
+        } catch (error) {
+            console.error(`followRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
+            return castError(error);
+        }
+    }
+    //api요청 날리고 성공하면 userPage.followed = false로 바꿔주기
+    const handleFollowCancel = async () => {
+        console.log('팔로우 취소');
+
+        try {
+            const id = await followCancelRequest(userPage?.user?.id);
+            if(id){
+                void fetchAndUpdateUserData();
+            }
+        } catch (error) {
+            console.error(`followCancelRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
+            return castError(error);
+        }
+    }
+
     return (
         <>
-            <Row className="align-items-center w-100">
+            <Row className="align-items-center w-100 m-0">
                 <Col xs={4} style={{...styles.profileHeader, ...style}}>
                     <div className="d-flex flex-column align-items-center w-100">
                         <div className="mb-3 w-100 d-flex flex-column align-items-center">
@@ -72,7 +112,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage,profileIm
                                 onError={handleImageError}
                                 alt="Profile"
                                 style={styles.profilePic}
-                                onClick={handleImageClick}
+                                onClick={myId === userPage?.user?.id ? handleImageClick : undefined}
                             />
                         </div>
                         <div>
@@ -80,26 +120,46 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userPage,profileIm
                         </div>
                     </div>
                 </Col>
-                <Col xs={8} className="d-flex align-items-center justify-content-center p-0">
-                    <Row className="text-center w-100" style={{ padding: '0' }}>
+                <Col xs={8} className="d-flex align-items-center justify-content-center p-0 m-0"
+                     style={{flexDirection: 'column'}}>
+                    <Row className="text-center w-100 m-0" style={{padding: '0', flex: 10}}>
                         <Col xs={4}>
                             <p className="fw-bold mb-0">{userPage?.postCount}</p>
-                            <p className="text-muted">posts</p>
+                            <p className="text-muted">게시물</p>
                         </Col>
                         <Col xs={4}>
-                            <p className="fw-bold mb-0">{userPage?.followerCount}</p>
-                            <p className="text-muted">followers</p>
+                            <Link
+                                to="/user/followRelationshipList"
+                                state={{ listType: "follower", userPage }}
+                                style={{ textDecoration: 'none', color: 'inherit' }}
+                            >
+                                <p className="fw-bold mb-0">{userPage?.followerCount}</p>
+                                <p className="text-muted">팔로워</p>
+                            </Link>
                         </Col>
                         <Col xs={4}>
-                            <p className="fw-bold mb-0">{userPage?.followingCount}</p>
-                            <p className="text-muted">following</p>
+                            <Link
+                                to="/user/followRelationshipList"
+                                state={{ listType: "following", userPage }}
+                                style={{ textDecoration: 'none', color: 'inherit' }}
+                            >
+                                <p className="fw-bold mb-0">{userPage?.followingCount}</p>
+                                <p className="text-muted">팔로잉</p>
+                            </Link>
                         </Col>
                     </Row>
+
+                    {myId !== userPage?.user?.id && (<Row style={styles.actionLayout} className="p-0">
+                        <button
+                            style={styles.button}
+                            onClick={userPage?.followed ? handleFollowCancel : handleFollow}
+                        >{userPage?.followed ? "팔로우 취소" : "팔로우"}</button>
+                        <button style={styles.button}>메세지</button>
+                    </Row>)}
                 </Col>
             </Row>
             <Row style={styles.intro}>
-                <p>Intro: {userPage?.user?.intro}</p>
-                <p>{userPage?.followed ? "팔로잉중" : "팔로우안하는중"}</p>
+                <p>{userPage?.user?.intro}</p>
             </Row>
             <input
                 type="file"
@@ -118,14 +178,14 @@ const styles: { [key: string]: React.CSSProperties } = {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '0',
-        margin : '0 0 0 0px',
-        width : '33.33%',
+        margin: '0 0 0 0px',
+        width: '33.33%',
     },
     profilePic: {
         width: '80px',
         height: '80px',
         borderRadius: '50%',
-        cursor : 'pointer', //추가
+        cursor: 'pointer', //추가
     },
     stats: {
         display: 'flex',
@@ -134,11 +194,26 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     nickname: {
         fontSize: '1.3rem',
-        fontWeight : '500',
+        fontWeight: '500',
         margin: '0',
     },
     intro: {
-        padding : '1rem',
+        padding: '1rem',
         margin: '0',
+    },
+    button: {
+        borderRadius: '10px',
+        border : '0px solid #000000',
+        backgroundColor : '#ececec',
+        width: 'auto'
+    },
+    actionLayout: {
+        width: '100%',
+        flex: 2,
+        flexDirection: 'row',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        gap: '2rem'
     }
 };

@@ -92,22 +92,22 @@ export const deleteProfileImageRequest = async (userId : string) : Promise<Axios
     }
 }
 
-export const followRequest = async (followeeId : string) : Promise<AxiosResponse<any, any> | Error> => {
+export const followRequest = async (followeeId : string) : Promise<string | Error> => {
     try {
         const response = await axiosInstanceWithAccessToken.post(`users/${followeeId}/follow`);
         console.log(`followRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
-        return response;
+        return response?.data?.followeeId;
     } catch (error) {
         console.error(`followRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
     }
 }
 
-export const followCancelRequest = async (followeeId : string) : Promise<AxiosResponse<any, any> | Error> => {
+export const followCancelRequest = async (followeeId : string) : Promise<string | Error> => {
     try {
         const response = await axiosInstanceWithAccessToken.delete(`users/${followeeId}/follow`);
         console.log(`followCancelRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
-        return response;
+        return response?.data?.followeeId;
     } catch (error) {
         console.error(`followCancelRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
@@ -134,6 +134,8 @@ export interface UserPage {
     followed : boolean
 }
 
+
+
 export const getProfileRequest = async (userId : string) : Promise<UserPagePocket | Error> => {
     try {
         let response;
@@ -150,32 +152,43 @@ export const getProfileRequest = async (userId : string) : Promise<UserPagePocke
     }
 }
 
-export const getFollowersRequest = async (userId : string) : Promise<AxiosResponse<any, any> | Error> => {
+export interface UserOfFollowList {
+    id: string;              // 사용자 ID
+    nickname: string;        // 사용자 닉네임
+    profileImage: string;    // 프로필 이미지 URL
+    followed: boolean;       // 팔로우 여부
+}
+export interface FollowListPocket {
+    content: UserOfFollowList[];         // 여러 사용자 정보를 담은 배열
+    hasNext : boolean;
+}
+
+export const getFollowersRequest = async (userId : string, size : number, cursor : number ) : Promise<FollowListPocket | Error> => {
     try {
         let response;
         if(tokenManager.getToken() !== ""){
-            response = await axiosInstanceWithAccessToken.get(`users/${userId}/followers`);
+            response = await axiosInstanceWithAccessToken.get(`users/${userId}/followers?`+`size=${size}&cursor=${cursor}`);
         } else {
-            response = await axiosInstance.get(`users/${userId}/followers`);
+            response = await axiosInstance.get(`users/${userId}/followers?`+`size=${size}&cursor=${cursor}`);
         }
         console.log(`getFollowersRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
-        return response;
+        return response.data;
     } catch (error) {
         console.error(`getFollowersRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
     }
 }
 
-export const getFollowingsRequest = async (userId : string) : Promise<AxiosResponse<any, any> | Error> => {
+export const getFollowingsRequest = async (userId : string, size : number, cursor : number) : Promise<FollowListPocket | Error> => {
     try {
         let response;
         if(tokenManager.getToken() !== "") {
-            response = await axiosInstanceWithAccessToken.get(`users/${userId}/followings`);
+            response = await axiosInstanceWithAccessToken.get(`users/${userId}/followings?`+`size=${size}&cursor=${cursor}`);
         } else {
-            response = await axiosInstance.get(`users/${userId}/followings`);
+            response = await axiosInstance.get(`users/${userId}/followings?`+`size=${size}&cursor=${cursor}`);
         }
         console.log(`getFollowingsRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
-        return response;
+        return response.data;
     } catch (error) {
         console.error(`getFollowingsRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);

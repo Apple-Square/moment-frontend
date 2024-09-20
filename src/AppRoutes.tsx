@@ -4,7 +4,7 @@ import {SignUp} from "./pages/auth/SignUp.tsx";
 import Postcode from "./pages/auth/Postcode.tsx";
 import Profile from "./pages/user/Profile.tsx";
 import FindUserId from "./pages/auth/FindUserId.tsx";
-import FollowList from "./pages/user/FollowList.tsx";
+import FollowRelationshipList from "./pages/user/FollowRelationshipList.tsx";
 import PersonalInfo from "./pages/user/PersonalInfo.tsx";
 import UpdatePwd from "./pages/auth/UpdatePwd.tsx";
 import ChatroomList from "./pages/chat/ChatroomList.tsx";
@@ -47,9 +47,9 @@ export const AppRoutes: React.FC = () => {
                     <Profile/>
                 </FooterLayout>
             }></Route>
-            <Route path="followList" element={
+            <Route path="followRelationshipList" element={
                 <FooterLayout>
-                    <FollowList/>
+                    <FollowRelationshipList/>
                 </FooterLayout>
             }></Route>
             <Route path="personalInfo" element={
