@@ -44,3 +44,15 @@
 .navRow {
     bottom: 0;
 }
+
+.cmodalRow {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    bottom: 13vh;
+    /* bottom: 0; */
+    z-index: 100;
+}

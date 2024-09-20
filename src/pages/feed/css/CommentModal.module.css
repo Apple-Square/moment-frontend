@@ -1,0 +1,35 @@
+.commentModal {
+    position: fixed;
+    max-width: 768px;
+    width: 100%;
+    height: 0vh;    /* hide on close */
+    left: auto;
+    bottom: 10vh;
+    background-color: #f0f0f0;
+    transition: height 0.3s ease;
+    overflow: hidden;
+    z-index: 3000;
+}
+
+.commentModal.open {
+    height: 40%;
+    overflow: auto;
+}
+
+.bar {
+    position: sticky;
+    top: 0;
+    padding: 10px 0;
+    width: 100%;
+    height: 3vh;
+    z-index: 50;
+}
+
+.bar>.barHr {
+    width: 50px;
+    height: 3px;
+    background-color: lightgray;
+    margin: 0 auto;
+    border-radius: 5px;
+    cursor: pointer;
+}

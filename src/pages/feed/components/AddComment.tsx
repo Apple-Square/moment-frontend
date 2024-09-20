@@ -6,9 +6,9 @@ const AddComment = () => {
     const [text, setText] = useState("");
 
     return (
-        <Container className={`${styles.container} px-0 pt-1`}>
+        <Container className={`${styles.container} px-0`}>
             <Row>
-                <Col xs={10} className="px-2">
+                <Col xs={10} className="px-0">
                     <div className={styles.commentInput}>
                         <textarea
                             placeholder="내용을 입력하세요."
