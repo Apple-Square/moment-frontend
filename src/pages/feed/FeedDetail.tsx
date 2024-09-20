@@ -20,7 +20,7 @@ const FeedDetail: React.FC = () => {
     return (
         <Container className={`${styles.container} p-0`}>
             <Row className={`${styles.feedRow} px-0`}>
-                <Col xs={12} md={8} lg={4} className='p-0'>
+                <Col /*xs={12} md={8} lg={4}*/ className='p-0'>
                     <Feed
                         profileImg={dummy.profileImg}
                         author={dummy.author}

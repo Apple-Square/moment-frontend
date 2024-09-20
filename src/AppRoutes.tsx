@@ -57,9 +57,9 @@ export const AppRoutes: React.FC = () => {
         </Route>
         <Route path="/feed" element={<AuthLayout />}>
             <Route path="threeColumnFeedList" element={<ThreeColumnFeedList/>}></Route>
-            <Route path="addFeed" element={<AddFeed/>}></Route>
             <Route path="feedDetail" element={<FeedDetail />}></Route>
         </Route>
+        <Route path="/feed/addFeed" element={<AddFeed/>}></Route>    {/* 개별 경로 설정 */}
     </Routes>)
 }
 

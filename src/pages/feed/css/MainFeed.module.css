@@ -1,14 +1,5 @@
-/* .container {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding-top: 12vh;
-    max-width: 768px !important;
-    width: 100%;
-} */
-
 .container {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
@@ -17,6 +8,7 @@
     width: 100vw;
     height: 100%;
     padding: 0 0;
+    padding-top: 12vh;
     overflow-y: visible;
     overflow-x: visible;
     box-sizing: border-box;
