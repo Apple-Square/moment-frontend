@@ -11,7 +11,7 @@
     height: 100vh;
     margin: 0 auto;
     border: solid 1px;
-    border-color: rgb(227, 168, 168);
+    border-color: rgb(168, 168, 168);
 }
 
 .row {
@@ -39,6 +39,10 @@
     justify-content: space-between;
 }
 
+.tbtnbox>.btn {
+    margin: 0 5px;
+}
+
 .btn {
     padding: 10px 20px;
     font-size: medium;
@@ -54,7 +58,15 @@
 
 .searchPlaceContainer {
     position: absolute;
-    top: 0px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.tagInputContainer {
+    position: absolute;
+    bottom: 2rem;
     left: 0;
     width: 100%;
     z-index: 100;
