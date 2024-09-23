@@ -91,9 +91,9 @@ const initialState : AuthState = {
         profileImage : "",
         profileIntro: "",
     },
-    token : "",
+    // token : "",
     isAuthenticated: false,
-    isRedirected: false, // 리다이렉트 한 번 하면 true가 됨.
+    shouldRedirect: false, // 리다이렉트 필요하면 true, 그리고 !shouldRedirect라면 로직수행 다른 Redirect와 꼬이지 않게 해줌
     loading: false,
     error: null,
 }
@@ -107,29 +107,44 @@ const authSlice = createSlice({
             state.user = {
                 ...state.user,
                 ...action.payload,
+            };
+            state.loading = false;
+        },
+        setRefresh : (state, action) => {
+            state.user = {
+                ...state.user,
+                ...action.payload.user,
             }
+            state.isAuthenticated = action.payload.isAuthenticated;
+            // state.isRedirected = action.payload.isRedirected;
+            state.loading = action.payload.loading;
+            state.error = action.payload.error;
         },
-        setToken : (state, action) => {
-            state.token = action.payload;
-        },
+        // setToken : (state, action) => {
+        //     state.token = action.payload;
+        // },
         setUserAndToken : (state, action) => {
             state.user = {
                 ...state.user,
                 ...action.payload.user,
             }
-            state.token = action.payload.token;
+            state.loading = false;
+            // state.token = action.payload.token;
         },
         setAuthentication : (state , action) => {
             state.isAuthenticated = action.payload;
+            state.loading = false;
         },
-        setIsRedirected: (state, action) => {
-            state.isRedirected = action.payload;
+        setShouldRedirect: (state, action) => {
+            state.shouldRedirect = action.payload;
+            state.loading = false;
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
         setError: (state, action) => {
             state.error = action.payload;
+            state.loading = false;
         }
     },
     //비동기작업
@@ -146,7 +161,7 @@ const authSlice = createSlice({
                     ...state.user,
                     ...action.payload.data.user
                 };
-                state.token = action.payload.token;
+                // state.token = action.payload.token;
             })
             .addCase(loginThunk.rejected, (state, action) => {
                 state.loading = false;
@@ -180,5 +195,5 @@ const authSlice = createSlice({
             });
     }
 })
-export const { setUser, setToken,setUserAndToken, setAuthentication, setIsRedirected, setLoading, setError } = authSlice.actions;
+export const { setUser, setRefresh,setUserAndToken, setAuthentication, setShouldRedirect, setLoading, setError } = authSlice.actions;
 export default authSlice.reducer;

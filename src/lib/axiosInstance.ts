@@ -103,7 +103,7 @@ const setUpResponseInterceptor = (instance) => {
             console.log(JSON.stringify(response, null, 2));
             return response;
         }, async function (error) {
-            if (error.response && error.response.status === 40444) {
+            if (error.response && error.response.status === 401) {
                 console.log(JSONColor.stringify(`서버로부터 401번호의 응답이 왔습니다\n인터셉터 작동 - error :: ${error}\n`));
                 console.log(JSONColor.stringify(`에러 리스폰스  :: ` + error.response));
 

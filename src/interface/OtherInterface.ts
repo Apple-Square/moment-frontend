@@ -5,9 +5,9 @@ export interface LoginThunkArgs extends Pick<User, 'username' | 'password'> {}
 
 export interface AuthState {
     user: User;
-    token : string;
+    //token : string;
     isAuthenticated: boolean;
-    isRedirected : boolean;
+    shouldRedirect : boolean;
     loading: boolean;
     error: unknown;
 }

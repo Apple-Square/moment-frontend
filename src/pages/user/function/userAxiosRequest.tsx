@@ -26,7 +26,7 @@ interface updateProfileImageResponse {
     userId: string;
 }
 /**
- * 나의 프로필 조회
+ * 나의 정보 조회
  */
 export const getMeRequest = async () : Promise<AxiosResponse<GetMeResponse> | Error> => {
     try {

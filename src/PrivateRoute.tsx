@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./redux/store/hooks.ts";
-import { setIsRedirected } from "./redux/slices/authSlice.ts";
+import {setShouldRedirect} from "./redux/slices/authSlice.ts";
 import {LoginRecommandModal} from "./pages/common/components/LoginRecommandModal.tsx";
 
 const PrivateRoute = ({ children }) => {
-    const { isAuthenticated, user, loading, isRedirected } = useAppSelector((state) => state.auth);
+    const { isAuthenticated, user, loading, shouldRedirect } = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        if (!loading && (!isAuthenticated || !user?.id) && !isRedirected) {
+        if (!loading && (!isAuthenticated || !user?.id) && !shouldRedirect) {
             setShowModal(true);
         }
-    }, [isAuthenticated, isRedirected, user, loading]);
+    }, [isAuthenticated, shouldRedirect, user, loading]);
 
     const handleConfirm = () => {
-        dispatch(setIsRedirected(true));
+        dispatch(setShouldRedirect(true));
         setShowModal(false);
         navigate("/auth/authMain");
     }
