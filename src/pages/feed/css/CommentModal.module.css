@@ -16,6 +16,11 @@
     overflow: auto;
 }
 
+/* 스크롤바 */
+.commentModal.open::-webkit-scrollbar {
+    display: none;
+}
+
 .bar {
     position: sticky;
     top: 0;

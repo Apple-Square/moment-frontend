@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import styles from "../css/PlaceSearch.module.css";
 
 interface SearchPlaceProps {
-    setPlaceTag: React.Dispatch<React.SetStateAction<Boolean>>;
-    setNow: React.Dispatch<React.SetStateAction<string>>;
+    setPlaceOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setPlace: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceTag, setNow }) => {  // 계단식 액션 -> 상위에서 적용
-    const [place, setPlace] = useState('');
+const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceOpen, setPlace }) => {  // 계단식 액션 -> 상위에서 적용
+    const [text, setText] = useState('');
+    const [selected, setSelected] = useState('');
 
     const handlePlaceClick = (event: React.MouseEvent<HTMLLIElement>) => {
         const placeName = event.currentTarget.textContent;
-        (placeName) ? setPlace(placeName) : setPlace(place);
+        (placeName) ? setSelected(placeName) : setSelected(selected);
     };
 
     return (
@@ -20,8 +21,8 @@ const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceTag, setNow }) => {  
                 <input
                     type="text"
                     placeholder="장소 검색"
-                    value={place}
-                    onChange={(e) => { setPlace(e.target.value) }}
+                    value={text}
+                    onChange={(e) => { setText(e.target.value) }}
                 />
                 <button
                     onClick={() => { }}
@@ -33,24 +34,29 @@ const SearchPlace: React.FC<SearchPlaceProps> = ({ setPlaceTag, setNow }) => {  
                 <ul>
                     {/* getPoint */}
                     <li onClick={handlePlaceClick}>유토피아</li>
-                    <li>버그없는세상</li>
-                    <li>놀고먹는데돈이계속늘어나는세상</li>
+                    <li onClick={handlePlaceClick}>버그없는세상</li>
+                    <li onClick={handlePlaceClick}>놀고먹는데돈이계속늘어나는세상</li>
                 </ul>
             </div>
             <div className={styles.buttonBox}>
                 <button
                     onClick={() => {
-                        setPlace('');
-                        setPlaceTag(false);
+                        setSelected('');       // 취소(적용 삭제)
+                        setPlaceOpen(false);
                     }}
                 >
                     취소
                 </button>
                 <button
                     onClick={() => {
-                        setNow(place);
-                        console.log(place);
-                        setPlaceTag(false);
+                        // console.log(text);
+                        if (selected) {
+                            setPlace(selected);
+                            console.log(selected);
+                            setPlaceOpen(false);
+                        } else {
+                            alert("장소를 선택해주세요");
+                        }
                     }}
                 >
                     선택

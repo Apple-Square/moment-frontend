@@ -4,12 +4,15 @@ import { Col, Container, Row } from 'react-bootstrap';
 import MediaUploader from './components/MediaUploader';
 import TextInput from './components/TextInput';
 import SearchPlace from './components/PlaceSearch';
+import TagInput from './components/TagInput';
 
 const AddFeed: React.FC = () => {
     const [media, setMedia] = useState<File[]>([]);;
     const [text, setText] = useState('');
-    const [placeTag, setPlaceTag] = useState<Boolean>(false);       // '위치'버튼을 눌렀을 때 창 처리 state
-    const [now, setNow] = useState<string>('');     // 게시글에 붙는 장소 태그
+    const [placeOpen, setPlaceOpen] = useState<boolean>(false);       // '위치'버튼을 눌렀을 때 창 처리 state
+    const [place, setPlace] = useState<string>('');     // 게시글에 붙는 장소 태그
+    const [tagOpen, setTagOpen] = useState<boolean>(false);
+    const [tags, setTags] = useState<string[]>([]);
 
     const handleSubmit = () => {
         if (media && text) {
@@ -39,12 +42,21 @@ const AddFeed: React.FC = () => {
                         </Row>
                         <Row className={`p-0 ${styles.row}`}>
                             <Col className={`p-2 ${styles.buttonBox}`}>
-                                <button className={styles.btn} onClick={() => setPlaceTag(!placeTag)}>위치</button>
-                                {placeTag && (
-                                    <div className={styles.searchPlaceContainer}>
-                                        <SearchPlace setPlaceTag={setPlaceTag} setNow={setNow}/>
-                                    </div>
-                                )}
+                                {/* 위치/태그 묶을 버튼박스 새로 만들기 */}
+                                <div className={`${styles.tbtnbox}`}>
+                                    <button className={styles.btn} onClick={() => setPlaceOpen(!placeOpen)}>위치</button>
+                                    {placeOpen && (
+                                        <div className={styles.searchPlaceContainer}>
+                                            <SearchPlace setPlaceOpen={setPlaceOpen} setPlace={setPlace} />
+                                        </div>
+                                    )}
+                                    <button className={`${styles.btn}`} onClick={() => setTagOpen(!tagOpen)}>태그</button>
+                                    {tagOpen && (
+                                        <div className={styles.tagInputContainer}>
+                                            <TagInput tags={tags} setTags={setTags} setTagOpen={setTagOpen}/>
+                                        </div>
+                                    )}
+                                </div>
                                 <button className={styles.btn} onSubmit={handleSubmit}>
                                     완료하기
                                 </button>
