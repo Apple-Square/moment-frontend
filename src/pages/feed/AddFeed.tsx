@@ -53,7 +53,7 @@ const AddFeed: React.FC = () => {
                                     <button className={`${styles.btn}`} onClick={() => setTagOpen(!tagOpen)}>태그</button>
                                     {tagOpen && (
                                         <div className={styles.tagInputContainer}>
-                                            <TagInput setTagOpen={setTagOpen} setTags={setTags} />
+                                            <TagInput tags={tags} setTags={setTags} setTagOpen={setTagOpen}/>
                                         </div>
                                     )}
                                 </div>

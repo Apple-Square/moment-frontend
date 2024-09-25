@@ -3,31 +3,32 @@ import styles from "../css/TagInput.module.css";
 import SvgDel from "./SvgDel";
 
 interface tagInputProps {
+    tags: string[];
     setTagOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setTags: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const TagInput: React.FC<tagInputProps> = ({ setTagOpen, setTags }) => {
+const TagInput: React.FC<tagInputProps> = ({ tags, setTagOpen, setTags }) => {
     const [text, setText] = useState('');
-    const [taglist, setTagList] = useState<string[]>([]);
+    // const [taglist, setTagList] = useState<string[]>([]);
 
     const handleAddClick = () => {
         if (text) {
             const newTags = text.split(/\s+/);
-            setTagList([...taglist, ...newTags])
+            setTags([...tags, ...newTags])
             setText('');
         }
     }
 
     const handleDeleteTag = (indexToDelete: number) => {
-        const updatedTags = taglist.filter((_, index) => index !== indexToDelete);
-        setTagList(updatedTags);
+        const updatedTags = tags.filter((_, index) => index !== indexToDelete);
+        setTags(updatedTags);
     }
 
     return (
         <div className={`${styles.container}`}>
             <div className={`${styles.tagBox}`}>
-                {taglist && taglist.map((tag, index) => (
+                {tags && tags.map((tag, index) => (
                     <>
                         <div key={index} className={`${styles.tag}`}>
                             {tag}<SvgDel className={`${styles.close}`} onClick={() => handleDeleteTag(index)} />
@@ -46,7 +47,7 @@ const TagInput: React.FC<tagInputProps> = ({ setTagOpen, setTags }) => {
                 <button className={`${styles.addBtn}`} onClick={() => { handleAddClick() }}>
                     입력
                 </button>
-                <button className={`${styles.submitBtn}`} onClick={() => { setTagOpen(false); setTags(taglist); }}>
+                <button className={`${styles.submitBtn}`} onClick={() => { setTagOpen(false); setTags(tags); }}>
                     완료
                 </button>
             </div>
