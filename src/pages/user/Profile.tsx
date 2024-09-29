@@ -161,6 +161,7 @@ const Profile: React.FC = () => {
             )}
             <ProfilePostType onSelect={handleSelectType} />
             <ProfilePostGrid posts={getPostData()} selectedType={selectedType} />
+
         </>
         // </Container>
     );

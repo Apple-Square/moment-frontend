@@ -97,13 +97,13 @@ const ProfileEdit = () => {
 
     useEffect(() => {
 
-        if(isAuthTaskFinished === ThreeValueBoolean.False){
+        if(isAuthTaskFinished !== ThreeValueBoolean.True){
             return;
         }
 
-        console.log("dkdkkasdfkaskdfkasdkfkasdasf");
-        console.log(myId);
-        console.log(JSON.stringify(userPagePocket, null, 2));
+        // console.log("ProfileEdit - useEffect :: myId와 userPagePocket 확인");
+        // console.log(myId);
+        // console.log(JSON.stringify(userPagePocket, null, 2));
 
         // //만약에 myId와 pocket의 id가 다르면 해킹이다. 즉시 네비게이트하고 리턴한다.
         if(myId !== userPagePocket.userPage.user.id){

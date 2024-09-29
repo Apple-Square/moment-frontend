@@ -4,25 +4,12 @@ import {Col, Image, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {castError} from "../../../lib/ErrorUtil.ts";
 import {Updater} from "use-immer";
+import {useLoginModal} from "../../common/hook/useLoginModal.ts";
+import {LoginRecommandModal} from "../../common/components/LoginRecommandModal.tsx";
 
 type ProfileHeaderProps = {
     myId: string;
-    userPage: {
-        user: {
-            id: string,
-            nickname: string,
-            regDate: string,
-            birth: string,
-            gender: string,
-            address: string,
-            intro: string,
-            profileImage: string,
-        },
-        postCount: string,
-        followerCount: string,
-        followingCount: string,
-        followed: boolean
-    };
+    userPage: UserPage;
     fetchAndUpdateUserData: () => Promise<void>
     // profileImage: string;//추가
     fileInputRef: React.RefObject<HTMLInputElement>;//추가
@@ -46,14 +33,22 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
 
 
-
+    const {
+        showModal,
+        handleConfirm,
+        handleCancel,
+        loading,
+        checkAuth,
+    } = useLoginModal();
 
 
     //api요청 날리고 성공하면 userPage.followed = true로 바꿔주기
     const handleFollow = async () => {
+        // if (!checkAuth()) return;
+
         console.log('팔로우');
         try{
-            const id = await followRequest(userPage?.user?.id);
+            const id = await followRequest(userPage.user.id);
             if(id){
                 void fetchAndUpdateUserData();
             }
@@ -64,6 +59,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     }
     //api요청 날리고 성공하면 userPage.followed = false로 바꿔주기
     const handleFollowCancel = async () => {
+        if (!checkAuth()) return;
         console.log('팔로우 취소');
 
         try {
@@ -79,10 +75,12 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 
 
     const handleProfileShare = async () => {
+        if (!checkAuth()) return;
         console.log('프로필 공유');
     }
 
     const handleMessage = async () => {
+        if (!checkAuth()) return;
         console.log('메세지');
     }
 
@@ -182,6 +180,13 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 style={{display: 'none'}}
                 onChange={handleFileChange}
             />
+            {showModal && (
+                <LoginRecommandModal
+                    open={showModal}
+                    onClose={handleCancel}
+                    onConfirm={handleConfirm}
+                />
+            )}
         </>
     );
 };

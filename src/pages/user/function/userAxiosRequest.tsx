@@ -13,8 +13,6 @@ interface UserProfile {
     nickname: string;
     profileImage: string;
 }
-
-
 interface GetMeResponse {
     timeStamp: string;
     message: string;
@@ -44,7 +42,7 @@ export const getMeRequest = async () : Promise<AxiosResponse<GetMeResponse> | Er
  * @param key
  * @param value
  */
-export const updateMeRequest = async (userId : string, user : User) : Promise<string | Error> => {
+export const updateMeRequest = async (userId : string, user : any) : Promise<string | Error> => {
     try {
 
         const response = await axiosInstanceWithAccessToken.patch(`users/${userId}`, user);
@@ -125,18 +123,15 @@ export interface UserPage {
     followed : boolean
 }
 export interface User {
-    id?: string;
-    nickname?: string;
-    regDate?: string;
-    birth?: string;
-    gender?: string;
-    address?: string;
-    intro?: string;
-    profileImage?: string;
+    id: string;
+    nickname: string;
+    regDate: string;
+    birth: string;
+    gender: string;
+    address: string;
+    intro: string;
+    profileImage: string;
 }
-
-
-
 export const getProfileRequest = async (userId : string) : Promise<UserPagePocket | Error> => {
     try {
         let response;
@@ -152,7 +147,6 @@ export const getProfileRequest = async (userId : string) : Promise<UserPagePocke
         return castError(error);
     }
 }
-
 export interface UserOfFollowList {
     id: string;              // 사용자 ID
     nickname: string;        // 사용자 닉네임
