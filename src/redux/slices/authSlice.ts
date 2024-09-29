@@ -1,15 +1,8 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {axiosInstance, tokenManager} from '../../lib/axiosInstance.ts';
+import {tokenManager} from '../../lib/axiosInstance.ts';
 import {loginRequest, logoutRequest} from "../../pages/auth/function/authAxios.ts"
-import {NavigateFunction} from "react-router-dom";
-import _ from "lodash";
-import {AuthState, LoginThunkArgs} from "../../interface/OtherInterface.ts";
-import {JSONColor} from "../../lib/deepLog.ts";
-import {produce, WritableDraft} from "immer";
+import {AuthState, LoginThunkArgs, ThreeValueBoolean} from "../../interface/OtherInterface.ts";
 import {getErrorMessage, isError} from "../../lib/ErrorUtil.ts";
-import {merge} from "chart.js/helpers";
-
-
 
 
 /**
@@ -94,7 +87,9 @@ const initialState : AuthState = {
     // token : "",
     isAuthenticated: false,
     shouldRedirect: false, // 리다이렉트 필요하면 true, 그리고 !shouldRedirect라면 로직수행 다른 Redirect와 꼬이지 않게 해줌
-    loading: false,
+    loading: false, //이거 언젠가 제거해야 함. isFinished로 바꿨음. loading. Refactoring
+    isAuthTaskFinished : ThreeValueBoolean.False,
+    //첫 리덕스 처리가 완료 되었는지 아닌지. 처음에 false이고 로그인 중이면 loading 처리 완료되면 무조건 true로 바꿔짐.
     error: null,
 }
 
@@ -108,7 +103,7 @@ const authSlice = createSlice({
                 ...state.user,
                 ...action.payload,
             };
-            state.loading = false;
+            state.loading = action.payload.loading;
         },
         setRefresh : (state, action) => {
             state.user = {
@@ -117,6 +112,7 @@ const authSlice = createSlice({
             }
             state.isAuthenticated = action.payload.isAuthenticated;
             // state.isRedirected = action.payload.isRedirected;
+            state.isAuthTaskFinished = ThreeValueBoolean.True;
             state.loading = action.payload.loading;
             state.error = action.payload.error;
         },
@@ -128,43 +124,47 @@ const authSlice = createSlice({
                 ...state.user,
                 ...action.payload.user,
             }
-            state.loading = false;
+            state.loading = action.payload.loading;
             // state.token = action.payload.token;
         },
         setAuthentication : (state , action) => {
             state.isAuthenticated = action.payload;
-            state.loading = false;
+            state.loading = action.payload.loading;
         },
         setShouldRedirect: (state, action) => {
             state.shouldRedirect = action.payload;
-            state.loading = false;
+            state.loading = action.payload.loading;
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
         setError: (state, action) => {
             state.error = action.payload;
-            state.loading = false;
+            state.loading = action.payload.loading;
         }
     },
     //비동기작업
     extraReducers: (builder) => {
         builder
             .addCase(loginThunk.pending, (state) => {
-                state.loading = true;
+                state.loading = true;//이거 지워야함...
+                state.isAuthTaskFinished = ThreeValueBoolean.Loading;
                 state.error = null;
             })
             .addCase(loginThunk.fulfilled, (state, action) => {
-                state.loading = false;
+
                 state.isAuthenticated = true;
                 state.user = {
                     ...state.user,
                     ...action.payload.data.user
                 };
+                state.loading = false;
+                state.isAuthTaskFinished = ThreeValueBoolean.True;
                 // state.token = action.payload.token;
             })
             .addCase(loginThunk.rejected, (state, action) => {
                 state.loading = false;
+                state.isAuthTaskFinished = ThreeValueBoolean.True;
                 state.isAuthenticated = false;
                 state.error = action.error.message || `로그인 실패 :: 에러메세지 없음`;
             })
@@ -191,6 +191,7 @@ const authSlice = createSlice({
             .addCase(logoutThunk.rejected, (state, action) => {
                 state.loading = false;
                 state.isAuthenticated = false;
+                state.isAuthTaskFinished = ThreeValueBoolean.False;
                 state.error = action.error.message || '로그아웃 실패 :: 에러메세지 없음';
             });
     }

@@ -9,14 +9,13 @@ import {getProfileRequest, updateProfileImageRequest, UserPage, UserPagePocket} 
 import {useImmer} from "use-immer";
 import {JSONColor} from "../../lib/deepLog.ts";
 import ProfileImageCropper from "./component/ProfileImageCropper.tsx";
+import useProfileImage from "./hook/useProfileImage.tsx";
 
 
 const Profile: React.FC = () => {
 
     const [selectedType, setSelectedType] = useState<string>('posts'); // 보여줄 리스트의 타입 저장
-    const [isCropping, setIsCropping] = useState(false); // 크롭 모드 제어
-    const [uploadedImage, setUploadedImage] = useState<string | null>(null); // 업로드된 이미지
-    const [userPagePocket,updateUserPagePocket] = useImmer({
+    const [userPagePocket,updateUserPagePocket] = useImmer<UserPagePocket>({
         userPage : {
             user : {
                 id : "",
@@ -36,57 +35,21 @@ const Profile: React.FC = () => {
     });
     const myId = useAppSelector(state => state.auth.user.id);
     const location = useLocation();
-    //테스트용으로 Bq8WIhU5eYNwler는 타인의 프로필 X03EPGPnrqM34he는 나의 프로필
-    const subjectId = "Bq8WIhU5eYNwler";
+    //테스트용으로 Bq8WIhU5eYNwler 는 타인의 프로필 X03EPGPnrqM34he 는 나의 프로필
+    const subjectId = "X03EPGPnrqM34he";
     // const subjectId = "X03EPGPnrqM34he";
     // const subjectId = location.state as string || myId;
-    
 
-
-    const handleProfileImageChange = (imageDataUrl: string) => {
-        setUploadedImage(imageDataUrl);
-        setIsCropping(true);
-    };
-
-    const handleCropped = async (croppedImageBlob: Blob) => {
-        try {
-            console.log("한번보자 :: " + JSON.stringify(myId, null, 2));
-            console.log("Cropped Blob: ", croppedImageBlob);
-
-            // Blob 객체를 updateProfileImageRequest로 전송
-            const response = await updateProfileImageRequest(croppedImageBlob, myId);
-
-            if (response instanceof Error) {
-                console.error("프로필 이미지 업데이트 실패: ", response);
-                return;
-            }
-
-            setIsCropping(false); // 크롭 모드 종료
-            updateUserPagePocket(draft => {
-                // Blob을 서버에서 저장한 URL로 교체
-                draft.userPage.user.profileImage = URL.createObjectURL(croppedImageBlob); // 임시로 Blob URL 사용
-            });
-        } catch (error) {
-            console.error("handleCropped에서 에러 발생: ", error);
-        }
-    };
-
-
-    //모달 닫기 함수
-    const closeCropper = () => {
-        setIsCropping(false);
-    }
-
-    //크롭 모드일 때 body 스크롤 막기
-    useEffect(() => {
-        if (isCropping) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
-    }, [isCropping]);
-
-
+    const {
+        isCropping,
+        uploadedImage,
+        fileInputRef,
+        handleImageClick,
+        handleImageError,
+        handleFileChange,
+        handleCropped,
+        closeCropper
+    } = useProfileImage(userPagePocket?.userPage, updateUserPagePocket,myId);
 
     const fetchAndUpdateUserData = async () : Promise<void> => {
     try{
@@ -183,8 +146,11 @@ const Profile: React.FC = () => {
                 myId={myId}
                 userPage={userPagePocket?.userPage}
                 fetchAndUpdateUserData={fetchAndUpdateUserData}
-                profileImage={userPagePocket?.userPage?.user?.profileImage}
-                onProfileImageChange={handleProfileImageChange}
+                // profileImage={userPagePocket?.userPage?.user?.profileImage}
+                fileInputRef={fileInputRef}
+                handleFileChange={handleFileChange}
+                handleImageClick={handleImageClick}
+                handleImageError={handleImageError}
             />
             {isCropping && uploadedImage && (
                 <ProfileImageCropper

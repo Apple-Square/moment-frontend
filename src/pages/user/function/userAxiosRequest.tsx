@@ -44,12 +44,12 @@ export const getMeRequest = async () : Promise<AxiosResponse<GetMeResponse> | Er
  * @param key
  * @param value
  */
-export const updateMeRequest = async (key : string, value : string) : Promise<AxiosResponse<any, any> | Error> => {
+export const updateMeRequest = async (userId : string, user : User) : Promise<string | Error> => {
     try {
 
-        const response = await axiosInstanceWithAccessToken.patch(`users?${key}=${value}}`);
+        const response = await axiosInstanceWithAccessToken.patch(`users/${userId}`, user);
         console.log(`updateMeRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
-        return response;
+        return response.data?.userId;
     } catch (error) {
         console.error(`updateMeRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
@@ -118,20 +118,21 @@ export interface UserPagePocket {
     userPage : UserPage;
 }
 export interface UserPage {
-    user : {
-        id : string,
-        nickname : string,
-        regDate : string,
-        birth : string,
-        gender : string,
-        address : string,
-        intro : string,
-        profileImage : string,
-    },
+    user : User
     postCount : string,
     followerCount : string,
     followingCount : string,
     followed : boolean
+}
+export interface User {
+    id?: string;
+    nickname?: string;
+    regDate?: string;
+    birth?: string;
+    gender?: string;
+    address?: string;
+    intro?: string;
+    profileImage?: string;
 }
 
 

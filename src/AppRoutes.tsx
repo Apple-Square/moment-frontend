@@ -20,6 +20,7 @@ import {Footer} from "./pages/common/components/Footer.tsx";
 import {Container} from "react-bootstrap";
 import React from "react";
 import {FooterLayout} from "./pages/common/layoutComponents/FooterLayout.tsx";
+import ProfileEdit from "./pages/user/ProfileEdit.tsx";
 
 
 export const AppRoutes: React.FC = () => {
@@ -47,6 +48,11 @@ export const AppRoutes: React.FC = () => {
                     <Profile/>
                 </FooterLayout>
             }></Route>
+            <Route path="profile/edit" element={
+                <FooterLayout>
+                    <ProfileEdit/> {/* 프로필 편집 컴포넌트 */}
+                </FooterLayout>
+            } />
             <Route path="followRelationshipList" element={
                 <FooterLayout>
                     <FollowRelationshipList/>

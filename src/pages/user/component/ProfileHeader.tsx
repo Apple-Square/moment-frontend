@@ -24,8 +24,11 @@ type ProfileHeaderProps = {
         followed: boolean
     };
     fetchAndUpdateUserData: () => Promise<void>
-    profileImage: string;//추가
-    onProfileImageChange: (imageDataUrl: string) => void;//추가
+    // profileImage: string;//추가
+    fileInputRef: React.RefObject<HTMLInputElement>;//추가
+    handleImageClick: () => void;//추가
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;//추가
+    handleImageError: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;//추가
     style?: React.CSSProperties;
 };
 //추가
@@ -33,44 +36,18 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                                                 myId,
                                                                 userPage,
                                                                 fetchAndUpdateUserData,
-                                                                profileImage,
-                                                                onProfileImageChange,
+                                                                // profileImage,
+                                                                fileInputRef,
+                                                                handleImageClick,
+                                                                handleFileChange,
+                                                                handleImageError,
                                                                 style
                                                             }) => {
 
-    //추가
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    /**
-     * 이미지를 클릭하면 input type='file'을 클릭하도록 하는 함수
-     */
-    const handleImageClick = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
-    }
 
-    /**
-     * input type='file'이 클릭되었을때 실행된다.
-     * 파일을 읽을 시 onload가 실행된다. 여기서 상태(uploadedImage)에 저장하고, 크롭중으로 만든다.
-     * @param e
-     */
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (reader.result) {
-                    onProfileImageChange(reader.result as string);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    }
 
-    const handleImageError = (e) => {
-        e.target.src = `${import.meta.env.BASE_URL}images/defaultProfileImage.jpg`;
-    }
+
 
     //api요청 날리고 성공하면 userPage.followed = true로 바꿔주기
     const handleFollow = async () => {
@@ -98,6 +75,15 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             console.error(`followCancelRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
             return castError(error);
         }
+    }
+
+
+    const handleProfileShare = async () => {
+        console.log('프로필 공유');
+    }
+
+    const handleMessage = async () => {
+        console.log('메세지');
     }
 
     return (
@@ -148,19 +134,47 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                             </Link>
                         </Col>
                     </Row>
-
-                    {myId !== userPage?.user?.id && (<Row style={styles.actionLayout} className="p-0">
-                        <button
-                            style={styles.button}
-                            onClick={userPage?.followed ? handleFollowCancel : handleFollow}
-                        >{userPage?.followed ? "팔로우 취소" : "팔로우"}</button>
-                        <button style={styles.button}>메세지</button>
-                    </Row>)}
                 </Col>
             </Row>
-            <Row style={styles.intro}>
+            <Row style={styles.intro} className="w-100">
                 <p>{userPage?.user?.intro}</p>
             </Row>
+            {myId !== userPage?.user?.id && (
+            <Row className="w-100 m-0 align-items-between" style={styles.actionLayout}>
+                <button
+                    style={styles.button}
+                    onClick={userPage?.followed ? handleFollowCancel : handleFollow}
+                >{userPage?.followed ? "팔로우 취소" : "팔로우"}</button>
+                <button
+                    style={styles.button}
+                    onClick={handleMessage}
+                >메세지</button>
+            </Row>)}
+            {myId === userPage?.user?.id && (
+                <Row className="w-100 m-0 align-items-between" style={styles.actionLayout}>
+                    <Link
+                        to={"edit"}
+                        state={{userPage : userPage}}
+                        style={{textDecoration: 'none', color: 'inherit', width : '47%'}}
+                        className="p-0"
+                    >
+                        <button
+                            style={styles.button2}>
+                            프로필 편집
+                        </button>
+                    </Link>
+                    <Link
+                        to={"edit"}
+                        state={{userPage : userPage}}
+                        style={{textDecoration: 'none', color: 'inherit', width : '47%'}}
+                        className="p-0"
+                    >
+                    <button
+                        style={styles.button2}
+                        onClick={handleProfileShare}
+                    >프로필 공유</button>
+                    </Link>
+                </Row>)}
             <input
                 type="file"
                 accept="image/*"
@@ -205,15 +219,23 @@ const styles: { [key: string]: React.CSSProperties } = {
         borderRadius: '10px',
         border : '0px solid #000000',
         backgroundColor : '#ececec',
-        width: 'auto'
+        width: '47%'
+    },
+    button2: {
+        borderRadius: '10px',
+        border : '0px solid #000000',
+        backgroundColor : '#ececec',
+        width: '100%'
     },
     actionLayout: {
-        width: '100%',
-        flex: 2,
-        flexDirection: 'row',
         display: 'flex',
-        alignItems: 'flex-start',
+        flexDirection : 'row',
+        justifyContent: 'space-evenly',
+        padding: '1rem 0 1rem 0',
+    },
+    profileModifyingLayout: {
+        display: 'flex',
         justifyContent: 'center',
-        gap: '2rem'
+        alignItems: 'center',
     }
 };
