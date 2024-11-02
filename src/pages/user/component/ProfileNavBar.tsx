@@ -14,8 +14,8 @@ type ProfileNavBarProps = {
 }
 
 export const ProfileNavBar: React.FC<ProfileNavBarProps> = ({
-                                                                myId,
-                                                                userPage
+                                                    myId,
+                                                    userPage
                                                             }) => {
 
     const dispatch = useAppDispatch()
