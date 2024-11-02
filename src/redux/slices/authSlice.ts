@@ -3,6 +3,7 @@ import {tokenManager} from '../../lib/axiosInstance.ts';
 import {loginRequest, logoutRequest} from "../../pages/auth/function/authAxios.ts"
 import {AuthState, LoginThunkArgs, ThreeValueBoolean} from "../../interface/OtherInterface.ts";
 import {getErrorMessage, isError} from "../../lib/ErrorUtil.ts";
+import {clearAllCookies} from "../../pages/common/function/cookie.ts";
 
 
 /**
@@ -28,23 +29,25 @@ export const loginThunk
         try{
             console.log("loginState :: "+ JSON.stringify(loginState));
 
-            if (!loginState?.username || !loginState?.password) {
-                return thunkAPI.rejectWithValue("아이디와 비밀번호를 \n입력해주세요.");
-            }
-
             const response = await loginRequest({
                 username: loginState.username,
                 password: loginState.password,
             });
 
+            //response가 에러를 담은 객체라면
             if(isError(response)){
+                console.log("loginThunk :: 에러가 담긴 res가 왔습니다. response :: " + JSON.stringify(response, null, 2));
                 return thunkAPI.rejectWithValue(getErrorMessage(response));
             }
-            console.log("loginThunk에서 response :: "+ JSON.stringify(response, null, 2));
+
+            console.log("loginThunk :: response :: "+ JSON.stringify(response, null, 2));
+
             tokenManager.setToken(response.token);
+
             console.log("로그인요청중 :: 베어러 토큰 - "+tokenManager.getToken());
 
             console.log(JSON.stringify(response, null, 2));
+
             return thunkAPI.fulfillWithValue(response);
 
         } catch (error) {
@@ -58,6 +61,8 @@ export const logoutThunk = createAsyncThunk(
     "auth/logout",
     async (_, thunkAPI) => {
         try {
+            tokenManager.clearToken();
+            clearAllCookies();
             const response = await logoutRequest();
 
             return thunkAPI.fulfillWithValue(response);

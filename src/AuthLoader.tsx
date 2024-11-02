@@ -92,7 +92,6 @@ export const AuthLoader = ({children}) => {
     //서버로 부터
 
     useEffect(() => {
-
         console.log("AuthLoader :: "+JSON.stringify(auth, null, 2));
     },[auth]);
 

@@ -118,16 +118,16 @@ const LoginArea: React.FC<{
     }, [token]);
 
     useEffect(() => {
-        console.log("store :: "+JSON.stringify(auth, null, 2));
+        // console.log("store :: "+JSON.stringify(auth, null, 2));
         if(auth.isAuthenticated || token !== ""){
             navigate('/user/profile');
             showToast("success", "로그인에 성공하였습니다", 1000);
         }
     }, [auth, navigate, token]);
 
-    useEffect(() => {
-        console.log("계속 로그 찍기"+JSON.stringify(loginState, null, 2));
-    });
+    // useEffect(() => {
+    //     console.log("계속 로그 찍기"+JSON.stringify(loginState, null, 2));
+    // });
 
 
 

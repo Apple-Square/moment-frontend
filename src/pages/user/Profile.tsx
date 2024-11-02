@@ -35,10 +35,16 @@ const Profile: React.FC = () => {
     });
     const myId = useAppSelector(state => state.auth.user.id);
     const location = useLocation();
-    //테스트용으로 Bq8WIhU5eYNwler 는 타인의 프로필 X03EPGPnrqM34he 는 나의 프로필
-    const subjectId = "X03EPGPnrqM34he";
+    //테스트용 1 :: X03EPGPnrqM34he 는 나의 프로필
     // const subjectId = "X03EPGPnrqM34he";
-    // const subjectId = location.state as string || myId;
+
+    //테스트용 2 :: Bq8WIhU5eYNwler 는 타인의 프로필
+    // const subjectId = "Bq8WIhU5eYNwler";
+
+    /**실제 사용 코드 :: location.state가 없고, myId 있으면 내 프로필
+     * locaion.state가 있으면 그 타 회원 프로필
+     */
+    const subjectId = location.state as string || myId;
 
     const {
         isCropping,
@@ -68,6 +74,9 @@ const Profile: React.FC = () => {
     }
 
     //테스트용 삭제
+    useEffect(() => {
+
+    }, []);
     useEffect(()=>{
         console.log(JSON.stringify(userPagePocket, null, 2));
     })
@@ -138,32 +147,35 @@ const Profile: React.FC = () => {
 
 
     return (
-        // <Container style={styles.container}>
         <>
-            <ProfileNavBar />
-            <ProfileHeader
-                // style={styles.headerWrapper}
-                myId={myId}
-                userPage={userPagePocket?.userPage}
-                fetchAndUpdateUserData={fetchAndUpdateUserData}
-                // profileImage={userPagePocket?.userPage?.user?.profileImage}
-                fileInputRef={fileInputRef}
-                handleFileChange={handleFileChange}
-                handleImageClick={handleImageClick}
-                handleImageError={handleImageError}
-            />
-            {isCropping && uploadedImage && (
-                <ProfileImageCropper
-                    imageSrc={uploadedImage}
-                    onCropped={handleCropped}
-                    onClose={closeCropper}
-                />
+            {subjectId ? (
+                <>
+                    <ProfileNavBar myId={myId} userPage={userPagePocket?.userPage} />
+                    <ProfileHeader
+                        myId={myId}
+                        userPage={userPagePocket?.userPage}
+                        fetchAndUpdateUserData={fetchAndUpdateUserData}
+                        fileInputRef={fileInputRef}
+                        handleFileChange={handleFileChange}
+                        handleImageClick={handleImageClick}
+                        handleImageError={handleImageError}
+                    />
+                    {isCropping && uploadedImage && (
+                        <ProfileImageCropper
+                            imageSrc={uploadedImage}
+                            onCropped={handleCropped}
+                            onClose={closeCropper}
+                        />
+                    )}
+                    <ProfilePostType onSelect={handleSelectType} />
+                    <ProfilePostGrid posts={getPostData()} selectedType={selectedType} />
+                </>
+            ) : (
+                <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                    존재하지 않는 회원입니다.
+                </div>
             )}
-            <ProfilePostType onSelect={handleSelectType} />
-            <ProfilePostGrid posts={getPostData()} selectedType={selectedType} />
-
         </>
-        // </Container>
     );
 };
 

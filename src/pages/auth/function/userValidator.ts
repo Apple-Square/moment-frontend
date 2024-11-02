@@ -35,7 +35,7 @@ export const userValidator = {
             return "";
         }
         if (!USERNAME_PATTERN.test(username)) {
-            return "8자~20자를 입력해주세요";
+            return "올바르지 않은 형식(8자~20자)";
         }
         return "";
     },

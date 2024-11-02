@@ -5,12 +5,24 @@ import st from "../css/profileNavbar.module.css";
 import {logoutRequest} from "../../auth/function/authAxios.ts";
 import {useAppDispatch} from "../../../redux/store/hooks.ts";
 import {logoutThunk} from "../../../redux/slices/authSlice.ts";
-export const ProfileNavBar: React.FC = () => {
+import {Link, useNavigate} from "react-router-dom";
+import {UserPage} from "../function/userAxiosRequest.tsx";
+
+type ProfileNavBarProps = {
+    myId : string
+    userPage : UserPage;
+}
+
+export const ProfileNavBar: React.FC<ProfileNavBarProps> = ({
+                                                        myId,
+                                                        userPage
+                                                            }) => {
 
     const dispatch = useAppDispatch()
-
+    const navigate = useNavigate();
     const handleLogout = async () => {
-        dispatch(logoutThunk());
+        await dispatch(logoutThunk());
+        navigate('/auth/authMain');
     }
 
     return (
@@ -36,7 +48,8 @@ export const ProfileNavBar: React.FC = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto mx-auto">
                         <Nav.Link href="#profile">즐겨찾기</Nav.Link>
-                        <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
+                        { myId == userPage?.user.id &&
+                        <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
 

@@ -15,6 +15,9 @@ export const tokenManager = (() => {
         },
         setToken: function(newToken) {
             accessToken = newToken;
+        },
+        clearToken: function () {
+            accessToken = '';
         }
     };
 })();
