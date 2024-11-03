@@ -15,7 +15,7 @@ import {JSONColor} from "../../lib/deepLog.ts";
 import {showToast} from "../../lib/ToastNotification.ts";
 import {debounce} from "lodash";
 import {userValidator} from "./function/userValidator.ts";
-import {axiosInstance} from "../../lib/axiosInstance.ts";
+import {axiosInstance, tokenManager} from "../../lib/axiosInstance.ts";
 
 const debouncedUpdateLoginState = debounce((updateLoginState : Updater<LoginState>,name : string, value : string) => {
         updateLoginState(draft => {
@@ -102,17 +102,32 @@ const LoginArea: React.FC<{
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    useEffect(()=> {
-        console.log("store :: "+JSON.stringify(auth,null,2));
-        if(auth.isAuthenticated){
-            navigate('/user/profile');
-            showToast("success","로그인에 성공하였습니다",1000);
-        }
-    },[auth, navigate]);
+    const [token, setToken] = useState(tokenManager.getToken());
 
     useEffect(() => {
-        console.log("계속 로그 찍기"+JSON.stringify(loginState, null, 2));
-    });
+        const checkToken = () => {
+            const newToken = tokenManager.getToken();
+            if (newToken !== token) {
+                setToken(newToken);
+            }
+        };
+
+        // 주기적으로 tokenManager에서 값을 확인
+        const interval = setInterval(checkToken, 100000); // 100초마다 토큰 변경 확인
+        return () => clearInterval(interval); // 컴포넌트가 언마운트되면 interval 정리
+    }, [token]);
+
+    useEffect(() => {
+        // console.log("store :: "+JSON.stringify(auth, null, 2));
+        if(auth.isAuthenticated || token !== ""){
+            navigate('/user/profile');
+            showToast("success", "로그인에 성공하였습니다", 1000);
+        }
+    }, [auth, navigate, token]);
+
+    // useEffect(() => {
+    //     console.log("계속 로그 찍기"+JSON.stringify(loginState, null, 2));
+    // });
 
 
 

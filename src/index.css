@@ -13,7 +13,7 @@ html, body {
   min-width: 375px;
   min-height: 100vh;
   max-width: 768px;
-  width: 100%;
+  width: 100vw;
   height: auto;
   margin: 0 auto; /* 수평 중앙 정렬 */
   box-sizing: border-box;

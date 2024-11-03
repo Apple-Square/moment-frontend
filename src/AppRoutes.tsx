@@ -4,7 +4,7 @@ import {SignUp} from "./pages/auth/SignUp.tsx";
 import Postcode from "./pages/auth/Postcode.tsx";
 import Profile from "./pages/user/Profile.tsx";
 import FindUserId from "./pages/auth/FindUserId.tsx";
-import FollowList from "./pages/user/FollowList.tsx";
+import FollowRelationshipList from "./pages/user/FollowRelationshipList.tsx";
 import PersonalInfo from "./pages/user/PersonalInfo.tsx";
 import UpdatePwd from "./pages/auth/UpdatePwd.tsx";
 import ChatroomList from "./pages/chat/ChatroomList.tsx";
@@ -19,6 +19,8 @@ import PrivateRoute from "./PrivateRoute.tsx";
 import {Footer} from "./pages/common/components/Footer.tsx";
 import {Container} from "react-bootstrap";
 import React from "react";
+import {FooterLayout} from "./pages/common/layoutComponents/FooterLayout.tsx";
+import ProfileEdit from "./pages/user/ProfileEdit.tsx";
 import FeedDetail from "./pages/feed/FeedDetail.tsx";
 
 
@@ -44,7 +46,29 @@ export const AppRoutes: React.FC = () => {
             <Route path="updatePwd" element={<UpdatePwd/>}></Route>
             <Route path="emailVerification" element={<EmailVerification/>}></Route>
         </Route>
-
+        <Route path="/user" element={<BackgroundEffect />}>
+            <Route path="profile" element={
+                <FooterLayout>
+                    <Profile/>
+                </FooterLayout>
+            }></Route>
+            <Route path="profile/edit" element={
+                <FooterLayout>
+                    <ProfileEdit/> {/* 프로필 편집 컴포넌트 */}
+                </FooterLayout>
+            } />
+            <Route path="followRelationshipList" element={
+                <FooterLayout>
+                    <FollowRelationshipList/>
+                </FooterLayout>
+            }></Route>
+            <Route path="personalInfo" element={
+                <PrivateRoute>
+                    <FooterLayout>
+                        <PersonalInfo/>
+                    </FooterLayout>
+                </PrivateRoute>
+            }></Route>
         <Route path="/user" element={<AuthLayout />}>
             <Route path="profile" element={<Profile/>}></Route>
             <Route path="followList" element={<FollowList/>}></Route>

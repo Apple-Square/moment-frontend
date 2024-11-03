@@ -49,12 +49,20 @@ export const setErrorName = (error: unknown, name: string): void => {
         (error as Record<string, unknown>).name = name;
     }
 };
-export const castError = (error: unknown): AxiosError | Error => {
+export const castError = (error: unknown): Error => {
     if (isAxiosError(error)) {
-        return error;
+        const axiosError = new Error(error.message);  // Error로 변환
+        // AxiosError의 모든 속성을 Error 객체에 복사
+        (axiosError as any).config = error.config;
+        (axiosError as any).request = error.request;
+        (axiosError as any).response = error.response;
+        (axiosError as any).isAxiosError = error.isAxiosError;
+        return axiosError;
     }
-    if ((error as any) instanceof Error) {
-        return error as Error;  // Error로 반환
+
+    if (error instanceof Error) {
+        return error;  // 이미 Error인 경우 그대로 반환
     }
-    return new Error(String(error));
-}
+
+    return new Error(String(error));  // 알 수 없는 에러는 문자열로 변환 후 Error로 생성
+};
