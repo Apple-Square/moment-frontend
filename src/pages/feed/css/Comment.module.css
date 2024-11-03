@@ -5,7 +5,6 @@
     
 }
 
-
 .header {
     display: flex;
     justify-content: space-between;
@@ -28,6 +27,12 @@
 .author {
     font-weight: bold;
     font-size: small;
+}
+
+.action {
+    display: flex;
+    align-items: self-end;
+    margin: 0 10px;
 }
 
 .contentsWrapper {
