@@ -16,6 +16,7 @@ import {showToast} from "../../lib/ToastNotification.ts";
 import {debounce} from "lodash";
 import {userValidator} from "./function/userValidator.ts";
 import {axiosInstance, tokenManager} from "../../lib/axiosInstance.ts";
+import layout from "../common/css/layout.module.css";
 
 const debouncedUpdateLoginState = debounce((updateLoginState : Updater<LoginState>,name : string, value : string) => {
         updateLoginState(draft => {
@@ -246,7 +247,7 @@ export const AuthMain: React.FC = () => {
 
 
     return (
-            <Container className={`${styles.container}`}>
+            <Container className={`${layout.authMainLayout}`}>
                 <Row className={`${styles.emptyTopRow}`}/>
                 <Row className={`w-100 mb-4 ${styles.h15}`} style={{minWidth: "300px"}}>
                     <Col className="d-flex justify-content-center" style={{ maxHeight: "100%" }}>

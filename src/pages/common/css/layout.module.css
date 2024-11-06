@@ -1,0 +1,28 @@
+/* layout.module.css */
+.footerLayout {
+    display: flex !important;
+    justify-content: flex-start !important;  /* 'start'를 'flex-start'로 수정 */
+    align-items: stretch !important;
+    flex-direction: column !important;
+    max-width: 768px !important;
+    min-height: 100vh !important;
+    width: 100vw !important;
+    height: 100% !important;
+    padding: 0 !important; /* 0px 대신 0으로 간소화 */
+    overflow-y: visible !important;
+    overflow-x: visible !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+}
+.authMainLayout {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;;
+    flex-direction: column !important;;
+    width: 100vw !important;;
+    height: 100vw !important;;
+    max-width: 768px !important;
+    min-height: 100vh !important;
+    margin: 0 auto !important;; /* 중앙 정렬을 위해 좌우 마진을 자동으로 설정 */
+    padding: 0 20px !important;; /* 내부 패딩 설정 */
+}
