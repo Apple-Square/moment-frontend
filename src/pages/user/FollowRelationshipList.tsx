@@ -20,9 +20,9 @@ import {
 const FollowRelationshipList: React.FC = () => {
     const location = useLocation();
     //만약에 location.state가 없다면 문제 생겼다고 알려야함
-    // Redux에서 사용자 ID 가져오기 그냥 변수명 me로 해버리는 거다. 그게 상남자다.
+
     const pageSize = 10;
-    const me = useAppSelector((state) => state.auth.user);
+    const me = useAppSelector((state) => state.auth.user);//// Redux에서 사용자 ID 가져오기
     const [listType, setListType] = useState('follower');
     const [followerListCursor, setFollowerListCursor] = useState(1);
     const [followingListCursor, setFollowingListCursor] = useState(1);

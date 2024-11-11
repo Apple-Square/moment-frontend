@@ -1,33 +1,28 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Container} from "react-bootstrap";
 import {Footer} from "../components/Footer.tsx";
-
+import styles from "../css/layout.module.css"
 
 interface FooterLayoutProps {
     children: React.ReactNode;
 }
 export const FooterLayout: React.FC<FooterLayoutProps> = ({ children }) => {
+
+    useEffect(() => {
+        // FooterLayout이 마운트되었을 때 body에 패딩 추가
+        // 패딩 10vh, 푸터 height 10vh로 맞추면 푸터 상단에 빈틈 생기는 문제 해결
+        document.body.style.paddingBottom = '8.6vh';
+
+        // FooterLayout이 언마운트될 때 패딩 제거
+        return () => {
+            document.body.style.paddingBottom = '';
+        };
+    }, []);
+
     return (
-        <Container style={styles.container}>
+        <Container className={styles.footerLayout}>
             {children}
             <Footer />
         </Container>
     );
 };
-const styles: {[key : string] : React.CSSProperties} = {
-    container: {
-        display: 'flex',
-        justifyContent: 'start',
-        alignItems: 'stretch',
-        flexDirection: 'column',
-        maxWidth: "768px",
-        minHeight: '100vh',
-        width: '100vw',
-        height: '100%',
-        padding: '0 0px', /* 내부 패딩 설정 */
-        overflowY: 'visible',
-        overflowX: 'visible',
-        boxSizing: "border-box",
-        position:"relative",
-    },
-}

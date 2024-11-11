@@ -59,7 +59,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     }
     //api요청 날리고 성공하면 userPage.followed = false로 바꿔주기
     const handleFollowCancel = async () => {
-        if (!checkAuth()) return;
+        // if (!checkAuth()) return;
         console.log('팔로우 취소');
 
         try {
@@ -73,14 +73,30 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         }
     }
 
+    const handleProfileShare = () => {
+        if (navigator.share) {
+            navigator
+                .share({
+                    title: '프로필 공유하기',
+                    text: '프로필 공유하기',
+                    url: window.location.href,
+                })
+                .then(() => console.log('공유 성공'))
+                .catch((error) => console.log('공유 실패:', error));
+        } else {
+            copyToClipboard();
+        }
+    };
 
-    const handleProfileShare = async () => {
-        if (!checkAuth()) return;
-        console.log('프로필 공유');
-    }
+    const copyToClipboard = () => {
+        navigator.clipboard
+            .writeText(window.location.href)
+            .then(() => alert('URL이 클립보드에 복사되었습니다!'))
+            .catch((error) => console.error('복사 실패:', error));
+    };
 
     const handleMessage = async () => {
-        if (!checkAuth()) return;
+        // if (!checkAuth()) return;
         console.log('메세지');
     }
 
@@ -161,9 +177,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                             프로필 편집
                         </button>
                     </Link>
-                    <Link
-                        to={"edit"}
-                        state={{userPage : userPage}}
+                    <span
                         style={{textDecoration: 'none', color: 'inherit', width : '47%'}}
                         className="p-0"
                     >
@@ -171,7 +185,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                         style={styles.button2}
                         onClick={handleProfileShare}
                     >프로필 공유</button>
-                    </Link>
+                    </span>
                 </Row>)}
             <input
                 type="file"

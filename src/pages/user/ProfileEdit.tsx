@@ -10,7 +10,8 @@ import DatePicker from 'react-datepicker';  // react-datepicker import
 import moment from 'moment';
 import {showToast} from "../../lib/ToastNotification.ts";
 import {ThreeValueBoolean} from "../../interface/OtherInterface.ts";
-import BackButton from "../common/components/BackButton.tsx";  // 날짜 형식 포맷을 위해 moment 사용
+import BackButton from "../common/components/BackButton.tsx";
+import DaumPostcode from "react-daum-postcode";  // 날짜 형식 포맷을 위해 moment 사용
 
 type CustomInputProps = {
     value?: string;
@@ -56,7 +57,7 @@ const FormField = ({ controlId, label, type = 'text', value, onChange, as = 'inp
 
 
 // PersonalInfoEdit 컴포넌트
-const PersonalInfoEdit = ({ showPersonalInfo, user }) => {
+const PersonalInfoEdit = ({ showPersonalInfo, user, myId }) => {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
@@ -64,14 +65,71 @@ const PersonalInfoEdit = ({ showPersonalInfo, user }) => {
     const [gender, setGender] = useState(user?.gender || '');
     const [address, setAddress] = useState(user?.address || '');
     const [showPasswordFields, setShowPasswordFields] = useState(false);
+    const [addressModalToggle, setAddressModalToggle] = useState(false);
 
-    if (!showPersonalInfo) return null;
+    const navigate = useNavigate();
+
+    const handleSavePersonalInfo = async () => {
+        // 입력 데이터 검증
+        const birthDateRegex = /^\d{4}-\d{2}-\d{2}$/; // 생년월일 형식: YYYY-MM-DD
+        const formattedBirth = birth ? birth.toISOString().split('T')[0] : undefined;
+        let isValidBirth = false;
+        if (formattedBirth != null) { // birth가 없거나 형식이 맞는 경우에만 true
+            isValidBirth = !birth || birthDateRegex.test(formattedBirth);
+        } else {
+            isValidBirth = true;
+        }
+
+        const isValidGender = !gender || ["MALE", "FEMALE", ""].includes(gender);
+        const isValidAddress = !address || address.length >= 0;
+
+        if (!isValidBirth || !isValidGender || !isValidAddress) {
+            alert(`isValidBirth: ${isValidBirth}, isValidAddress: ${isValidAddress}, isValidGender: ${isValidGender}, ${gender}`);
+            showToast('fail', "입력한 정보가 올바르지 않습니다. 다시 확인해주세요.", 500);
+            return;
+        }
+
+        // 유효성 검사를 통과한 경우에만 업데이트 요청
+        const response = await updateMeRequest(myId, {
+            birth: birth || "",  // 빈 값은 전송하지 않음
+            gender: gender || "",
+            address: address || "",
+        });
+
+        console.log(response);
+        if (response instanceof Error) {
+            console.error("개인 정보 업데이트 실패: ", response);
+            return;
+        }
+        void navigate(`/user/profile`);
+    };
+
+
 
     // 토글 함수
     const togglePasswordFields = () => {
         setShowPasswordFields(!showPasswordFields);
     };
 
+    const handleComplete = (data) => {
+        let fullAddress = data.address;
+        let extraAddress = '';
+
+        if (data.addressType === 'R') {
+            if (data.bname !== '') {
+                extraAddress += data.bname;
+            }
+            if (data.buildingName !== '') {
+                extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
+            }
+            fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
+        }
+
+        setAddress(fullAddress);  // 선택된 주소를 state에 저장
+        setAddressModalToggle(false);     // 주소 검색 창 닫기
+    };
+
+    if (!showPersonalInfo) return null;
     return (
         <div className="mt-4">
             <Row>
@@ -87,35 +145,60 @@ const PersonalInfoEdit = ({ showPersonalInfo, user }) => {
                 <Form>
                     <Form.Group as={Row} controlId="formBirthDate" className="m-3" style={styles.profileInputWrapper}>
                         <Form.Label className="p-0" style={styles.inputLabel}>생년월일</Form.Label>
-                        <DatePicker
-                            selected={birth}
-                            onChange={(date) => setBirth(date)}  // 날짜 선택 시 state 업데이트
-                            dateFormat="yyyy-MM-dd"  // YYYY-MM-DD 형식
-                            customInput={<CustomInput/>}
-                            placeholderText="YYYY-MM-DD"
-                        />
+                        <div style={{position:'relative'}}>
+                            <DatePicker
+                                selected={birth}
+                                onChange={(date) => setBirth(date)}  // 날짜 선택 시 state 업데이트
+                                dateFormat="yyyy-MM-dd"  // YYYY-MM-DD 형식
+                                customInput={<CustomInput/>}
+                                placeholderText="YYYY-MM-DD"
+                            />
+                            {birth && (
+                                <span onClick={() => setBirth(null)} style={styles.clearIcon}>×</span>
+                            )}
+                        </div>
                     </Form.Group>
 
                     <Form.Group as={Row} controlId="formGender" className="m-3" style={styles.profileInputWrapper}>
                         <Form.Label className="p-0" style={styles.inputLabel}>성별</Form.Label>
-                        <Form.Control
-                            as="select"
-                            value={gender}
-                            onChange={(e) => setGender(e.target.value)}
-                            style={styles.profileInput}
-                        >
-                            <option value="male">남성</option>
-                            <option value="female">여성</option>
-                        </Form.Control>
+                        <div style={{position:'relative'}}>
+                            <Form.Control
+                                as="select"
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                                style={styles.profileInput}
+                            >
+                                <option value="male">남성</option>
+                                <option value="female">여성</option>
+                                <option value="">알려지지 않음</option>
+                            </Form.Control>
+                            {gender !== "" && (
+                                <span onClick={() => setGender("")} style={styles.clearIcon}>×</span>
+                            )}
+                        </div>
                     </Form.Group>
 
-                    <FormField
-                        controlId="formAddress"
-                        label="주소"
-                        type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                    />
+                    <Form.Group as={Row} controlId="formAddress" className="m-3" style={styles.profileInputWrapper}>
+                        <Form.Label className="p-0" style={styles.inputLabel}>주소</Form.Label>
+                        <div style={{position:'relative'}}>
+                        <Form.Control
+                            type="text"
+                            readOnly
+                            value={address}
+                            placeholder="주소를 검색하세요"
+                            onClick={() => setAddressModalToggle((prev)=> !prev)}
+                            style={styles.profileInput}
+                        />
+                        {address && (
+                            <span onClick={() => setAddress('')} style={styles.clearIcon}>×</span>
+                        )}
+                        </div>
+                        {addressModalToggle && (
+                            <div style={{ position: 'relative', zIndex: 100 }}>
+                                <DaumPostcode onComplete={handleComplete} />
+                            </div>
+                        )}
+                    </Form.Group>
 
                     {showPasswordFields && (
                         <>
@@ -146,7 +229,7 @@ const PersonalInfoEdit = ({ showPersonalInfo, user }) => {
                         onClick={togglePasswordFields}
                         style={{marginLeft:"16px" ,color: 'blue', textDecoration: 'underline', cursor: 'pointer'}}>비밀번호 변경하기</span>
                     <div className="d-flex justify-content-end">
-                        <button style={styles.button} type="button" onClick={() => console.log('Personal Info Saved')}
+                        <button style={styles.button} type="button" onClick={handleSavePersonalInfo}
                                 className="m-3">
                             저장
                         </button>
@@ -241,7 +324,7 @@ const ProfileEdit = () => {
             <Row className="align-items-center">
                 <Col xs={12} md={3} className="d-flex justify-content-center mt-4 mb-4">
                     <Image
-                        src={uploadedImage || 'defaultImageURL'}
+                        src={userPagePocket.userPage.user.profileImage || 'defaultImageURL'}
                         roundedCircle
                         onClick={handleImageClick}
                         onError={handleImageError}
@@ -294,7 +377,7 @@ const ProfileEdit = () => {
     </Button>
 
             {/* PersonalInfoEdit 컴포넌트 */}
-            <PersonalInfoEdit showPersonalInfo={showPersonalInfo} user={userPagePocket.userPage.user} />
+            <PersonalInfoEdit showPersonalInfo={showPersonalInfo} user={userPagePocket.userPage.user} myId={myId} />
 
             {/* 크롭 모드일 때 크롭 컴포넌트 표시 */}
             {isCropping && uploadedImage && (
@@ -314,7 +397,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         padding: '12px',
         borderRadius: '8px',
         backgroundColor: '#f9f9f9',
-        marginBottom: '1rem',
+        marginBottom: '1rem'
     },
     inputLabel: {
         fontSize: '0.75rem',
@@ -339,6 +422,14 @@ const styles: { [key: string]: React.CSSProperties } = {
         color: '#fff',
         border: 'none',
         borderRadius: '8px',
-    }
+    },
+    clearIcon: {
+        position: 'absolute',
+        inset : '-10% 0 auto auto',
+        cursor: 'pointer',
+        color: 'gray',
+        fontSize: '18px',
+        width: 'auto'
+    },
 };
 export default ProfileEdit;

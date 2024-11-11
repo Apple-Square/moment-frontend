@@ -16,6 +16,7 @@ import {showToast} from "../../lib/ToastNotification.ts";
 import {debounce} from "lodash";
 import {userValidator} from "./function/userValidator.ts";
 import {axiosInstance, tokenManager} from "../../lib/axiosInstance.ts";
+import layout from "../common/css/layout.module.css";
 
 const debouncedUpdateLoginState = debounce((updateLoginState : Updater<LoginState>,name : string, value : string) => {
         updateLoginState(draft => {
@@ -63,7 +64,7 @@ const InputField: React.FC<{
         return (
             <>
                 <Row className={` w-100 mb-3 ${styles.h8}`}
-                     style={{minWidth: "300px", maxWidth: "300px"}}
+                     style={{minWidth: "300px", maxWidth: "300px", maxHeight : "50px"}}
                 >
                     <Col className="position-relative d-flex justify-content-center">
                         <Form.Control
@@ -150,10 +151,6 @@ const LoginArea: React.FC<{
             //여기 어떨때는 상태가 반영되고 어떨때는 다 사라진다.
             //디바운스 관련해서 상태가 문제인듯 하다 시간 늘려보고 useEffect로 상태 계속 확인해보자.
             console.log("handleLogin" + JSON.stringify(loginState, null, 2));
-            if(loginState.usernameError || loginState.passwordError){
-                showToast("error","아이디와 비밀번호를 확인해주세요",1000);
-                return;
-            }
             // console.log(`로그인 실행`);
             const {username, password}: LoginThunkArgs = loginState;
 
@@ -224,7 +221,7 @@ const LoginButton : React.FC<
     { handleLogin?: () => void }
 > = React.memo(({handleLogin}) => {
     return (
-        <Row className={`w-100 ${styles.h8}`}  style={{minWidth: "300px", maxWidth: "300px"}}>
+        <Row className={`w-100 ${styles.h8}`}  style={{minWidth: "300px", maxWidth: "300px", maxHeight: "50px"}}>
             <Col className="d-flex justify-content-center">
                 <Button
                     type="button"
@@ -246,10 +243,10 @@ export const AuthMain: React.FC = () => {
 
 
     return (
-            <Container className={`${styles.container}`}>
+            <Container className={`${layout.authMainLayout}`}>
                 <Row className={`${styles.emptyTopRow}`}/>
-                <Row className={`w-100 mb-4 ${styles.h15}`} style={{minWidth: "300px"}}>
-                    <Col className="d-flex justify-content-center" style={{ maxHeight: "100%" }}>
+                <Row className={`w-100 mb-4 ${styles.h15} ${styles.AdaptiveSizeForImage}`}>
+                    <Col className="d-flex justify-content-center">
                         <div className={`${styles.momentLogoNTextImg}`}>
                             <MomentLogoNTextImg style={{ maxWidth: "100%", maxHeight: "100%", width: "auto", height: "auto" }} />
                         </div>
