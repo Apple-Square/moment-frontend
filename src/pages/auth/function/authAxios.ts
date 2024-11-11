@@ -2,7 +2,7 @@ import {axiosInstance, axiosInstanceWithAccessToken} from "../../../lib/axiosIns
 import {LoginRequestDto, LoginResponseDto} from "../../../interface/AxiosInterface.ts";
 import {clearAllCookies} from "../../common/function/cookie.ts";
 import {JSONColor} from "../../../lib/deepLog.ts";
-import {castError, getErrorName, setErrorMessage} from "../../../lib/ErrorUtil.ts";
+import {castError, getErrorStatus, setErrorMessage} from "../../../lib/ErrorUtil.ts";
 import {AxiosResponse} from "axios";
 export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<LoginResponseDto | Error> => {
     try {
@@ -20,8 +20,8 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<
         // if(getErrorState(error) === "401"){
         //     setErrorMessage(error, "아이디와 비밀번호를 확인해주세요.");
         // }
-        if(getErrorName(error) === "AxiosError"){
-            setErrorMessage(error, "네트워크 오류");
+        if(getErrorStatus(error) === 401){
+            setErrorMessage(error, "아이디 또는 비밀번호 오류");
         }
         return castError(error);
     }

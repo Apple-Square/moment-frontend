@@ -1,23 +1,29 @@
-#root {
+/* 기본 스타일 - 데스크톱 (노트북) 환경
+
+min-weight, height때문에 줄였을 때 문제 생기는 거 같음.
+*/
+html {
+  overflow: auto;
+}
+#root, body {
   display: flex !important;
   justify-content: center !important; /* 가로 방향 중앙 정렬 */
   align-items: center !important; /* 세로 방향 중앙 정렬 */
-  min-width: 300px !important;
-  min-height: 100vh !important;
-  width:100% !important;
-  height: auto !important;
-  max-width: 768px !important;
-}
 
-html, body {
-  min-width: 300px !important;
-  min-height: 100vh !important;
-  max-width: 768px !important;
-  width: 100vw !important;
+  /*min-width: 300px !important; */
+  /*min-height: 100vh !important;*/
+  max-width: 512px !important; /* 1024px이상이면...노트북에서 최대 너비 512px */
+  width: 100% !important;
   height: auto !important;
   margin: 0 auto !important; /* 수평 중앙 정렬 */
   box-sizing: border-box !important;
-  display: flex !important;
-  justify-content: center !important; /* 가로 방향 중앙 정렬 */
-  align-items: center !important; /* 세로 방향 중앙 정렬 */
+}
+
+/* 모바일 환경 (화면 너비 1024px 이하) */
+@media (max-width: 1024px) {
+  #root, html, body {
+    max-width: 100vw !important; /* 모바일에서는 화면 너비에 맞춤 */
+    height: 100vh !important;
+    width: 100vw !important;
+  }
 }

@@ -2,8 +2,9 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {tokenManager} from '../../lib/axiosInstance.ts';
 import {loginRequest, logoutRequest} from "../../pages/auth/function/authAxios.ts"
 import {AuthState, LoginThunkArgs, ThreeValueBoolean} from "../../interface/OtherInterface.ts";
-import {getErrorMessage, isError} from "../../lib/ErrorUtil.ts";
+import {getErrorMessage, isError, setErrorMessage} from "../../lib/ErrorUtil.ts";
 import {clearAllCookies} from "../../pages/common/function/cookie.ts";
+import {isAxiosError} from "axios";
 
 
 /**
@@ -36,8 +37,7 @@ export const loginThunk
 
             //response가 에러를 담은 객체라면
             if(isError(response)){
-                console.log("loginThunk :: 에러가 담긴 res가 왔습니다. response :: " + JSON.stringify(response, null, 2));
-                return thunkAPI.rejectWithValue(getErrorMessage(response));
+                throw response;
             }
 
             console.log("loginThunk :: response :: "+ JSON.stringify(response, null, 2));
@@ -53,7 +53,12 @@ export const loginThunk
         } catch (error) {
             console.log("loginThunk에서 에러");
             console.log(JSON.stringify(error, null, 2));
-            return thunkAPI.rejectWithValue(getErrorMessage(error));
+            console.log(getErrorMessage(error));
+
+            if(isAxiosError(error) && !error.response) {
+                setErrorMessage(error, "네트워크 오류 : \n서버에 문제가 있어요");
+            }
+                return thunkAPI.rejectWithValue(getErrorMessage(error));
         }
 })
 
