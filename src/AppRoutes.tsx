@@ -20,6 +20,9 @@ import {Footer} from "./pages/common/components/Footer.tsx";
 import {Container} from "react-bootstrap";
 import React from "react";
 import FeedDetail from "./pages/feed/FeedDetail.tsx";
+// import Moment from "./pages/feed/components/Moment.tsx";
+import MomentList from "./pages/feed/components/MomentList.tsx";
+import MomentScroll from "./pages/feed/MomentScroll.tsx";
 
 
 export const AppRoutes: React.FC = () => {
@@ -34,7 +37,8 @@ export const AppRoutes: React.FC = () => {
     );
 
     return (<Routes>
-        <Route path="/" element={<MainFeed/>}></Route>
+        {/* <Route path="/" element={<MainFeed/>}></Route> */}
+        <Route path="/" element={<MomentScroll/>}></Route>
         <Route path="/test" element={<Test/>}></Route>
         <Route path="/auth" element={<AuthLayout />}>
             <Route path="authMain" element={<AuthMain/>}></Route>
