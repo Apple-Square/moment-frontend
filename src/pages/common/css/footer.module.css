@@ -12,7 +12,7 @@
 }
 
 .footer a {
-    color: gray; /* 아이콘 색상 */
+    color: #000; /* 아이콘 색상 */
     text-decoration: none;
     display: inline-block;
     width: 100%;
