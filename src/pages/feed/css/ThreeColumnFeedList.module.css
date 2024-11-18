@@ -1,3 +1,25 @@
+
+html {
+    overflow: hidden;
+}
+#root, body {
+    display: flex !important;
+    justify-content: center !important; /* 가로 방향 중앙 정렬 */
+    align-items: center !important; /* 세로 방향 중앙 정렬 */
+
+    /*min-width: 300px !important; */
+    /*min-height: 100vh !important;*/
+    max-width: 512px !important; /* 1024px이상이면...노트북에서 최대 너비 512px */
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 auto !important; /* 수평 중앙 정렬 */
+    box-sizing: border-box !important;
+    overflow: auto;
+}
+#root,body::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 엣지 */
+}
+
 .container {
     display: flex;
     flex-wrap: wrap;

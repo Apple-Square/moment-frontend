@@ -9,10 +9,13 @@
     max-width: 512px !important;
     min-height: 100vh !important;
     padding: 0 !important; /* 0px 대신 0으로 간소화 */
-    overflow-y: visible !important;
-    overflow-x: visible !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
     box-sizing: border-box !important;
     position: relative !important;
+}
+.footerLayout::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 엣지 */
 }
 .authMainLayout {
     display: flex !important;
