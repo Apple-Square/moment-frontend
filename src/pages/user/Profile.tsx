@@ -58,19 +58,19 @@ const Profile: React.FC = () => {
     } = useProfileImage(userPagePocket?.userPage, updateUserPagePocket,myId);
 
     const fetchAndUpdateUserData = async () : Promise<void> => {
-    try{
-        const data : UserPagePocket | Error = await getProfileRequest(subjectId);
-        if (data instanceof Error) {
-            console.error("프로필 정보를 가져오는 중 에러 발생:", data.message);
-            return;
+        try{
+            const data : UserPagePocket | Error = await getProfileRequest(subjectId);
+            if (data instanceof Error) {
+                console.error("프로필 정보를 가져오는 중 에러 발생:", data.message);
+                return;
+            }
+            console.log(`프로필 정보를 가져오는 중 성공: ${JSONColor.stringify(data, null, 2)}`);
+            updateUserPagePocket(draft => {
+                draft.userPage = data.userPage;
+            });
+        } catch (error) {
+            console.error("프로필 정보를 가져오는 중 에러 발생:", error);
         }
-        console.log(`프로필 정보를 가져오는 중 성공: ${JSONColor.stringify(data, null, 2)}`);
-        updateUserPagePocket(draft => {
-            draft.userPage = data.userPage;
-        });
-    } catch (error) {
-        console.error("프로필 정보를 가져오는 중 에러 발생:", error);
-    }
     }
 
     //테스트용 삭제
@@ -101,8 +101,35 @@ const Profile: React.FC = () => {
         posts: 4,
         followers: 106,
         following: 441,
-        profilePicUrl: 'path_to_profile_picture.jpg', // Replace with actual URL
-        postImages: ['cat1.jpg', 'cat2.jpg', 'cat3.jpg', 'pasta.jpg'], // Replace with actual post images
+        profilePicUrl: 'path_to_profile_picture.jpg',
+        postImages: [`${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+
+        ],
         videos: ['video1.mp4', 'video2.mp4'], // 비디오 데이터 추가
         favorites: ['fav1.jpg', 'fav2.jpg'], // 즐겨찾기 데이터 추가
     };
