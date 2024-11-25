@@ -25,10 +25,10 @@ const AddFeed: React.FC = () => {
     }
 
     return (
-        <Container className='pageContainer'>
-            <Row className='justify-content-center p-0'>
-                <Col className='p-0' xs={12} lg={8}>
-                    {/* main component */}
+        // <Container className='pageContainer'>
+            /* <Row className='justify-content-center p-0'>
+                <Col className='p-0' xs={12} lg={8}> */
+                    /* main component */
                     <Container className={`${styles.container} p-0`}>
                         <Row className={`p-0 m-0 ${styles.row}`}>
                             <Col className="p-0">
@@ -63,9 +63,9 @@ const AddFeed: React.FC = () => {
                             </Col>
                         </Row>
                     </Container>
-                </Col>
-            </Row>
-        </Container>
+                /* </Col>
+            </Row> */
+        // </Container>
 
     );
 };
