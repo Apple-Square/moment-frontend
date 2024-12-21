@@ -3,11 +3,18 @@ import {NavigateFunction} from "react-router-dom";
 
 export interface LoginThunkArgs extends Pick<User, 'username' | 'password'> {}
 
+export enum ThreeValueBoolean {
+    False = 'false',
+    Loading = 'loading',
+    True = 'true',
+}
+
 export interface AuthState {
     user: User;
-    token : string;
+    //token : string;
     isAuthenticated: boolean;
-    isRedirected : boolean;
+    shouldRedirect : boolean;
+    isAuthTaskFinished : ThreeValueBoolean;
     loading: boolean;
     error: unknown;
 }

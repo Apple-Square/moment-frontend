@@ -6,37 +6,44 @@ import st from "../css/footer.module.css";
 export const Footer:React.FC = () => {
 
     return (
-        <footer id="footer" className={`${st.footer}`}>
+        <footer id="footer" className={`${st.footer} d-flex justify-content-center align-items-center`}>
             <Container fluid>
                 <Row>
-                   <Col>
+                   <Col style={styles.columnStyle}>
                        <Link to="/">
-                           <FaHome style={{ fontSize: '4vh'}}/>
+                           <FaHome className={st.footerIcon}/>
                        </Link>
                    </Col>
-                    <Col>
+                    <Col style={styles.columnStyle}>
                         <Link to="/chat/chatroomList">
-                            <FaComments style={{ fontSize: '4vh'}}/>
+                            <FaComments className={st.footerIcon}/>
                         </Link>
                     </Col>
-                    <Col>
+                    <Col style={styles.columnStyle}>
                         <Link to="/feed/addFeed">
-                            <FaPlus style={{ fontSize: '4vh'}}/>
+                            <FaPlus className={st.footerIcon}/>
                         </Link>
                     </Col>
-                    <Col>
-                        <Link to="/moment">
-                            <FaVideo style={{ fontSize: '4vh'}}/>
+                    <Col style={styles.columnStyle}>
+                        <Link to="/feed/moments">
+                            <FaVideo className={st.footerIcon}/>
                         </Link>
                     </Col>
-                    <Col>
+                    <Col style={styles.columnStyle}>
                         <Link to="/user/profile">
-                            <FaUser style={{ fontSize: '4vh'}}/>
+                            <FaUser className={st.footerIcon}/>
                         </Link>
                     </Col>
                 </Row>
             </Container>
         </footer>
     );
-
 };
+
+const styles : {[key : string] : React.CSSProperties} = {
+    columnStyle : {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+}

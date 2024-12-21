@@ -1,19 +1,18 @@
 .footer {
-    position: fixed;
-    bottom: 0;
+    position : fixed;
+    bottom: -1.5%; /*bottom 0 > -1.5%로 조절하여 푸터하단에 빈틈 생기는 문제 해결*/
     left : auto;
     width: 100%;
     height: 10vh;
     background-color: #f8f9fa;
-    padding: 2vw 0;
+    padding: 2vw 0 !important;
     text-align: center;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    max-width:768px;
-    z-index: 1000;
+    max-width:512px;
 }
 
 .footer a {
-    color: gray; /* 아이콘 색상 */
+    color: #000; /* 아이콘 색상 */
     text-decoration: none;
     display: inline-block;
     width: 100%;
@@ -22,4 +21,15 @@
 
 .footer .row {
     justify-content: space-around;
+}
+
+.footerIcon {
+    font-size: 5vh;
+}
+
+/* 화면 너비가 308px 미만일 때 font-size 줄이기 */
+@media (max-width: 307px) {
+    .footerIcon {
+        font-size: 4.5vh;
+    }
 }
