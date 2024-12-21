@@ -3,6 +3,7 @@ import styles from "../css/MomentList.module.css"
 import Moment from "./Moment";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import { Keyboard, Mousewheel } from "swiper/modules";
 
 const momentData = [
     {
@@ -80,6 +81,9 @@ const MomentList = () => {
                 direction={'vertical'}
                 className={`${styles.momentSlide} px-0`}
                 slidesPerView={1}
+                keyboard={{ enabled: true }}
+                mousewheel={{ forceToAxis: true }}
+                modules={[Keyboard, Mousewheel]}
             >
                 {momentData.map((moment, index) => (
                     <SwiperSlide key={index}>
