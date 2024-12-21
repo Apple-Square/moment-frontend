@@ -1,0 +1,8 @@
+.container, .container>*, .container>*>* {
+    width: 100%;
+}
+
+
+.viewer {
+    width: 100%;
+}

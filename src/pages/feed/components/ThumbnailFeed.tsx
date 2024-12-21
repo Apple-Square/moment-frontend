@@ -15,7 +15,7 @@ const ThumbnailFeed: React.FC<ThumbnailFeedProps> = ({ img, likes, comments, sha
     const handleClickThumbnail = () => {
         // getPoint
         // goto detailPost
-        navi('/feed/FeedDetail'); // navi point
+        navi('/moment'); // navi point
     }
 
     return (

@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start; 
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.momentRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.momentRow>* {
+    width: 100%;
+}
+
+.momentSlide {
+    height: 90vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+} 
