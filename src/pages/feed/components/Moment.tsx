@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import styles from "../css/Moment.module.css";
 import SvgLike from "./SvgLike";
+import { CommentModalContext } from "../../../context/CommentModalContext";
 
 interface MomentProps {
     profileImg: string;
@@ -15,6 +16,21 @@ interface MomentProps {
 }
 
 const Moment: React.FC<MomentProps> = ({ profileImg, author, location, src, contents, likes, comments, shares, timeAgo }) => {
+    const [liked, setLiked] = useState<boolean>(false);
+    const { commentOpen, setCommentOpen } = useContext(CommentModalContext);
+
+    const handleClickComment = () => {
+        setCommentOpen(true);
+        // setVisibleComment(!visibleComment);
+        // navi('/feed/FeedDetail');   // navi point
+    }
+
+    const handleClickLike = () => {
+        setLiked(!liked);
+        // post like (liked ? 1 : -1)
+        // get like
+    }
+
     return (
         <div className={`${styles.container}`}>
             <div className={`${styles.videoRow}`}>
@@ -38,28 +54,31 @@ const Moment: React.FC<MomentProps> = ({ profileImg, author, location, src, cont
                 <div className={`${styles.action}`}>
                     <SvgLike
                         className={styles.likeBtn}
-                        // onClick={ /* handleClickLike */ }
+                        onClick={handleClickLike}
                         style={{ "width": "2rem", "height": "auto" }}
-                        // fill={/*liked ? "blue" : "black"*/}
+                        fill={liked ? "blue" : "black"}
                     />
                     <span className={styles.likes}>{likes}</span>
                 </div>
                 <div className={`${styles.action}`}>
                     <span
-                        style={{fontSize: "1.5rem"}}
+                        className={styles.commentBtn}
+                        onClick={handleClickComment}
+                        style={{ fontSize: "1.5rem" }}
                     >💬</span>
-                    <span className={styles.comments} /* onClick={  handleClickComment } */ > {comments}</span>
+                    <span className={styles.comments}> {comments}</span>
                 </div>
                 <div className={`${styles.action}`}>
                     <span
-                        style={{fontSize: "2rem"}}
+                        style={{ fontSize: "2rem" }}
                     >
-                    ↗️
+                        ↗️
                     </span>
                     <span className={styles.shares}>{shares}</span>
                 </div>
             </div>
             <div>
+                {/* 인기 댓글 하나 */}
                 {/* <Comment 
                     profileImg={trandingComment.profileImg} 
                     author={trandingComment.author}
@@ -67,10 +86,12 @@ const Moment: React.FC<MomentProps> = ({ profileImg, author, location, src, cont
                     contents={trandingComment.contents}
                     onClick={handleClickComment}
                 /> */}
+
             </div>
 
         </div>
     );
 }
 
-export default Moment
+
+export default Moment;

@@ -5,8 +5,10 @@ import { CommentModalContext } from "../../context/CommentModalContext";
 import { Footer } from "../common/components/Footer";
 import CommentModal from "./components/CommentModal";
 import styles from "./css/MomentScroll.module.css";
+import { useState } from "react";
 
 const MomentScroll = () => {
+    const [commentOpen, setCommentOpen] = useState<boolean>(false);
 
     return (
         <Container className={`${styles.container} px-0`}>
@@ -17,16 +19,16 @@ const MomentScroll = () => {
             </Row> */}
             <Row className={`${styles.viewer} px-0 mx-0`}>
                 <Col className='p-0'>
-                    {/* <CommentModalContext.Provider value={}> */}
+                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen }}>
                         <MomentList />
-                    {/* </CommentModalContext.Provider> */}
+                    </CommentModalContext.Provider>
                 </Col>
             </Row>
             <Row className={`${styles.cmodalRow} p-0 m-0`}>
                 <Col className='p-0'>
-                    {/* <CommentModalContext.Provider value={}> */}
+                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen }}>
                         <CommentModal id={0} /> {/* dummy id */}
-                    {/* </CommentModalContext.Provider> */}
+                    </CommentModalContext.Provider>
                 </Col>
             </Row>
             <Row className={`${styles.navRow} p-0 m-0`}>
