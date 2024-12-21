@@ -25,7 +25,7 @@ export const Footer:React.FC = () => {
                         </Link>
                     </Col>
                     <Col style={styles.columnStyle}>
-                        <Link to="/feed/moments">
+                        <Link to="/moments">
                             <FaVideo className={st.footerIcon}/>
                         </Link>
                     </Col>
