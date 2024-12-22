@@ -7,9 +7,9 @@ const TitleHeader = () => {
             <div className={`${styles.title}`}>
                 <h1>monent</h1>
             </div>
-            <div className={`${styles.searchBtn}`}>
+            {/* <div className={`${styles.searchBtn}`}>
                 <SvgSearch fill='gray' />
-            </div>
+            </div> */}
         </div>
     );
 }

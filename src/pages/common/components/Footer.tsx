@@ -1,10 +1,11 @@
 import React from 'react';
 import {Col, Container, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import {FaHome, FaComments, FaUser, FaPlus, FaVideo} from "react-icons/fa";
+import {FaHome, FaUser, FaPlus, FaVideo} from "react-icons/fa";
 import st from "../css/footer.module.css";
-export const Footer:React.FC = () => {
+import SvgSearch from './SvgSearch';
 
+export const Footer:React.FC = () => {
     return (
         <footer id="footer" className={`${st.footer} d-flex justify-content-center align-items-center`}>
             <Container fluid>
@@ -15,8 +16,8 @@ export const Footer:React.FC = () => {
                        </Link>
                    </Col>
                     <Col style={styles.columnStyle}>
-                        <Link to="/chat/chatroomList">
-                            <FaComments className={st.footerIcon}/>
+                        <Link to="/feed/threeColumnFeedList">
+                            <SvgSearch className={`${st.footerIcon} ${st.searchBtn}`} />
                         </Link>
                     </Col>
                     <Col style={styles.columnStyle}>
