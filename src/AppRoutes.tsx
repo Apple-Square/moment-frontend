@@ -1,6 +1,6 @@
-import {Outlet, Route, Routes} from "react-router-dom";
-import {AuthMain} from "./pages/auth/AuthMain.tsx";
-import {SignUp} from "./pages/auth/SignUp.tsx";
+import { Outlet, Route, Routes } from "react-router-dom";
+import { AuthMain } from "./pages/auth/AuthMain.tsx";
+import { SignUp } from "./pages/auth/SignUp.tsx";
 import Postcode from "./pages/auth/Postcode.tsx";
 import Profile from "./pages/user/Profile.tsx";
 import FindUserId from "./pages/auth/FindUserId.tsx";
@@ -16,12 +16,15 @@ import EmailVerification from "./pages/auth/EmailVerification.tsx";
 import BackgroundTemplate from "./pages/common/components/BackgroundTemplate.tsx";
 import Test from "./pages/auth/Test.tsx";
 import PrivateRoute from "./PrivateRoute.tsx";
-import {Footer} from "./pages/common/components/Footer.tsx";
-import {Container} from "react-bootstrap";
+import { Footer } from "./pages/common/components/Footer.tsx";
+import { Container } from "react-bootstrap";
 import React from "react";
 import {FooterLayout} from "./pages/common/layoutComponents/FooterLayout.tsx";
 import ProfileEdit from "./pages/user/ProfileEdit.tsx";
 import FeedDetail from "./pages/feed/FeedDetail.tsx";
+// import Moment from "./pages/feed/components/Moment.tsx";
+import MomentList from "./pages/feed/components/MomentList.tsx";
+import MomentScroll from "./pages/feed/MomentScroll.tsx";
 
 
 export const AppRoutes: React.FC = () => {
@@ -95,7 +98,8 @@ export const AppRoutes: React.FC = () => {
                 </FooterLayout>
             }></Route>
         </Route>
-        <Route path="/feed/addFeed" element={<AddFeed/>}></Route>    {/* 개별 경로 설정 */}
+        <Route path="/moment" element={<MomentScroll />}></Route>
+        <Route path="/feed/addFeed" element={<AddFeed />}></Route>    {/* 개별 경로 설정 */}
     </Routes>)
 }
 

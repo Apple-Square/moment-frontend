@@ -127,7 +127,7 @@ const dummyData = [
 ];
 
 const ThumbnailFeedList = () => {
-    const field = [];
+    const field: JSX.Element[] = [];
 
     for (let i = 0; i < dummyData.length; i += 3) {
         const items = dummyData.slice(i, i + 3);

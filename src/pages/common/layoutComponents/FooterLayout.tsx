@@ -19,6 +19,7 @@ export const FooterLayout: React.FC<FooterLayoutProps> = ({ children }) => {
         };
     }, []);
 
+    //footerLayout 스타일을 각각의 코드에 다 옮기기.
     return (
         <Container className={styles.footerLayout}>
             {children}

@@ -16,6 +16,7 @@
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/js-cookie": "^3.0.6",
+    "amplify": "^0.0.11",
     "axios": "^1.7.3",
     "base64url": "^3.0.1",
     "bootstrap": "^5.3.3",
