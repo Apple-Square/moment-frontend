@@ -22,6 +22,7 @@ export const tokenManager = (() => {
     };
 })();
 /**
+ * token 없는 user가 사용
  * withCredentials : true
  * timeout : 10000
  * headers : 'Content-Type': 'application/json'
@@ -36,7 +37,11 @@ export const axiosInstance = axios.create({
 });
 
 /**
- * axios.create()는 처음 호출될때 인스턴스를 생성하므로, create함수의 인자에 Authorization을 설정해봐야 동적으로 토큰을 설정할 수 없다.
+ * axios.create()는 처음 호출될때 인스턴스를 생성하므로,
+ * create함수의 인자에 Authorization을 설정해봐야 동적으로 토큰을 설정할 수 없다.
+ * 
+ * token 있는 user가 사용
+ * - token 있을 때 axiosInstance 사용하면 error, 반드시 axiosInstanceWithAccessToken 사용
  */
 export const axiosInstanceWithAccessToken = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
