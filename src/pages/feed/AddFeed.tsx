@@ -6,6 +6,7 @@ import MediaUploader from './components/MediaUploader';
 import TextInput from './components/TextInput';
 import SearchPlace from './components/PlaceSearch';
 import TagInput from './components/TagInput';
+import { createFeedRequest } from './function/feedAxiosReqest';
 
 const AddFeed: React.FC = () => {
     const [media, setMedia] = useState<File[]>([]);;
@@ -19,7 +20,16 @@ const AddFeed: React.FC = () => {
 
     const handleSubmit = () => {
         if (media && text) {
-            // server
+            createFeedRequest(media, text, tags, place)     // backend point
+                .then(response => {
+                    if ('data' in response) {
+                        console.log('게시글 작성 성공:', response.data);
+                    }
+                })
+                .catch(error => {
+                    console.error('게시글 작성 실패:', error);
+                });
+
             console.log('Media:', media);
             console.log('Text:', text);
         } else {
