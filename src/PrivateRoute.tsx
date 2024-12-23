@@ -1,6 +1,6 @@
 // PrivateRoute.tsx
 import React from "react";
-import { useLoginModal } from './pages/common/hook/useLoginModal.ts'
+import { useLoginModal } from "./pages/common/hook/useLoginModal.ts"
 import { LoginRecommandModal } from "./pages/common/components/LoginRecommandModal.tsx";
 
 const PrivateRoute = ({ children }) => {

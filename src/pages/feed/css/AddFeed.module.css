@@ -71,3 +71,24 @@
     width: 100%;
     z-index: 100;
 }
+
+.topBar {
+    height: 7vh;
+    display: flex;
+    justify-content: center;  /* 수평 중앙 정렬 */
+    align-items: center;      /* 수직 중앙 정렬 */
+}
+
+.topBar>span {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.topBar>.back {
+    position: absolute;
+    top: 1vh;
+    left: 1vh;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
