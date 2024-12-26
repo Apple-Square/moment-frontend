@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Form, Col, Container, Row, Button} from "react-bootstrap";
 import st from "./css/signUp.module.css"
 import MomentLogoNTextImg from "./component/MomentLogoNTextImg.tsx";
@@ -6,9 +6,23 @@ import {IoMdArrowRoundBack} from "react-icons/io";
 import BirthdaySelector from "./component/BirthDaySelector.tsx";
 import GenderSelector from "./component/GenderSelector.tsx";
 import {NavigateFunction, useNavigate} from "react-router-dom";
+
+
+
 export const SignUp:React.FC = () => {
 
     const navigate : NavigateFunction = useNavigate();
+
+    const [year, setYear] = useState<number>(0);
+    const [month, setMonth] = useState<number>(0);
+    const [day, setDay] = useState<number>(0);
+
+    const setBirthCallback = (year : number, month : number, day : number) => {
+        setYear(year);
+        setMonth(month);
+        setDay(day);
+    };
+
 
     const sendEmail = () => {
         // 버튼 클릭 시 수행할 동작을 여기서 처리합니다.
@@ -74,7 +88,7 @@ export const SignUp:React.FC = () => {
                 </Col>
             </Row>
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
-                <BirthdaySelector/>
+                <BirthdaySelector setBirthCallback = {setBirthCallback}/>
             </Row>
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
                 <GenderSelector/>

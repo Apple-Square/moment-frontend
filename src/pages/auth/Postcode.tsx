@@ -2,12 +2,21 @@ import React from 'react';
 import DaumPostcode from "react-daum-postcode";
 import {NavigateFunction, useLocation, useNavigate} from "react-router-dom";
 
-const Postcode:React.FC = () => {
+interface SignUpInfo {
+    nickname : string;
+    userId : string,
+    pwd : string,
+    pwd2 : string,
 
+
+}
+
+const Postcode:React.FC = () => {
 
     const navigate : NavigateFunction = useNavigate();
     const location = useLocation();
     const previousPage = location.state?.previousPage || '/'; // 기본값을 설정
+
     const nickname = location.state?.nickname || {};
     const userId = location.state?.memberId || {};
     const pwd = location.state?.pwd || {};

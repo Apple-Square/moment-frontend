@@ -42,21 +42,39 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     } = useLoginModal();
 
 
-    //api요청 날리고 성공하면 userPage.followed = true로 바꿔주기
+    /**
+     * 사용자를 팔로우하는 액션을 처리하는 함수.
+     *
+     * 이 함수는 특정 사용자를 팔로우하기 위한 요청을 보내고, 요청이 성공하면
+     * 사용자 데이터를 최신 상태로 업데이트합니다.(void fetchAndUpdateUserData() : userPage.followed = true로 바꿔줌)
+     * 요청 처리 중 에러가 발생하면
+     * 에러를 로깅한 뒤, `castError`를 통해 에러를 상위로 전달합니다.
+     *
+     * @async
+     * @function handleFollow
+     * @throws {Error} - 팔로우 요청이 실패한 경우, 해당 에러를 처리하고 상위로 전달합니다.
+     *
+     * 사용 예제:
+     * ```javascript
+     * await handleFollow();
+     * ```
+     */
     const handleFollow = async () => {
         // if (!checkAuth()) return;
 
         console.log('팔로우');
-        try{
+        try {
             const id = await followRequest(userPage.user.id);
-            if(id){
+            if (id) {
+                // 팔로우 요청 성공 시, 사용자 데이터를 업데이트
                 void fetchAndUpdateUserData();
             }
         } catch (error) {
+            // 에러를 로깅하고 상위로 전달
             console.error(`followRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
             return castError(error);
         }
-    }
+    };
     //api요청 날리고 성공하면 userPage.followed = false로 바꿔주기
     const handleFollowCancel = async () => {
         // if (!checkAuth()) return;

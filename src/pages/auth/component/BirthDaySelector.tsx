@@ -8,6 +8,11 @@ interface OptionType {
     value: number;
     label: string;
 }
+
+interface BirthDaySelectorProps {
+    setBirthCallback : (year : number, month : number, day : number) => void;
+}
+
 const generateYears = () => {
     const currentYear = new Date().getFullYear();
     return Array.from({ length: 100 }, (_, i) => ({
@@ -33,21 +38,36 @@ const generateDays = () => {
 };
 
 
-const BirthdaySelector: React.FC = () => {
+const BirthdaySelector: React.FC<BirthDaySelectorProps> = ({setBirthCallback}) => {
     const [selectedYear, setSelectedYear] = useState<SingleValue<OptionType>>(null);
     const [selectedMonth, setSelectedMonth] = useState<SingleValue<OptionType>>(null);
     const [selectedDay, setSelectedDay] = useState<SingleValue<OptionType>>(null);
 
+    const updateParent = (
+        selectedYear : SingleValue<OptionType>,
+        selectedMonth : SingleValue<OptionType>,
+        selectedDay : SingleValue<OptionType>
+    ) => {
+        if (selectedYear && selectedMonth && selectedDay) {
+            setBirthCallback(selectedYear.value, selectedMonth.value, selectedDay.value);
+        } else {
+            setBirthCallback(0, 0, 0);
+        }
+    }
+
     const handleYearChange = (selectedOption: SingleValue<OptionType>) => {
         setSelectedYear(selectedOption);
+        updateParent(selectedOption, selectedMonth, selectedDay);
     };
 
     const handleMonthChange = (selectedOption: SingleValue<OptionType>) => {
         setSelectedMonth(selectedOption);
+        updateParent(selectedYear, selectedOption, selectedDay);
     };
 
     const handleDayChange = (selectedOption: SingleValue<OptionType>) => {
         setSelectedDay(selectedOption);
+        updateParent(selectedYear, selectedMonth, selectedOption);
     };
 
     return (
