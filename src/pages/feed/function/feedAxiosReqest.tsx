@@ -68,8 +68,8 @@ export const getFeedRequest = async (
 
 /**
  * 게시글 작성
- * @param files - 첨부파일 리스트 (사진 또는 영상)
- * @param content - 게시글 내용 (선택)
+ * @param files - 첨부파일 리스트 (Image[] | Video)
+ * @param content - 게시글 내용 (선택) : front단에서는 text contents 필수
  * @param tags - 태그 리스트 (선택)
  * @param address - 주소 정보 (선택)
  * @returns AxiosResponse
@@ -118,6 +118,22 @@ export const createFeedRequest = async (
         return castError(error);
     }
 };
+
+
+/**
+ * 게시글 삭제
+ */
+export const deleteFeedRequest = async ( postId: number ): Promise<AxiosResponse<FeedResponse> | Error> => {
+    try {
+        const response = await axiosInstanceWithAccessToken.delete<FeedResponse>(`posts/${postId}}`);
+        console.log(`deleteFeedRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
+        return response;
+    } catch (error) {
+        console.error(`deleteFeedRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
+        return castError(error);
+    }
+}
+
 
 // /**
 //  * 유저 정보 수정

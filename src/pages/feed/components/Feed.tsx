@@ -14,6 +14,7 @@ import { CommentModalContext } from '../../../context/CommentModalContext';
 // import { Col, Container, Row } from 'react-bootstrap';
 import { trandingComment } from '../temp/tempData';
 import { FeedMenuContext } from '../../../context/FeedMenuContext';
+import { deleteFeedRequest } from '../function/feedAxiosReqest';
 
 interface FeedProps {
     id: number;
@@ -70,6 +71,15 @@ const Feed: React.FC<FeedProps> = ({
         },
     };
 
+    const deleteFeed = async () => {
+            try {
+                const response = await deleteFeedRequest(id);
+                // console.log(response.message);
+            } catch (error) {
+                console.error('Unexpected error:', error);
+            }
+        };
+
     const handleClickComment = () => {
         setCommentOpen(true);
         // setVisibleComment(!visibleComment);
@@ -92,7 +102,7 @@ const Feed: React.FC<FeedProps> = ({
     }
 
     const handleClickDeleteFeed = () => {
-        // delete feed
+        deleteFeed()    // 추후 확인 팝업 추가해야 함. ex) 정말 삭제하시겠습니까?
         return;
     }
 
