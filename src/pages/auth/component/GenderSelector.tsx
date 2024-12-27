@@ -1,21 +1,36 @@
 import React, { useState } from "react";
-import Select from "react-select";
+import Select, {SingleValue} from "react-select";
 import {Col} from "react-bootstrap";
 import "../css/genderSelector.css";
-// 간단한 타입 정의
+
 interface OptionType {
     value: string;
     label: string;
 }
 
-// 성별 옵션 생성
+interface GenderSelectorProps {
+    setGenderCallback : (gender : string) => void;
+}
+
 const genderOptions: OptionType[] = [
-    { value: "male", label: "남" },
-    { value: "female", label: "여" },
+    { value: "MALE", label: "남" },
+    { value: "FEMALE", label: "여" },
 ];
 
-const GenderSelector: React.FC = () => {
+const GenderSelector: React.FC<GenderSelectorProps> = ({setGenderCallback}) => {
     const [selectedGender, setSelectedGender] = useState<OptionType | null>(null);
+
+    const updateParent = (selectedGender : SingleValue<OptionType>) => {
+        if (selectedGender){
+            setGenderCallback(selectedGender.value);
+        }
+    }
+
+    const handleGenderChange = (selectedOption : SingleValue<OptionType>) => {
+        setSelectedGender(selectedOption);
+        updateParent(selectedOption)
+    }
+
 
     return (
         <Col className="mb-3">
@@ -23,7 +38,7 @@ const GenderSelector: React.FC = () => {
                 options={genderOptions}
                 placeholder="성별" // 성별 플레이스홀더
                 value={selectedGender}
-                onChange={(option) => setSelectedGender(option as OptionType)}
+                onChange={handleGenderChange}
                 styles={{
                     control: (provided) => ({
                         ...provided,

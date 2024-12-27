@@ -14,7 +14,7 @@ import {map} from "react-bootstrap/ElementChildren";
 import FollowListNotFound from "./component/FollowListNotFound.tsx";
 import {
     encryptData,
-    decryptData, setEncryptedSessionItem, getDecryptedSessionItem,
+    decryptData, setSessionItem, getSessionItem,
 } from '../../lib/crypto.ts';
 
 const FollowRelationshipList: React.FC = () => {
@@ -84,7 +84,7 @@ const FollowRelationshipList: React.FC = () => {
         if (location.state) {
             console.log("location에서 데이터를 찾았습니다.");
             setListType(location.state.listType || 'follower');
-            setEncryptedSessionItem('userPage', {
+            setSessionItem('userPage', {
                 user : location.state.user,
                 followerCount : location.state.followerCount,
                 followingCount : location.state.followingCount,
@@ -95,7 +95,7 @@ const FollowRelationshipList: React.FC = () => {
                 draft.followingCount = location.state.followingCount;
             });
         } else {
-            const userPage = getDecryptedSessionItem('userPage');
+            const userPage = getSessionItem('userPage');
             if (userPage) {
                 updateUserPage((draft) => {
                     draft.user = userPage.user;

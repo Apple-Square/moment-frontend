@@ -83,18 +83,20 @@ const BirthdaySelector: React.FC<BirthDaySelectorProps> = ({setBirthCallback}) =
                             ...provided,
                             borderRadius: "5px",
                             width:"100%",
-                            height:"100%"
+                            height:"100%",
+                            fontSize: "1.4vh",
                         }),
                         placeholder: (provided) => ({
                             ...provided,
-                            fontSize: "1.5vh", // 글씨 크기 줄이기
+                            fontSize: "1vh",
                         })
                     }}
-                    menuPortalTarget={null} // 포털을 사용하지 않도록 설정
-                    menuPosition="absolute" // absolute 위치 사용
+                    menuPortalTarget={null}
+                    menuPosition="fixed"
+                    menuShouldScrollIntoView={false}
                 />
             </Col>
-            <Col className="mb-3">
+            <Col className="mb-3 p-0">
                 <Select
                     options={generateMonths()}
                     placeholder="월"
@@ -105,9 +107,17 @@ const BirthdaySelector: React.FC<BirthDaySelectorProps> = ({setBirthCallback}) =
                             ...provided,
                             borderRadius: "5px",
                             width:"100%",
-                            height:"100%"
+                            height:"100%",
+                            fontSize: "2vh",
+                        }),
+                        placeholder: (provided) => ({
+                            ...provided,
+                            fontSize: "2vh",
                         })
                     }}
+                    menuPortalTarget={null}
+                    menuPosition="fixed"
+                    menuShouldScrollIntoView={false}
                 />
             </Col>
             <Col className="mb-3">
@@ -121,9 +131,17 @@ const BirthdaySelector: React.FC<BirthDaySelectorProps> = ({setBirthCallback}) =
                             ...provided,
                             borderRadius: "5px",
                             width:"100%",
-                            height:"100%"
+                            height:"100%",
+                            fontSize: "2vh",
+                        }),
+                        placeholder: (provided) => ({
+                            ...provided,
+                            fontSize: "2vh",
                         })
                     }}
+                    menuPortalTarget={null}
+                    menuPosition="fixed"
+                    menuShouldScrollIntoView={false}
                 />
             </Col>
         </>

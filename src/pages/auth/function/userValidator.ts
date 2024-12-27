@@ -5,7 +5,7 @@ const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // - 알파벳 대소문자, 숫자, 밑줄 (_), 하이픈 (-) 사용 가능
 // - 공백 입력 불가
 const USERNAME_PATTERN = /^[a-zA-Z0-9_-]{8,20}$/;
-
+const NICKNAME_PATTERN = /^[가-힣a-zA-Z0-9_-]{2,20}$/;
 // - 10~20자
 // - 알파벳 대문자, 소문자, 숫자, 특수 문자 ( ! ? @ # $ % ^ & ) 1개 이상 포함
 // - 공백 입력 불가
@@ -18,6 +18,15 @@ export const userValidator = {
         }
         if (!PHONE_NUMBER_PATTERN.test(phoneNumber)) {
             return "휴대폰 번호를 확인해주세요.";
+        }
+        return "";
+    },
+    validateNickname: (nickname: string) => {
+        if (nickname.length === 0) {
+            return "닉네임을 입력해주세요.";
+        }
+        if (!NICKNAME_PATTERN.test(nickname)) {
+            return "닉네임은 2~20자, 한글, 알파벳, 숫자, 밑줄(_), 하이픈(-)만 허용됩니다.";
         }
         return "";
     },
