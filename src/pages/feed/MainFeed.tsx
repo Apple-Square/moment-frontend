@@ -7,18 +7,20 @@ import { Footer } from '../common/components/Footer';
 import CommentModal from './components/CommentModal';
 // import NaviBar from '../common/components/NaviBar';
 import { CommentModalContext } from '../../context/CommentModalContext';
+import { FeedMenuContext } from '../../context/FeedMenuContext';
 
 const MainFeed: React.FC = () => {
     const [commentOpen, setCommentOpen] = useState<boolean>(false);
+    const [feedMenuOpen, setFeedMenuOpen] = useState<boolean>(false)
 
     // modal 오픈 시 main scroll lock
     useEffect(() => {
-        if (commentOpen) {
+        if (commentOpen || feedMenuOpen) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "auto";
         }
-    }, [commentOpen]);
+    }, [commentOpen, feedMenuOpen]);
 
     return (
         <Container className={`${styles.container} px-0`}>
@@ -30,7 +32,9 @@ const MainFeed: React.FC = () => {
             <Row className={`${styles.viewer} px-0 mx-0`}>
                 <Col className='p-0'>
                     <CommentModalContext.Provider value={{ commentOpen, setCommentOpen }}>
-                        <FeedList />
+                        <FeedMenuContext.Provider value={{ feedMenuOpen, setFeedMenuOpen }}>
+                            <FeedList />
+                        </FeedMenuContext.Provider>
                     </CommentModalContext.Provider>
                 </Col>
             </Row>

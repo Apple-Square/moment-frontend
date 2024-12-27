@@ -13,6 +13,7 @@ import SvgMenu from './svgMenu';
 import { CommentModalContext } from '../../../context/CommentModalContext';
 // import { Col, Container, Row } from 'react-bootstrap';
 import { trandingComment } from '../temp/tempData';
+import { FeedMenuContext } from '../../../context/FeedMenuContext';
 
 interface FeedProps {
     id: number;
@@ -56,8 +57,9 @@ const Feed: React.FC<FeedProps> = ({
     // const [visibleComment, setVisibleComment] = useState<boolean>(false);
     // const [slidePosition, setSlidePosition] = useState<number>(0);
     const { commentOpen, setCommentOpen } = useContext(CommentModalContext);
+    const { feedMenuOpen, setFeedMenuOpen } = useContext(FeedMenuContext);
     const [likedState, setLikedState] = useState<boolean>(liked);
-    const [feedMenuOpen, setFeedMenuOpen] = useState<boolean>(false)
+    
 
     const navi = useNavigate();
     // const locationPath = useLocation();
