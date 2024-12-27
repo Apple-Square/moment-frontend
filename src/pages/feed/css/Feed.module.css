@@ -45,6 +45,35 @@
     color: gray;
 }
 
+.feedMenuBtn {
+    display: flex;
+}
+
+.feedMenu {
+    position: absolute;
+    right: 0;
+    top: calc(50px + 2 * 0.5rem);
+    width: 30%;
+    z-index: 100;
+    background-color: white;
+    border-radius: 0 0 0 10px;
+}
+
+.feedMenu>ul {
+    margin: 0;
+    padding: 0;
+}
+
+.feedMenu>ul>* {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: medium;
+    font-weight: 700;
+    padding: 5% 5%;
+    height: fit-content;
+}
+
 .imageContainer {
     width: 100%;
     position: relative;
@@ -73,7 +102,7 @@
 
 .likes,
 .comments,
-.shares,
+.views,
 .timeAgo {
     margin-right: 15px;
 }

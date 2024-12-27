@@ -9,6 +9,7 @@ import 'swiper/css/pagination';
 // import SwiperCore from 'swiper';
 import 'swiper/css';
 import SvgLike from './SvgLike';
+import SvgMenu from './svgMenu';
 import { CommentModalContext } from '../../../context/CommentModalContext';
 // import { Col, Container, Row } from 'react-bootstrap';
 import { trandingComment } from '../temp/tempData';
@@ -56,6 +57,7 @@ const Feed: React.FC<FeedProps> = ({
     // const [slidePosition, setSlidePosition] = useState<number>(0);
     const { commentOpen, setCommentOpen } = useContext(CommentModalContext);
     const [likedState, setLikedState] = useState<boolean>(liked);
+    const [feedMenuOpen, setFeedMenuOpen] = useState<boolean>(false)
 
     const navi = useNavigate();
     // const locationPath = useLocation();
@@ -78,11 +80,25 @@ const Feed: React.FC<FeedProps> = ({
         // get like
     }
 
+    const handleClickFeedMenu = () => {
+        setFeedMenuOpen(!feedMenuOpen)
+    }
+
+    const handleClickUpdateFeed = () => {
+        // post feed
+        return;
+    }
+
+    const handleClickDeleteFeed = () => {
+        // delete feed
+        return;
+    }
+
     const castTime = (isoString: string): string => {
         const time = new Date(isoString).getTime();
         const now = Date.now();
         const diff = now - time;
-    
+
         const seconds = Math.floor(diff / 1000);
         const minutes = Math.floor(seconds / 60);
         const hours = Math.floor(minutes / 60);
@@ -91,7 +107,7 @@ const Feed: React.FC<FeedProps> = ({
         const month = Math.floor(days / 30);
         const year = Math.floor(days / 365);
 
-    
+
         if (seconds < 60) return `${seconds}초 전`;
         if (minutes < 60) return `${minutes}분 전`;
         if (hours < 24) return `${hours}시간 전`;
@@ -111,7 +127,21 @@ const Feed: React.FC<FeedProps> = ({
                         <span className={styles.location}>{address}</span>
                     </div>
                 </div>
+                <div className={`${styles.feedMenuBtn} p-2`}>
+                    <SvgMenu
+                        className={styles.likeBtn}
+                        onClick={handleClickFeedMenu}
+                        style={{ "width": "1rem", "height": "auto", "cursor": "pointer" }}
+                    />
+                </div>
             </div>
+            {feedMenuOpen && (
+                <div className={`${styles.feedMenu} p-2`}>
+                    <ul>
+                        <li onClick={handleClickUpdateFeed}>피드 수정</li>
+                        <li onClick={handleClickDeleteFeed}>피드 삭제</li>
+                    </ul>
+                </div>)}
             <div className={styles.imageContainer}>
                 {/* <img className={styles.contentImg} src={img} alt="contents" /> */}
                 <Swiper
@@ -126,7 +156,7 @@ const Feed: React.FC<FeedProps> = ({
                 >
                     {urls.map((url, index) => (
                         <SwiperSlide key={index}>
-                            <img className={styles.contentImg} src={url} alt={`Content${index}`}/>
+                            <img className={styles.contentImg} src={url} alt={`Content${index}`} />
                         </SwiperSlide>
                     ))}
                 </Swiper>
@@ -142,8 +172,8 @@ const Feed: React.FC<FeedProps> = ({
                     />
                     {likeCount}
                 </span>
-                <span className={styles.comments} onClick={handleClickComment} style={{"cursor": "pointer"}}>💬 {commentCount}</span>
-                <span className={styles.shares}>👀 {viewCount}</span>
+                <span className={styles.comments} onClick={handleClickComment} style={{ "cursor": "pointer" }}>💬 {commentCount}</span>
+                <span className={styles.views}>👀 {viewCount}</span>
                 <span className={styles.timeAgo}>{castTime(regDate)}</span>
             </div>
             <div className={`${styles.contentsWrapper}`}>
