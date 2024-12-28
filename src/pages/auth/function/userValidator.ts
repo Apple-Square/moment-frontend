@@ -26,7 +26,7 @@ export const userValidator = {
             return "닉네임을 입력해주세요.";
         }
         if (!NICKNAME_PATTERN.test(nickname)) {
-            return "닉네임은 2~20자, 한글, 알파벳, 숫자, 밑줄(_), 하이픈(-)만 허용됩니다.";
+            return "닉네임은 2~20자, 한글, 알파벳, 숫자, 밑줄(_), 하이픈(-)만 허용";
         }
         return "";
     },

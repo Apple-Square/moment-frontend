@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Select, {SingleValue} from "react-select";
 import {Col} from "react-bootstrap";
 import "../css/genderSelector.css";
-
+import {getSessionItem, setSessionItem} from "../../../lib/crypto.ts";
+import {SESSON_STORAGE_KEY, SESSON_STORAGE_REFRESH_TIME} from "../key/key.ts";
+import lodash from "lodash";
 interface OptionType {
     value: string;
     label: string;
-}
-
-interface GenderSelectorProps {
-    setGenderCallback : (gender : string) => void;
 }
 
 const genderOptions: OptionType[] = [
@@ -17,18 +15,38 @@ const genderOptions: OptionType[] = [
     { value: "FEMALE", label: "여" },
 ];
 
-const GenderSelector: React.FC<GenderSelectorProps> = ({setGenderCallback}) => {
-    const [selectedGender, setSelectedGender] = useState<OptionType | null>(null);
+const GenderSelector: React.FC = () => {
+    const [gender, setGender] = useState<OptionType | null>(null);
 
-    const updateParent = (selectedGender : SingleValue<OptionType>) => {
-        if (selectedGender){
-            setGenderCallback(selectedGender.value);
+    const savedInfo = getSessionItem(SESSON_STORAGE_KEY);
+
+    useEffect(() => {
+        if (savedInfo) {
+            if (savedInfo.gender) setGender(savedInfo.gender);
         }
-    }
+    }, []);
+
+    const debouncedSaveToSession = useCallback(
+        lodash.debounce(() => {
+            const userInfo = {
+                ...savedInfo,
+                gender
+            };
+            setSessionItem(SESSON_STORAGE_KEY, userInfo);
+            console.log("세션 스토리지에 저장되었습니다!");
+        }, SESSON_STORAGE_REFRESH_TIME),
+        [gender]
+    );
+
+    useEffect(() => {
+        debouncedSaveToSession();
+        return () => {
+            debouncedSaveToSession.cancel();
+        };
+    }, [gender]);
 
     const handleGenderChange = (selectedOption : SingleValue<OptionType>) => {
-        setSelectedGender(selectedOption);
-        updateParent(selectedOption)
+        setGender(selectedOption);
     }
 
 
@@ -37,7 +55,7 @@ const GenderSelector: React.FC<GenderSelectorProps> = ({setGenderCallback}) => {
             <Select
                 options={genderOptions}
                 placeholder="성별" // 성별 플레이스홀더
-                value={selectedGender}
+                value={gender}
                 onChange={handleGenderChange}
                 styles={{
                     control: (provided) => ({

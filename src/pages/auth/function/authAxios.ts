@@ -2,13 +2,87 @@ import {axiosInstance, axiosInstanceWithAccessToken} from "../../../lib/axiosIns
 import {LoginRequestDto, LoginResponseDto} from "../../../interface/AxiosInterface.ts";
 import {clearAllCookies} from "../../common/function/cookie.ts";
 import {JSONColor} from "../../../lib/deepLog.ts";
-import {castError, getErrorStatus, setErrorMessage} from "../../../lib/ErrorUtil.ts";
+import {castError, getErrorMessage, getErrorStatus, setErrorMessage} from "../../../lib/ErrorUtil.ts";
 import {AxiosResponse} from "axios";
 
 export interface CheckDto {
     timeStamp: string;
     available: boolean;
     message: string;
+}
+export interface minimalDto {
+    timeStamp: string;
+    message: string;
+}
+
+export const signUpRequest = async (nickname, userId, pwd, year, month, day, gender, email, address: string): Promise<boolean | Error> => {
+    try {
+        console.log("\n",nickname, " ", userId, " ", pwd, " ", year, " ", month, " ", day, " ", gender, " ", email, " ", address);
+
+        const yearValue = year?.value || ""; // 2024
+        const monthValue = month?.value.toString().padStart(2, "0") || ""; // 05
+        const dayValue = day?.value.toString().padStart(2, "0") || ""; // 27
+        const genderValue = gender?.value || ""; // 'MALE'
+
+        console.log("yearValue :: ", yearValue);
+        console.log("monthValue :: ", monthValue);
+        console.log("dayValue :: ", dayValue);
+        console.log("genderValue :: ", genderValue);
+
+        const response = await axiosInstance.post<minimalDto>(`/auth/signup`, {
+            nickname: nickname,
+            username: userId,
+            password: pwd,
+            birth: `${yearValue}-${monthValue}-${dayValue}`, // '2024-05-27'
+            gender: genderValue,
+            email: email,
+            address: address,
+        });
+
+        return (response.status === 201);
+    } catch (error: unknown) {
+        const status = getErrorStatus(error);
+
+        console.log(error);
+        if (status === 500) {
+            setErrorMessage(error, "서버에 문제가 있습니다.");
+        }
+
+        return castError(error);
+    }
+}
+
+export const validateEmailAuthCodeRequest = async (email, authCode : string) : Promise<boolean | Error> => {
+    try {
+        const response = await axiosInstance.post<minimalDto>(`/auth/email/code/validate`, {
+            email : email,
+            code : authCode
+        });
+        return (response.status === 200)
+    } catch (error : unknown) {
+
+        const status = getErrorStatus(error);
+
+        if (status === 500) {
+            setErrorMessage(error, "서버에 문제가 있습니다.");
+        }
+
+        return castError(error);
+    }
+}
+
+export const sendEmailRequest = async (email : string) : Promise<boolean | Error> => {
+    try {
+        console.log(JSON.stringify(email, null, 2));
+        const response = await axiosInstance.post<minimalDto>(`/auth/email/code`, {
+          email
+        });
+        return (response.status === 200)
+    } catch (error : unknown) {
+        console.log(`sendEmailRequest 에러: ${JSON.stringify(error, null, 2)}`);
+        setErrorMessage(error, "서버에 문제가 생겼습니다.");
+        return castError(error);
+    }
 }
 
 export const checkUserIdRequest = async (username: string): Promise<CheckDto | Error> => {
@@ -26,8 +100,7 @@ export const checkUserIdRequest = async (username: string): Promise<CheckDto | E
 
         // 상태 코드에 따른 에러 메시지 설정
         if (status === 400) {
-            const errorMessage = extractBadRequestMessage(error);
-            setErrorMessage(error, errorMessage);
+            setErrorMessage(error, getErrorMessage(error)); // 배열을 스트링으로 바꿨음
         } else if (status === 409) {
             setErrorMessage(error, "이미 존재하는 아이디입니다.");
         } else {
@@ -82,7 +155,7 @@ export const checkNicknameRequest = async (nickname: string): Promise<CheckDto |
 
         // 상태 코드에 따른 에러 메시지 설정
         if (status === 400) {
-            const errorMessage = extractBadRequestMessage(error);
+            const errorMessage = getErrorMessage(error);
             setErrorMessage(error, errorMessage);
         } else if (status === 409) {
             setErrorMessage(error, "이미 존재하는 닉네임입니다.");

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Select, {SingleValue} from "react-select";
 import { Col } from "react-bootstrap";
 import "../css/bithDaySelector.css";
+import lodash from "lodash";
+import {getSessionItem, setSessionItem} from "../../../lib/crypto.ts";
+import {SESSON_STORAGE_KEY, SESSON_STORAGE_REFRESH_TIME} from "../key/key.ts";
 
 // 연도 생성 함수
 interface OptionType {
@@ -9,9 +12,7 @@ interface OptionType {
     label: string;
 }
 
-interface BirthDaySelectorProps {
-    setBirthCallback : (year : number, month : number, day : number) => void;
-}
+
 
 const generateYears = () => {
     const currentYear = new Date().getFullYear();
@@ -38,36 +39,54 @@ const generateDays = () => {
 };
 
 
-const BirthdaySelector: React.FC<BirthDaySelectorProps> = ({setBirthCallback}) => {
-    const [selectedYear, setSelectedYear] = useState<SingleValue<OptionType>>(null);
-    const [selectedMonth, setSelectedMonth] = useState<SingleValue<OptionType>>(null);
-    const [selectedDay, setSelectedDay] = useState<SingleValue<OptionType>>(null);
+const BirthdaySelector: React.FC = () => {
+    const [year, setYear] = useState<SingleValue<OptionType>>(null);
+    const [month, setMonth] = useState<SingleValue<OptionType>>(null);
+    const [day, setDay] = useState<SingleValue<OptionType>>(null);
 
-    const updateParent = (
-        selectedYear : SingleValue<OptionType>,
-        selectedMonth : SingleValue<OptionType>,
-        selectedDay : SingleValue<OptionType>
-    ) => {
-        if (selectedYear && selectedMonth && selectedDay) {
-            setBirthCallback(selectedYear.value, selectedMonth.value, selectedDay.value);
-        } else {
-            setBirthCallback(0, 0, 0);
+    const savedInfo = getSessionItem(SESSON_STORAGE_KEY);
+
+    useEffect(() => {
+        console.log("이거보면 끝 : "+JSON.stringify(savedInfo));
+        if (savedInfo) {
+            if (savedInfo.year) setYear(savedInfo.year);
+            if (savedInfo.month) setMonth(savedInfo.month);
+            if (savedInfo.day) setDay(savedInfo.day);
         }
-    }
+    }, []);
+
+    const debouncedSaveToSession = useCallback(
+        lodash.debounce(() => {
+            const userInfo = {
+                ...savedInfo,
+                year : year,
+                month : month,
+                day : day
+            };
+            setSessionItem(SESSON_STORAGE_KEY, userInfo);
+            console.log("세션 스토리지에 저장되었습니다! :: " + JSON.stringify(userInfo, null, 2));
+            console.log(getSessionItem(SESSON_STORAGE_KEY));
+        }, SESSON_STORAGE_REFRESH_TIME),
+        [year,month,day]
+    );
+
+    useEffect(() => {
+        debouncedSaveToSession();
+        return () => {
+            debouncedSaveToSession.cancel();
+        };
+    }, [year, month, day]);
 
     const handleYearChange = (selectedOption: SingleValue<OptionType>) => {
-        setSelectedYear(selectedOption);
-        updateParent(selectedOption, selectedMonth, selectedDay);
+        setYear(selectedOption);
     };
 
     const handleMonthChange = (selectedOption: SingleValue<OptionType>) => {
-        setSelectedMonth(selectedOption);
-        updateParent(selectedYear, selectedOption, selectedDay);
+        setMonth(selectedOption);
     };
 
     const handleDayChange = (selectedOption: SingleValue<OptionType>) => {
-        setSelectedDay(selectedOption);
-        updateParent(selectedYear, selectedMonth, selectedOption);
+        setDay(selectedOption);
     };
 
     return (
@@ -76,7 +95,7 @@ const BirthdaySelector: React.FC<BirthDaySelectorProps> = ({setBirthCallback}) =
                 <Select
                     options={generateYears()}
                     placeholder="생년"
-                    value={selectedYear}
+                    value={year}
                     onChange={handleYearChange}
                     styles={{
                         control: (provided) => ({
@@ -100,7 +119,7 @@ const BirthdaySelector: React.FC<BirthDaySelectorProps> = ({setBirthCallback}) =
                 <Select
                     options={generateMonths()}
                     placeholder="월"
-                    value={selectedMonth}
+                    value={month}
                     onChange={handleMonthChange}
                     styles={{
                         control: (provided) => ({
@@ -124,7 +143,7 @@ const BirthdaySelector: React.FC<BirthDaySelectorProps> = ({setBirthCallback}) =
                 <Select
                     options={generateDays()}
                     placeholder="일"
-                    value={selectedDay}
+                    value={day}
                     onChange={handleDayChange}
                     styles={{
                         control: (provided) => ({
