@@ -9,7 +9,7 @@ import 'swiper/css/pagination';
 // import SwiperCore from 'swiper';
 import 'swiper/css';
 import SvgLike from './SvgLike';
-import SvgMenu from './svgMenu';
+import SvgMenu from './SvgMenu';
 import { CommentModalContext } from '../../../context/CommentModalContext';
 // import { Col, Container, Row } from 'react-bootstrap';
 import { trandingComment } from '../temp/tempData';
