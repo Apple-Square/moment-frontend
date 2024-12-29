@@ -14,11 +14,31 @@ const hasStatus = (error: unknown): error is { status: number } => {
     return typeof error === "object" && error !== null && "status" in error && typeof (error as any).status === "number";
 };
 
+/**
+ * 안전하게 에러메세지를 가져오는 명령어
+ * 에러메세지가 배열인 경우에 하나의 string으로 가져온다.
+ * 어느 때는 배열이고 어느 때는 string인 에러메세지를 안전하게 받는다.
+ * @param error
+ */
 export const getErrorMessage = (error: unknown): string => {
     if (isError(error)) {
-        return error.message;
+        return extractMessageWhenAlsoArray(error);
     }
     return "알 수 없는 에러";
+};
+
+const extractMessageWhenAlsoArray = (error: any): string => {
+    try {
+        const responseData = error.response?.data;
+        if (Array.isArray(responseData.message)) {
+            return responseData.message.join(", ");
+        } else if (typeof responseData.message === "string") {
+            return responseData.message;
+        }
+    } catch (e) {
+        console.error("BadRequest 메시지 추출 실패:", e);
+    }
+    return "잘못된 요청입니다. 입력값을 확인해주세요.";
 };
 
 export const getErrorName = (error: unknown): string => {
@@ -38,6 +58,7 @@ export const setErrorMessage = (error: unknown, message: string): void => {
         error.message = message;
     }
 };
+
 
 export const setErrorName = (error: unknown, name: string): void => {
     if (isError(error)) {

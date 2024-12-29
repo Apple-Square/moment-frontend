@@ -88,7 +88,7 @@ export const deleteProfileImageRequest = async (userId : string) : Promise<Axios
         console.error(`deleteProfileImageRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
     }
-}
+};
 
 export const followRequest = async (followeeId : string) : Promise<string | Error> => {
     try {
@@ -96,10 +96,14 @@ export const followRequest = async (followeeId : string) : Promise<string | Erro
         console.log(`followRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response?.data?.followeeId;
     } catch (error) {
-        console.error(`followRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
+        if (axios.isAxiosError(error)) {
+            console.error(`AxiosError 발생 :: 상태 코드: ${error.response?.status}, 메시지: ${error.response?.data?.message}`);
+        } else {
+            console.error(`알 수 없는 에러 발생 :: ${JSON.stringify(error, null, 2)}`);
+        }
         return castError(error);
     }
-}
+};
 
 export const followCancelRequest = async (followeeId : string) : Promise<string | Error> => {
     try {
@@ -110,18 +114,18 @@ export const followCancelRequest = async (followeeId : string) : Promise<string 
         console.error(`followCancelRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
     }
-}
+};
 
 export interface UserPagePocket {
     userPage : UserPage;
-}
+};
 export interface UserPage {
     user : User
     postCount : string,
     followerCount : string,
     followingCount : string,
     followed : boolean
-}
+};
 export interface User {
     id: string;
     nickname: string;
@@ -131,7 +135,7 @@ export interface User {
     address: string;
     intro: string;
     profileImage: string;
-}
+};
 export const getProfileRequest = async (userId : string) : Promise<UserPagePocket | Error> => {
     try {
         let response;

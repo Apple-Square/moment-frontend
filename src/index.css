@@ -18,12 +18,3 @@ html {
   margin: 0 auto !important; /* 수평 중앙 정렬 */
   box-sizing: border-box !important;
 }
-
-/* 모바일 환경 (화면 너비 1024px 이하) */
-@media (max-width: 1024px) {
-  #root, html, body {
-    max-width: 100vw !important; /* 모바일에서는 화면 너비에 맞춤 */
-    height: 100vh !important;
-    width: 100vw !important;
-  }
-}

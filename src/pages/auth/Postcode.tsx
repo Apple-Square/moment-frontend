@@ -1,20 +1,14 @@
 import React from 'react';
 import DaumPostcode from "react-daum-postcode";
 import {NavigateFunction, useLocation, useNavigate} from "react-router-dom";
+import {getSessionItem, setSessionItem} from "../../lib/crypto.ts";
 
 const Postcode:React.FC = () => {
 
-
     const navigate : NavigateFunction = useNavigate();
     const location = useLocation();
-    const previousPage = location.state?.previousPage || '/'; // 기본값을 설정
-    const nickname = location.state?.nickname || {};
-    const userId = location.state?.memberId || {};
-    const pwd = location.state?.pwd || {};
-    const pwd2 = location.state?.pwd2 || {};
-    const birth = 0;
-    const gender = location.state?.gender || {};
-    const email = location.state?.email || {};
+
+    const sessionStorageKey = "signUpInfo";
 
     const themeObj = {
         bgColor: '#FFFFFF',
@@ -23,23 +17,13 @@ const Postcode:React.FC = () => {
         emphTextColor: '#222222',
     };
 
-    const handleComplete = (data : any) => {
+    const handleComplete = (data: any) => {
         const { zonecode, buildingName, roadAddress } = data;
         const fullAddress = `${roadAddress} ${buildingName ? `, ${buildingName}` : ''}`;
-        navigate(previousPage, {
-            state : {
-                nickname,
-                userId,
-                pwd,
-                pwd2,
-                birth,
-                gender,
-                email,
-                address : fullAddress,
-                zonecode
-            }
-        })
-    }
+        const savedInfo = getSessionItem(sessionStorageKey);
+        if (savedInfo) setSessionItem(sessionStorageKey, { ...savedInfo, address: fullAddress }, 5);
+        navigate('/auth/signUp');
+    };
 
     return (
         <div>
