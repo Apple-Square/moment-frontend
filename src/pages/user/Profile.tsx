@@ -35,16 +35,11 @@ const Profile: React.FC = () => {
     });
     const myId = useAppSelector(state => state.auth.user.id);
     const location = useLocation();
-    //테스트용 1 :: X03EPGPnrqM34he 는 나의 프로필
-    // const subjectId = "X03EPGPnrqM34he";
 
-    //테스트용 2 :: Bq8WIhU5eYNwler 는 타인의 프로필
-    // const subjectId = "Bq8WIhU5eYNwler";
-
-    /**실제 사용 코드 :: location.state가 없고, myId 있으면 내 프로필
-     * locaion.state가 있으면 그 타 회원 프로필
+    /**실제 사용 코드 :: location.state.userId가 없고, myId 있으면 내 프로필
+     * locaion.state.userId가 있으면 그 타 회원 프로필
      */
-    const subjectId = location.state as string || myId;
+    const subjectId = location.state?.userId as string || myId;
 
     const {
         isCropping,
@@ -87,6 +82,11 @@ const Profile: React.FC = () => {
             console.log("유저페이지가 이미 있습니다.");
             return;
         }
+
+        if (!subjectId) {
+            return;
+        }
+
         void fetchAndUpdateUserData();
     }, [userPagePocket,myId]);
 

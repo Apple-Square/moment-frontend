@@ -4,7 +4,7 @@ const passphrase = import.meta.env.VITE_APP_CRYPTO_SECRET_KEY;
 // const passphrase = "g5j4ti8e3n1q9m6i";
 // Base64 URL Safe 인코딩
 
-console.log(passphrase);
+
 
 const base64UrlEncode = (str) => {
     return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -16,7 +16,10 @@ const base64UrlDecode = (str) => {
     return str + pad;
 };
 
-// AES 암호화 객체도 암호화 가능
+export const generateRandomKey = () => {
+    return base64UrlEncode(CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Base64));
+};
+
 export const encryptData = (data) => {
     const key = CryptoJS.enc.Utf8.parse(passphrase);
     const iv = CryptoJS.lib.WordArray.random(16); // 16 바이트 길이의 랜덤 iv 생성
@@ -27,7 +30,7 @@ export const encryptData = (data) => {
     return base64UrlEncode(combinedData); // URI 인코딩
 };
 
-// AES 암호화 객체도 암호화 가능
+
 export const decryptData = (combinedData) => {
     const decodedData = base64UrlDecode(combinedData); // URI 디코딩
     const [ivData, encryptedData] = decodedData.split(':'); // ivData와 encryptedData 분리
@@ -44,28 +47,42 @@ export const decryptData = (combinedData) => {
 
 
 // 세션 스토리지에 데이터를 암호화하여 저장하는 함수
-export const setEncryptedSessionItem = (key, data) => {
+export const setSessionItem = (key, data, expiryInMinutes = 30) => {
     try {
-        const encryptedData = encryptData(data); // 데이터 암호화
-        sessionStorage.setItem(key, encryptedData); // 암호화된 데이터를 세션 스토리지에 저장
+        const now = new Date();
+        const item = {
+            value : encryptData(data),
+            expiry : now.getTime() + expiryInMinutes * 60 * 1000,
+        };
+        sessionStorage.setItem(key, JSON.stringify(item)); // 암호화된 데이터를 세션 스토리지에 저장
     } catch (error) {
         console.error('데이터 암호화 및 저장 중 오류 발생:', error);
     }
 };
 
 // 세션 스토리지에서 데이터를 복호화하여 가져오는 함수
-export const getDecryptedSessionItem = (key) => {
+export const getSessionItem = (key) => {
     try {
-        const encryptedData = sessionStorage.getItem(key); // 암호화된 데이터를 세션 스토리지에서 가져옴
-        if (encryptedData) {
-            return decryptData(encryptedData); // 가져온 데이터를 복호화하여 반환
+        const itemStr = sessionStorage.getItem(key);
+        if (!itemStr) return null;
+
+        const item = JSON.parse(itemStr);
+        const now = new Date();
+
+        if (now.getTime() > item.expiry) {
+            sessionStorage.removeItem(key);
+            return null;
         }
-        return null;
+
+        return decryptData(item.value);
     } catch (error) {
         console.error('데이터 복호화 및 가져오기 중 오류 발생:', error);
         return null;
     }
 };
+export const removeSessionItem = (key) => {
+    sessionStorage.removeItem(key);
+}
 
 // export const generateNavigateUrl = async (memberId) => {
 //     try {

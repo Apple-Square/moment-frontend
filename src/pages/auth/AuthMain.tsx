@@ -29,7 +29,7 @@ const debouncedUpdateLoginState = debounce((updateLoginState : Updater<LoginStat
                 error = userValidator.validatePassword(value);
             }
 
-            draft[(name + "Error") as keyof LoginState] = error;
+            draft[(name + "Error") as keyof LoginState] = error;//name + "Error" 필드가 기존에 존재해야만 함.
 
         });
 }, 10);

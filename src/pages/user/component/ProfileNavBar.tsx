@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Navbar, Nav, Container, Image } from 'react-bootstrap';
 import { BsGear, BsPlusCircle } from 'react-icons/bs'; // 부트스트랩 아이콘 사용
 import st from "../css/profileNavbar.module.css";
@@ -25,6 +25,11 @@ export const ProfileNavBar: React.FC<ProfileNavBarProps> = ({
         navigate('/auth/authMain');
     }
 
+
+    useEffect(()=> {
+        console.log("확인하자 :: " + JSON.stringify(userPage, null, 2) + " 그리고 " +myId)
+    }, [myId, userPage])
+
     return (
         <Navbar
             bg="light"
@@ -48,7 +53,7 @@ export const ProfileNavBar: React.FC<ProfileNavBarProps> = ({
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto mx-auto">
                         <Nav.Link href="#profile">즐겨찾기</Nav.Link>
-                        { myId == userPage?.user.id &&
+                        { myId === userPage?.user.id &&
                             <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>

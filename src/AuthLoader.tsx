@@ -71,7 +71,7 @@ export const AuthLoader = ({children}) => {
 
                 // userResponse가 AxiosResponse인지 확인
                 if ((userResponse as AxiosResponse).data?.user) {
-                    showToast("success","로그인 되었습니다. 테스트용", 1000);
+                    // showToast("success","로그인 되었습니다. 테스트용", 1000);
                     dispatch(setRefresh({
                         user: (userResponse as AxiosResponse).data.user,
                         // token: response.headers.authorization,
