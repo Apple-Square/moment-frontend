@@ -17,6 +17,7 @@ import {
     sendEmailRequest, signUpRequest, validateEmailAuthCodeRequest
 } from "./function/authAxios.ts";
 import {SESSON_STORAGE_KEY, SESSON_STORAGE_REFRESH_TIME} from "./key/key.ts";
+import DaumPostcode from "react-daum-postcode";
 
 interface SignUpInfo {
     nickname : string;
@@ -33,10 +34,10 @@ interface SignUpInfo {
 
 export const SignUp:React.FC = () => {
 
-    const navigate : NavigateFunction = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
     const DEBOUNCE_TIME = 700;
 
-    const savedInfo : SignUpInfo = getSessionItem(SESSON_STORAGE_KEY);
+    const savedInfo: SignUpInfo = getSessionItem(SESSON_STORAGE_KEY);
 
     const [initializingPwd, setInitializingPwd] = useState<boolean>(false);
 
@@ -69,7 +70,7 @@ export const SignUp:React.FC = () => {
     const [emailFirstSuccess, setEmailFirstSuccess] = useState(false);
     const [emailSecondSuccess, setEmailSecondSuccess] = useState(false);
     const [emailSendSuccess, setEmailSendSuccess] = useState(false);
-    const [emailAuthCode,setEmailAuthCode] = useState("");
+    const [emailAuthCode, setEmailAuthCode] = useState("");
     const [emailAuthSuccess, setEmailAuthSuccess] = useState(false);
     const [sendLoading, setSendLoading] = useState(false);
     //
@@ -77,51 +78,69 @@ export const SignUp:React.FC = () => {
 
     //""아니면 성공
     const [address, setAddress] = useState("");
+    const [postCodeMode, setPostCodeMode] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (savedInfo) {
-            setNickname(savedInfo.nickname || "");
-            setUserId(savedInfo.userId || "");
-            setPwd(savedInfo.pwd || "");
-            setPwd2(savedInfo.pwd2 || "");
-            setEmail(savedInfo.email || "");
-            setAddress(savedInfo.address || "");
 
-            // nickname, userId, pwd 등의 기본값 변경
-            if (savedInfo.nickname) handleChange("nickname", savedInfo.nickname);
-            if (savedInfo.userId) handleChange("userId", savedInfo.userId);
-            if (savedInfo.email) handleChange("email", savedInfo.email);
-            const timer = setTimeout(() => {
-                if (savedInfo.pwd) {
-                    handleChange("pwd", savedInfo.pwd);
-                    setInitializingPwd(true);
-                }
-            }, DEBOUNCE_TIME);
+    /**
+     * 보안 상의 이유로 사용하지 않는 게 낫겟다고 판단하여 주석처리하였습니다.
+     */
+        // useEffect(() => {
+    //     if (savedInfo) {
+    //         setNickname(savedInfo.nickname || "");
+    //         setUserId(savedInfo.userId || "");
+    //         setPwd(savedInfo.pwd || "");
+    //         setPwd2(savedInfo.pwd2 || "");
+    //         setEmail(savedInfo.email || "");
+    //         setAddress(savedInfo.address || "");
+    //
+    //         // nickname, userId, pwd 등의 기본값 변경
+    //         if (savedInfo.nickname) handleChange("nickname", savedInfo.nickname);
+    //         if (savedInfo.userId) handleChange("userId", savedInfo.userId);
+    //         if (savedInfo.email) handleChange("email", savedInfo.email);
+    //         const timer = setTimeout(() => {
+    //             if (savedInfo.pwd) {
+    //                 handleChange("pwd", savedInfo.pwd);
+    //                 setInitializingPwd(true);
+    //             }
+    //         }, DEBOUNCE_TIME);
+    //         return () => clearTimeout(timer);
+    //     }
+    // }, []);
 
-            return () => clearTimeout(timer);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (initializingPwd) {
+    //         // pwd 상태가 업데이트된 후에만 handleChange("pwd2") 호출
+    //         handleChange("pwd2", savedInfo.pwd2);
+    //     }
+    // }, [initializingPwd]);
 
-    useEffect(() => {
-        if (initializingPwd) {
-            // pwd 상태가 업데이트된 후에만 handleChange("pwd2") 호출
-            handleChange("pwd2", savedInfo.pwd2);
-        }
-    }, [initializingPwd]);
-
-    const saveToSession = () => {
-        const userInfo = {
-            ...savedInfo,
-            nickname,
-            userId,
-            pwd,
-            pwd2,
-            email,
-            address,
-        };
-        setSessionItem(SESSON_STORAGE_KEY, userInfo);
-        //console.log("세션 스토리지에 저장되었습니다!");
-    };
+    // const saveToSession = () => {
+    //     const userInfo = {
+    //         ...savedInfo,
+    //         nickname,
+    //         userId,
+    //         pwd,
+    //         pwd2,
+    //         email,
+    //         address,
+    //     };
+    //     setSessionItem(SESSON_STORAGE_KEY, userInfo);
+    //     //console.log("세션 스토리지에 저장되었습니다!");
+    // };
+    //
+    // const debouncedSaveToSession = useCallback(
+    //     lodash.debounce(() => {
+    //         saveToSession();
+    //     }, SESSON_STORAGE_REFRESH_TIME),
+    //     [nickname, userId, pwd, pwd2, email, address]
+    // );
+    //
+    // useEffect(() => {
+    //     debouncedSaveToSession();
+    //     return () => {
+    //         debouncedSaveToSession.cancel();
+    //     };
+    // }, [nickname, userId, pwd, pwd2, email, address])
 
 
     const stateMap = {
@@ -138,22 +157,7 @@ export const SignUp:React.FC = () => {
         address: setAddress,
     };
 
-    const debouncedSaveToSession = useCallback(
-        lodash.debounce(() => {
-            saveToSession();
-        }, SESSON_STORAGE_REFRESH_TIME),
-        [nickname, userId, pwd, pwd2, email, address]
-    );
-
     useEffect(() => {
-        debouncedSaveToSession();
-        return () => {
-            debouncedSaveToSession.cancel();
-        };
-    }, [nickname, userId, pwd, pwd2, email, address]);
-
-
-    useEffect(()=> {
         //pwd pwd2가 다르면 pwd2Error
         if (pwd && pwd2) {
             if (pwd !== pwd2) {
@@ -164,69 +168,69 @@ export const SignUp:React.FC = () => {
                 setPwd2Success(true);
             }
         }
-    },[pwd, pwd2]);
+    }, [pwd, pwd2]);
 
 
-    const handleChange =  (key, value) => {
-            if (key in stateMap) {
-                // 상태 업데이트
-                stateMap[key as keyof typeof stateMap](value);
+    const handleChange = (key, value) => {
+        if (key in stateMap) {
+            // 상태 업데이트
+            stateMap[key as keyof typeof stateMap](value);
 
-                // 검증 로직 추가
-                let errorMessage = "";
+            // 검증 로직 추가
+            let errorMessage = "";
 
-                //console.log(JSON.stringify("value좀 보자 좀 보자 ::"+value, null, 2));
+            //console.log(JSON.stringify("value좀 보자 좀 보자 ::"+value, null, 2));
 
-                switch (key) {
-                    case "nickname":
-                        errorMessage = userValidator.validateNickname(value);
-                        setNicknameSecondSuccess(false);
-                        setNickname(value);
-                        setNicknameError(errorMessage || "");
-                        if (!errorMessage) setNicknameFirstSuccess(true)
-                        else setNicknameFirstSuccess(false);
-                        break;
-                    case "userId":
-                        errorMessage = userValidator.validateUsername(value);
-                        setUserIdSecondSuccess(false);
-                        setUserId(value);
-                        setUserIdError(errorMessage || "");
-                        if (!errorMessage) setUserIdFirstSuccess(true);
-                        else setUserIdFirstSuccess(false);
-                        break;
-                    case "pwd":
-                        errorMessage = userValidator.validatePassword(value);
-                        setPwd(value);
-                        if(errorMessage) {
-                            setPwdError(errorMessage);
-                            setPwdSuccess(false);
-                        } else {
-                            setPwdError("");
-                            setPwdSuccess(true);
-                        }
-                        break;
-                    case "pwd2":
-                        errorMessage = userValidator.validatePasswordConfirm(pwd, value);
-                        setPwd2(value);
-                        setPwd2Error(errorMessage || "");
-                        setPwd2Success(errorMessage === "");
-                        break;
-                    case "email":
-                        errorMessage = userValidator.validateEmail(value);
-                        setEmailSecondSuccess(false);
-                        setEmail(value);
-                        setEmailError(errorMessage || "");
-                        if (!errorMessage) setEmailFirstSuccess(true);
-                        else setEmailFirstSuccess(false);
-                        break;
-                    default:
-                        //console.warn(`알 수 없는 키 : ${key}`);
-                }
-
-            } else {
+            switch (key) {
+                case "nickname":
+                    errorMessage = userValidator.validateNickname(value);
+                    setNicknameSecondSuccess(false);
+                    setNickname(value);
+                    setNicknameError(errorMessage || "");
+                    if (!errorMessage) setNicknameFirstSuccess(true)
+                    else setNicknameFirstSuccess(false);
+                    break;
+                case "userId":
+                    errorMessage = userValidator.validateUsername(value);
+                    setUserIdSecondSuccess(false);
+                    setUserId(value);
+                    setUserIdError(errorMessage || "");
+                    if (!errorMessage) setUserIdFirstSuccess(true);
+                    else setUserIdFirstSuccess(false);
+                    break;
+                case "pwd":
+                    errorMessage = userValidator.validatePassword(value);
+                    setPwd(value);
+                    if (errorMessage) {
+                        setPwdError(errorMessage);
+                        setPwdSuccess(false);
+                    } else {
+                        setPwdError("");
+                        setPwdSuccess(true);
+                    }
+                    break;
+                case "pwd2":
+                    errorMessage = userValidator.validatePasswordConfirm(pwd, value);
+                    setPwd2(value);
+                    setPwd2Error(errorMessage || "");
+                    setPwd2Success(errorMessage === "");
+                    break;
+                case "email":
+                    errorMessage = userValidator.validateEmail(value);
+                    setEmailSecondSuccess(false);
+                    setEmail(value);
+                    setEmailError(errorMessage || "");
+                    if (!errorMessage) setEmailFirstSuccess(true);
+                    else setEmailFirstSuccess(false);
+                    break;
+                default:
                 //console.warn(`알 수 없는 키 : ${key}`);
             }
-        };
+
+        } else {
+            //console.warn(`알 수 없는 키 : ${key}`);
+        }
+    };
     type CheckDuplicateFn = (value: string) => Promise<CheckDto | Error>;
 
     /**
@@ -354,8 +358,8 @@ export const SignUp:React.FC = () => {
         }
     };
 
-    const navPostCode = () => {
-        navigate('/auth/postcode');
+    const changePostCodeMode = () => {
+        setPostCodeMode(true);
     };
 
     const navBack = () => {
@@ -379,29 +383,43 @@ export const SignUp:React.FC = () => {
 
     };
     const handleSignUp = async () => {
-        const response = await signUpRequest(nickname,userId,pwd,savedInfo?.year,savedInfo?.month,savedInfo?.day,savedInfo?.gender,email,address);
+        const response = await signUpRequest(nickname, userId, pwd, savedInfo?.year, savedInfo?.month, savedInfo?.day, savedInfo?.gender, email, address);
 
         if (response === true) {
             navigate('/auth/authMain');
         }
     }
 
-    return (
-        <Container className={`${st.container}`}>
+    const themeObj = {
+        bgColor: '#FFFFFF',
+        pageBgColor: '#FFFFFF',
+        postcodeTextColor: '#C05850',
+        emphTextColor: '#222222',
+    };
+
+    const handleComplete = (data: any) => {
+        const { zonecode, buildingName, roadAddress } = data;
+        const fullAddress = `${roadAddress} ${buildingName ? `, ${buildingName}` : ''}`;
+        setAddress(fullAddress);
+        setPostCodeMode(false);
+    };
+
+    return !postCodeMode ?
+        (<Container className={`${st.container}`}>
             <Row className="d-flex justify-content-between align-items-center w-100 mb-4">
-                <Col xs="auto" style={{height:"auto"}}>
+                <Col xs="auto" style={{height: "auto"}}>
                     <div
                         className={`${st.backButton}`}
                         onClick={navBack}>
                         <IoMdArrowRoundBack size={32}/>
                     </div>
                 </Col>
-                <Col xs="auto" style={{maxWidth:"80px"}}>
-                    <MomentLogoNTextImg />
+                <Col xs="auto" style={{maxWidth: "80px"}}>
+                    <MomentLogoNTextImg/>
                 </Col>
             </Row>
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
-                <div style={{paddingRight:"12px",paddingLeft:"12px"}}>
+                <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
                     <OverlayTrigger
                         placement="bottom"
                         overlay={
@@ -418,35 +436,35 @@ export const SignUp:React.FC = () => {
                             ) : <></>
                         }
                     >
-                        <div style={{ position: "relative", width: "100%", padding : "0px" }}>
-                        <Form.Control
-                            type="text"
-                            placeholder="닉네임"
-                            className={`mb-3 ${st.h100}`}
-                            name="nickname"
-                            value={nickname}
-                            onInput={(e) => handleChange(e.currentTarget.name, e.currentTarget.value)}
-                            isInvalid={!!nicknameError}
-                            isValid={nicknameSecondSuccess}
-                        />
-                        <span
-                            style={{
-                                top: "115%",
-                                left : "2%",
-                                position: "absolute",
-                                color: (nicknameSecondSuccess && !nicknameError) ? "green" : "red",
-                                fontSize: "0.6rem",
-                            }}
-                        >
+                        <div style={{position: "relative", width: "100%", padding: "0px"}}>
+                            <Form.Control
+                                type="text"
+                                placeholder="닉네임"
+                                className={`mb-3 ${st.h100}`}
+                                name="nickname"
+                                value={nickname}
+                                onInput={(e) => handleChange(e.currentTarget.name, e.currentTarget.value)}
+                                isInvalid={!!nicknameError}
+                                isValid={nicknameSecondSuccess}
+                            />
+                            <span
+                                style={{
+                                    top: "115%",
+                                    left: "2%",
+                                    position: "absolute",
+                                    color: (nicknameSecondSuccess && !nicknameError) ? "green" : "red",
+                                    fontSize: "0.6rem",
+                                }}
+                            >
                         {nicknameSecondSuccess ? "사용 가능" : ""}
-                        {nicknameError ? nicknameError : ""}
+                                {nicknameError ? nicknameError : ""}
                         </span>
                         </div>
                     </OverlayTrigger>
                 </div>
             </Row>
-            <Row className={`w-100 mb-2 ${st.h8}`} style={{ minWidth: "300px" }}>
-                <div style={{ paddingRight: "12px", paddingLeft: "12px" }}>
+            <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
+                <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
                     <OverlayTrigger
                         placement="bottom"
                         overlay={
@@ -465,7 +483,7 @@ export const SignUp:React.FC = () => {
                             )
                         }
                     >
-                        <div style={{ position: "relative", width: "100%", padding: "0px" }}>
+                        <div style={{position: "relative", width: "100%", padding: "0px"}}>
                             <Form.Control
                                 type="text"
                                 placeholder="아이디"
@@ -486,14 +504,14 @@ export const SignUp:React.FC = () => {
                                 }}
                             >
                               {userIdSecondSuccess ? "사용 가능" : ""}
-                              {userIdError ? userIdError : ""}
+                                {userIdError ? userIdError : ""}
                             </span>
                         </div>
                     </OverlayTrigger>
                 </div>
             </Row>
-            <Row className={`w-100 mb-2 ${st.h8}`} style={{ minWidth: "300px" }}>
-                <div style={{ paddingRight: "12px", paddingLeft: "12px" }}>
+            <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
+                <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
                     <OverlayTrigger
                         placement="bottom"
                         overlay={
@@ -512,7 +530,7 @@ export const SignUp:React.FC = () => {
                             )
                         }
                     >
-                        <div style={{ position: "relative", width: "100%", padding: "0px" }}>
+                        <div style={{position: "relative", width: "100%", padding: "0px"}}>
                             <Form.Control
                                 type="password"
                                 placeholder="비밀번호"
@@ -533,15 +551,15 @@ export const SignUp:React.FC = () => {
                                 }}
                             >
                               {pwdSuccess ? "사용 가능" : ""}
-                              {pwdError ? pwdError : ""}
+                                {pwdError ? pwdError : ""}
                             </span>
                         </div>
                     </OverlayTrigger>
                 </div>
             </Row>
 
-            <Row className={`w-100 mb-2 ${st.h8}`} style={{ minWidth: "300px" }}>
-                <div style={{ paddingRight: "12px", paddingLeft: "12px" }}>
+            <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
+                <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
                     <OverlayTrigger
                         placement="bottom"
                         overlay={
@@ -560,7 +578,7 @@ export const SignUp:React.FC = () => {
                             )
                         }
                     >
-                        <div style={{ position: "relative", width: "100%", padding: "0px" }}>
+                        <div style={{position: "relative", width: "100%", padding: "0px"}}>
                             <Form.Control
                                 type="password"
                                 placeholder="비밀번호 재입력"
@@ -580,8 +598,8 @@ export const SignUp:React.FC = () => {
                                     fontSize: "0.6rem",
                                 }}
                             >
-                          {pwd2Success ? "일치합니다" : ""}
-                          {pwd2Error ? pwd2Error : ""}
+                          {pwd2Success ? "일치합니다" + JSON.stringify(pwd2Success, null, 2) : ""}
+                                {pwd2Error ? pwd2Error : ""}
                         </span>
                         </div>
                     </OverlayTrigger>
@@ -594,7 +612,7 @@ export const SignUp:React.FC = () => {
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
                 <GenderSelector/>
             </Row>
-            <Row className={`w-100 mb-2 ${st.h8} `} style={{ minWidth: "300px" }}>
+            <Row className={`w-100 mb-2 ${st.h8} `} style={{minWidth: "300px"}}>
                 <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
                     <OverlayTrigger
                         placement="bottom"
@@ -635,9 +653,9 @@ export const SignUp:React.FC = () => {
                                         }}
                                     >
                                     {sendLoading && "보내는 중"}
-                                    {(!emailSendSuccess && !sendLoading && !!emailError) && emailError}
-                                    {(!sendLoading && !emailError && emailSecondSuccess && !emailSendSuccess) ? "사용가능. 이메일 전송을 해주세요." : ""}
-                                    {emailSendSuccess ? "이메일에서 인증코드를 확인해주세요." : ""}
+                                        {(!emailSendSuccess && !sendLoading && !!emailError) && emailError}
+                                        {(!sendLoading && !emailError && emailSecondSuccess && !emailSendSuccess) ? "사용가능. 이메일 전송을 해주세요." : ""}
+                                        {emailSendSuccess ? "이메일에서 인증코드를 확인해주세요." : ""}
                                     </span>
                                 </Col>
                                 <Col xs={2} style={{padding: "0px 0px 0px 8px", marginLeft: "auto"}}>
@@ -646,7 +664,7 @@ export const SignUp:React.FC = () => {
                                         className={`w-100 mb-3 ${st.emailButton} ${st.h100}`}
                                         style={{minWidth: "50px", padding: "0px"}}
                                         onClick={sendEmail}
-                                        disabled={emailAuthSuccess || sendLoading}
+                                        disabled={emailAuthSuccess || sendLoading || !!emailError}
                                     >
                                         전송
                                     </Button>
@@ -671,6 +689,7 @@ export const SignUp:React.FC = () => {
                                         textOverflow: "ellipsis",
                                         whiteSpace: "nowrap"
                                     }}
+                                    value={emailAuthCode}
                                     onChange={(e) => {
                                         setEmailAuthCode(e.target.value)
                                     }}
@@ -734,13 +753,13 @@ export const SignUp:React.FC = () => {
                                 whiteSpace: "nowrap"
                             }}
                             value={address || ""}
-                            onClick={navPostCode}
+                            onClick={changePostCodeMode}
                             readOnly
                         />
                     </OverlayTrigger>
                 </Col>
             </Row>
-            <Row className={`w-100 ${st.h8}`}  style={{minWidth: "300px"}}>
+            <Row className={`w-100 ${st.h8}`} style={{minWidth: "300px"}}>
                 <Col className="d-flex justify-content-center">
                     <Button
                         className={`w-100
@@ -756,6 +775,10 @@ export const SignUp:React.FC = () => {
                 </Col>
             </Row>
 
-        </Container>
-    );
+        </Container>) : <div>
+            <DaumPostcode
+                theme={themeObj}
+                onComplete={handleComplete}
+            />
+        </div>
 };

@@ -58,9 +58,6 @@ export const userValidator = {
         return "";
     },
     validatePasswordConfirm: (password: string, passwordConfirm: string) => {
-        if (passwordConfirm.length === 0) {
-            return "";
-        }
         if (password !== passwordConfirm) {
             return "비밀번호가 일치하지 않습니다.";
         }
