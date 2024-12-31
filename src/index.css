@@ -10,11 +10,22 @@ html {
   justify-content: center !important; /* 가로 방향 중앙 정렬 */
   align-items: center !important; /* 세로 방향 중앙 정렬 */
 
-  /*min-width: 300px !important; */
-  /*min-height: 100vh !important;*/
   max-width: 512px !important; /* 1024px이상이면...노트북에서 최대 너비 512px */
   width: 100% !important;
   height: auto !important;
   margin: 0 auto !important; /* 수평 중앙 정렬 */
   box-sizing: border-box !important;
+}
+
+@font-face {
+  font-family: 'Money';
+  src: url('/public/fonts/Moneygraphy-Pixel.woff2') format('woff2'); /* 폰트 파일 경로 */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Money2';
+  src: url('/public/fonts/Moneygraphy-Rounded.woff2') format('woff2'); /* 폰트 파일 경로 */
+  font-weight: normal;
+  font-style: normal;
 }

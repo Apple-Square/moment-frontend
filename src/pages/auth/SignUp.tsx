@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {Form, Col, Container, Row, Button, OverlayTrigger, Tooltip} from "react-bootstrap";
-import st from "./css/signUp.module.css"
+import st from "./css/signUp.module.css";
+import d from "../../lib/css/default.module.css";
 import MomentLogoNTextImg from "./component/MomentLogoNTextImg.tsx";
 import {IoMdArrowRoundBack} from "react-icons/io";
 import BirthdaySelector from "./component/BirthDaySelector.tsx";
@@ -405,8 +406,8 @@ export const SignUp:React.FC = () => {
     };
 
     return !postCodeMode ?
-        (<Container className={`${st.container}`}>
-            <Row className="d-flex justify-content-between align-items-center w-100 mb-4">
+        (<Container className={`${st.container} ${d.rootFont}`}>
+            <Row className="d-flex justify-content-between align-items-center w-100 mb-4 mt-4">
                 <Col xs="auto" style={{height: "auto"}}>
                     <div
                         className={`${st.backButton}`}

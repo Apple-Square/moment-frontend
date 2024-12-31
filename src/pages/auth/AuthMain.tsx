@@ -17,6 +17,8 @@ import {debounce} from "lodash";
 import {userValidator} from "./function/userValidator.ts";
 import {axiosInstance, tokenManager} from "../../lib/axiosInstance.ts";
 import layout from "../common/css/layout.module.css";
+import {kakaoLoginRequest} from "./function/authAxios.ts";
+import d from "../../lib/css/default.module.css";
 
 const debouncedUpdateLoginState = debounce((updateLoginState : Updater<LoginState>,name : string, value : string) => {
         updateLoginState(draft => {
@@ -240,10 +242,13 @@ export const AuthMain: React.FC = () => {
      * 이걸 username,usernameError  password,passwordError로 나누거나, 하나의 객체로 다루면 1번의 렌더링이 일어난다.
      * 어차피 속성이 몇 개 없으니 하나로 다루겠다.
      */
+    const handleKakaoLogin = async () => {
+        await kakaoLoginRequest();
+    }
 
 
     return (
-            <Container className={`${layout.authMainLayout}`}>
+            <Container className={`${layout.authMainLayout} ${d.rootFont}`}>
                 <Row className={`${styles.emptyTopRow}`}/>
                 <Row className={`w-100 mb-4 ${styles.h15} ${styles.AdaptiveSizeForImage}`}>
                     <Col className="d-flex justify-content-center">
@@ -264,11 +269,11 @@ export const AuthMain: React.FC = () => {
                         <span>회원가입</span>
                         </Link>
                         <span style={{marginLeft: "5px", marginRight: "5px"}}>|</span>
-                        <Link to="/auth/emailVerification">
+                        <Link to="/auth/emailVerification/id">
                         <span>아이디 찾기</span>
                         </Link>
                         <span style={{marginLeft: "5px", marginRight: "5px"}}>|</span>
-                        <Link to="/auth/emailVerification">
+                        <Link to="/auth/emailVerification/pwd">
                         <span>비밀번호 재설정</span>
                         </Link>
                     </Col>
@@ -287,6 +292,7 @@ export const AuthMain: React.FC = () => {
                                 alignItems: "center", /* 이미지와 버튼을 수직으로 가운데 정렬 */
                                 lineHeight: "0", /* 라인 높이 설정을 제거 */
                             }}
+                            onClick={(e)=>handleKakaoLogin()}
                         >
                             <KakaoButtonImg
                                 className={`${styles.kakaoButtonImg}`}

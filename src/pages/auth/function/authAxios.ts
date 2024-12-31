@@ -1,6 +1,5 @@
 import {axiosInstance, axiosInstanceWithAccessToken} from "../../../lib/axiosInstance.ts";
 import {LoginRequestDto, LoginResponseDto} from "../../../interface/AxiosInterface.ts";
-import {clearAllCookies} from "../../common/function/cookie.ts";
 import {JSONColor} from "../../../lib/deepLog.ts";
 import {castError, getErrorMessage, getErrorStatus, setErrorMessage} from "../../../lib/ErrorUtil.ts";
 import {AxiosResponse} from "axios";
@@ -14,6 +13,76 @@ export interface minimalDto {
     timeStamp: string;
     message: string;
 }
+export interface kakaoResponseDto {
+    timeStamp : string;
+    user : {
+        id : string,
+        nickname : string,
+        profileImage : string
+    }
+    message : string;
+}
+
+export const kakaoLoginRequest = (): void => {
+    const redirectUri = `${import.meta.env.VITE_APP_BASE_URL}` + '/oauth/kakao/callback';
+    console.log('redirectUri :: ', redirectUri);
+    const encodedUri = encodeURIComponent(redirectUri);
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_APP_KAKAO_CLIENT_ID}&redirect_uri=${encodedUri}`;
+}
+
+export const passwordRecoveryRequest = async (token : string, newPassword : string) : Promise<boolean | Error> => {
+    try {
+        const response = await axiosInstance.patch(`/auth/password/reset`, {
+            token,
+            newPassword
+        });
+
+        return (response.status === 200);
+    } catch (error : unknown) {
+
+        return castError(error);
+
+    }
+}
+
+export const accountRecoveryRequest = async (email : string):Promise<string | Error> => {
+    try {
+        const response = await axiosInstance.post(`/auth/account/recovery`,
+            email);
+
+        response.data.message = "계정 복구 메일을 전송했습니다.";
+
+        return response.data.message;
+    } catch (error : unknown) {
+
+        if(getErrorStatus(error) === 400) {
+            setErrorMessage(error,"올바른 형식의 이메일 주소이어야 합니다.");
+        }
+
+        return castError(error);
+    }
+}
+
+// export const kakaoLoginRequest = async () => {
+//     try {
+//         const response = await axiosInstance.get(`/oauth/kakao/login`, {
+//             validateStatus: (status) => status === 302 || status < 400,
+//         });
+//
+//         // 카카오 로그인 URL로 리다이렉트
+//         const kakaoRedirectUrl = response.headers.location;
+//
+//         if (kakaoRedirectUrl) {
+//             window.location.href = kakaoRedirectUrl; // 브라우저에서 리다이렉트
+//         } else {
+//             throw new Error("카카오 로그인 URL이 반환되지 않았습니다.");
+//         }
+//     } catch (error: unknown) {
+//         console.error("카카오 로그인 요청 실패:", error);
+//         return castError(error);
+//     }
+// };
+
 
 export const signUpRequest = async (nickname, userId, pwd, year, month, day, gender, email, address: string): Promise<boolean | Error> => {
     try {
