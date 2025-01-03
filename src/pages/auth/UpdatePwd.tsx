@@ -38,24 +38,17 @@ const UpdatePwd: React.FC = () => {
         setPwd2Success(errorMessage === "");
     };
 
-    useEffect(()=> {
-        // console.log("pwdError"+" : "+JSON.stringify(pwdError, null, 2));
-        // console.log("pwdSuccess"+" : "+JSON.stringify(pwdSuccess, null, 2));
-        // console.log("pwd2Error"+" : "+JSON.stringify(pwd2Error, null, 2));
-        // console.log("pwd2Success"+" : "+JSON.stringify(pwd2Success, null, 2));
-        showAlert(
-                "success","안녕"
-            );
-
-    },[pwd,pwd2])
 
     const resetPassword = async () => {
         if (token) {
             const response = await passwordRecoveryRequest(token, pwd);
             if (response instanceof Error) {
-                showToast("error","비밀번호 변경 실패!");
+                showToast("error",response.message,1000,'15px');
+            } else if (response) {
+                showAlert("","변경 성공 \n \n 로그인하러 갑니다.");
+                navigate("/auth/authMain");
             } else {
-
+                showAlert("error", "알 수 없는 에러");
             }
         }
 

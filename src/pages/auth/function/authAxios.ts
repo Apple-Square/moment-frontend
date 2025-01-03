@@ -22,13 +22,60 @@ export interface kakaoResponseDto {
     }
     message : string;
 }
+// export const kakaoLoginRequest = async () => {
+//     try {
+//         const response = await axiosInstance.get(`/oauth/kakao/login`, {
+//             validateStatus: (status) => status === 302 || status < 400,
+//         });
+//
+//         // 카카오 로그인 URL로 리다이렉트
+//         const kakaoRedirectUrl = response.headers.location;
+//
+//         if (kakaoRedirectUrl) {
+//             window.location.href = kakaoRedirectUrl; // 브라우저에서 리다이렉트
+//         } else {
+//             throw new Error("카카오 로그인 URL이 반환되지 않았습니다.");
+//         }
+//     } catch (error: unknown) {
+//         console.error("카카오 로그인 요청 실패:", error);
+//         return castError(error);
+//     }
+// };
+export const naverLoginRequest = async () : Promise<void> => {
+        const response = await axiosInstance.get(`/oauth/naver/login`, {
+            validateStatus: (status) => status === 302 || status < 400,
+        });
+        // 네이버 로그인 URL로 리다이렉트
+        const redirectUrl = response.data;
 
-export const kakaoLoginRequest = (): void => {
-    const redirectUri = `${import.meta.env.VITE_APP_BASE_URL}` + '/oauth/kakao/callback';
-    console.log('redirectUri :: ', redirectUri);
-    const encodedUri = encodeURIComponent(redirectUri);
-    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_APP_KAKAO_CLIENT_ID}&redirect_uri=${encodedUri}`;
+        if (redirectUrl) {
+            window.location.href = redirectUrl; // 브라우저에서 리다이렉트
+        } else {
+            throw new Error("네이버 로그인 URL이 반환되지 않았습니다.");
+        }
 }
+
+export const kakaoLoginRequest = async () : Promise<void> => {
+        const response = await axiosInstance.get(`/oauth/kakao/login`, {
+            validateStatus: (status) => status === 302 || status < 400,
+        });
+        const redirectUrl = response.data;
+        console.log(JSON.stringify("리다이렉트 유알엘", null, 2));
+        console.log(JSON.stringify(redirectUrl, null, 2));
+
+        if (redirectUrl) {
+            window.location.href = redirectUrl; // 브라우저에서 리다이렉트
+        } else {
+            throw new Error("카카오 로그인 URL이 반환되지 않았습니다.");
+        }
+}
+
+// export const kakaoLoginRequest = (): void => {
+//     const redirectUri = `${import.meta.env.VITE_APP_BASE_URL}` + '/oauth/kakao/callback';
+//     console.log('redirectUri :: ', redirectUri);
+//     const encodedUri = encodeURIComponent(redirectUri);
+//     window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_APP_KAKAO_CLIENT_ID}&redirect_uri=${encodedUri}`;
+// }
 
 export const passwordRecoveryRequest = async (token : string, newPassword : string) : Promise<boolean | Error> => {
     try {
@@ -39,6 +86,12 @@ export const passwordRecoveryRequest = async (token : string, newPassword : stri
 
         return (response.status === 200);
     } catch (error : unknown) {
+
+        const status = getErrorStatus(error);
+
+        if (status === 410) {
+            setErrorMessage(error, "이미 비밀번호를 \n 변경하셨거나 만료되었습니다.");
+        }
 
         return castError(error);
 

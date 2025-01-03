@@ -7,7 +7,7 @@ const MySwal = withReactContent(Swal);
 
 /**
  *
- * @param type : "success" | "error" | "warning" | "info" | "question"
+ * @param type : "" | "success" | "error" | "warning" | "info" | "question"
  * @param text : string
  * @param milisecondtimer : number
  */
@@ -49,7 +49,8 @@ export const showToast = (type, text, milisecondtimer = 1000, titleFontSize = '1
 
 export const showAlert = (type, text, titleFontSize = '18px', bodyFontSize = '14px') => {
     MySwal.fire({
-        title: "회원가입이 완료되었습니다.",
+        title: text,
+        icon : type,
         allowOutsideClick: false,
         width : "300px",
         didOpen: (popup) => {
