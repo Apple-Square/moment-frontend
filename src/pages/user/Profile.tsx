@@ -54,7 +54,7 @@ const Profile: React.FC = () => {
         handleConfirm,
         handleCancel
     } = useLoginModal();
-    
+
     useEffect(() => {
         if (!subjectId) {
             setShowModal(true);

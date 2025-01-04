@@ -32,16 +32,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                                                             }) => {
 
 
-
-    const {
-        showModal,
-        handleConfirm,
-        handleCancel,
-        loading,
-        checkAuth,
-    } = useLoginModal();
-
-
     /**
      * 사용자를 팔로우하는 액션을 처리하는 함수.
      *
@@ -212,13 +202,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 style={{display: 'none'}}
                 onChange={handleFileChange}
             />
-            {showModal && (
-                <LoginRecommandModal
-                    open={showModal}
-                    onClose={handleCancel}
-                    onConfirm={handleConfirm}
-                />
-            )}
         </>
     );
 };
