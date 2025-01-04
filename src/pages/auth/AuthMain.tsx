@@ -253,11 +253,14 @@ export const AuthMain: React.FC = () => {
 
     return (
             <Container className={`${layout.authMainLayout} ${d.rootFont}`}>
+
                 <Row className={`${styles.emptyTopRow}`}/>
-                <Row className={`w-100 mb-4 ${styles.h15} ${styles.AdaptiveSizeForImage}`}>
+
+                <Row className={`w-100 mb-4 ${styles.h15} ${styles.AdaptiveSizeForImage}`} >
                     <Col className="d-flex justify-content-center">
                         <div className={`${styles.momentLogoNTextImg}`}>
-                            <MomentLogoNTextImg style={{ maxWidth: "100%", maxHeight: "100%", width: "auto", height: "auto" }} />
+                            <MomentLogoNTextImg
+                                style={{maxWidth: "100%", maxHeight: "100%", width: "auto", height: "auto"}}/>
                         </div>
                     </Col>
                 </Row>
@@ -267,24 +270,27 @@ export const AuthMain: React.FC = () => {
                     <LoginButton/>
                 </LoginArea>
 
-                <Row className={`w-100 mb-4`} style={{fontSize:"10px", minWidth: "300px", maxWidth: "300px"}}>
+                <Row className={`w-100 mb-4`} style={{fontSize: "10px", minWidth: "300px", maxWidth: "300px"}}>
                     <Col className="d-flex justify-content-end">
                         <Link to="/auth/signUp">
-                        <span>회원가입</span>
+                            <span>회원가입</span>
                         </Link>
                         <span style={{marginLeft: "5px", marginRight: "5px"}}>|</span>
                         <Link to="/auth/emailVerification/id">
-                        <span>아이디 찾기</span>
+                            <span>아이디 찾기</span>
                         </Link>
                         <span style={{marginLeft: "5px", marginRight: "5px"}}>|</span>
                         <Link to="/auth/emailVerification/pwd">
-                        <span>비밀번호 재설정</span>
+                            <span>비밀번호 재설정</span>
                         </Link>
                     </Col>
+                    <Link to="/" style={{fontSize: '9px', textAlign:"right"}}>
+                        <span >로그인없이 사용해보기{"->"}</span>
+                    </Link>
                 </Row>
 
                 <Row className={`w-100 mb-3 ${styles.h6}`}
-                     style={{ height: "auto", minHeight: "40px", maxHeight: "40px", minWidth: "300px" }} >
+                     style={{height: "auto", minHeight: "40px", maxHeight: "40px", minWidth: "300px" }} >
                     <Col className="d-flex justify-content-center" style={{minHeight: "40px", maxHeight: "40px" }} >
                         <button
                             type="button"

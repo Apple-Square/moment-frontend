@@ -1,7 +1,13 @@
 import {axiosInstance, axiosInstanceWithAccessToken} from "../../../lib/axiosInstance.ts";
 import {LoginRequestDto, LoginResponseDto} from "../../../interface/AxiosInterface.ts";
 import {JSONColor} from "../../../lib/deepLog.ts";
-import {castError, getErrorMessage, getErrorStatus, setErrorMessage} from "../../../lib/ErrorUtil.ts";
+import {
+    castError,
+    gerServerErrorMessage,
+    getErrorMessage,
+    getErrorStatus,
+    setErrorMessage
+} from "../../../lib/ErrorUtil.ts";
 import {AxiosResponse} from "axios";
 
 export interface CheckDto {
@@ -90,7 +96,9 @@ export const passwordRecoveryRequest = async (token : string, newPassword : stri
         const status = getErrorStatus(error);
 
         if (status === 410) {
+            console.log(JSON.stringify(error, null, 2));
             setErrorMessage(error, "이미 비밀번호를 \n 변경하셨거나 만료되었습니다.");
+            console.log(JSON.stringify(gerServerErrorMessage(error), null, 2));
         }
 
         return castError(error);
@@ -222,7 +230,7 @@ export const checkUserIdRequest = async (username: string): Promise<CheckDto | E
 
         // 상태 코드에 따른 에러 메시지 설정
         if (status === 400) {
-            setErrorMessage(error, getErrorMessage(error)); // 배열을 스트링으로 바꿨음
+            setErrorMessage(error, gerServerErrorMessage(error)); // 배열을 스트링으로 바꿨음
         } else if (status === 409) {
             setErrorMessage(error, "이미 존재하는 아이디입니다.");
         } else {
@@ -277,7 +285,7 @@ export const checkNicknameRequest = async (nickname: string): Promise<CheckDto |
 
         // 상태 코드에 따른 에러 메시지 설정
         if (status === 400) {
-            const errorMessage = getErrorMessage(error);
+            const errorMessage = gerServerErrorMessage(error);
             setErrorMessage(error, errorMessage);
         } else if (status === 409) {
             setErrorMessage(error, "이미 존재하는 닉네임입니다.");
@@ -316,11 +324,10 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<
     } catch (error : unknown) {
         // console.log(`디티오 `+JSON.stringify(loginRequestDto, null, 2));
         console.log(`loginRequest에서 에러 :: ${JSONColor.stringify(error)}`);
-        // if(getErrorState(error) === "401"){
-        //     setErrorMessage(error, "아이디와 비밀번호를 확인해주세요.");
-        // }
         if(getErrorStatus(error) === 401){
             setErrorMessage(error, "아이디 또는 비밀번호 오류");
+        } else {
+            setErrorMessage(error, "네트워크 에러");
         }
         return castError(error);
     }

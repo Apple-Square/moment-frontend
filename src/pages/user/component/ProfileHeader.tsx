@@ -4,7 +4,7 @@ import {Col, Image, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {castError} from "../../../lib/ErrorUtil.ts";
 import {Updater} from "use-immer";
-import {useLoginModal} from "../../common/hook/useLoginModal.ts";
+import {useLoginModal} from "../../common/hook/useRequireLogin.ts";
 import {LoginRecommandModal} from "../../common/components/LoginRecommandModal.tsx";
 
 type ProfileHeaderProps = {

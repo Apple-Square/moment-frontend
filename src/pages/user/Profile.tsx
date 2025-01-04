@@ -10,6 +10,8 @@ import {useImmer} from "use-immer";
 import {JSONColor} from "../../lib/deepLog.ts";
 import ProfileImageCropper from "./component/ProfileImageCropper.tsx";
 import useProfileImage from "./hook/useProfileImage.tsx";
+import {useLoginModal, useRequireLogin} from "../common/hook/useRequireLogin.ts";
+import {LoginRecommandModal} from "../common/components/LoginRecommandModal.tsx";
 
 
 const Profile: React.FC = () => {
@@ -34,12 +36,30 @@ const Profile: React.FC = () => {
         }
     });
     const myId = useAppSelector(state => state.auth.user.id);
+
     const location = useLocation();
 
-    /**실제 사용 코드 :: location.state.userId가 없고, myId 있으면 내 프로필
-     * locaion.state.userId가 있으면 그 타 회원 프로필
+
+    /**
+     * location.state.userId가 있음 =>타 회원 프로필사진을 클릭했을 경우
+     * location.state.userId가 없고, myId 있음 => 로그인한 유저가 프로필 사진 클릭이 아닌 푸터를 통해 프로필 접근.
+     * location.state.userId가 없고, myId 없음 => 로그인하지 않은 유저가 푸터를 통해 자신의 프로필 접근.
      */
     const subjectId = location.state?.userId as string || myId;
+
+
+    const {
+        showModal,
+        setShowModal,
+        handleConfirm,
+        handleCancel
+    } = useLoginModal();
+    
+    useEffect(() => {
+        if (!subjectId) {
+            setShowModal(true);
+        }
+    }, [subjectId])
 
     const {
         isCropping,
@@ -68,26 +88,20 @@ const Profile: React.FC = () => {
         }
     }
 
-    //테스트용 삭제
-    useEffect(() => {
 
-    }, []);
-    useEffect(()=>{
-        console.log(JSON.stringify(userPagePocket, null, 2));
-    })
     useEffect(() => {
-        //유저 페이지가 있거나 내가 없으면 탈출
+        //유저 페이지가 있거나 subjectId가 없으면 fetch하지 않음
         // if(userPagePocket?.userPage?.user?.id !== "" || myId === ""){
         if(userPagePocket?.userPage?.user?.id !== ""){
             console.log("유저페이지가 이미 있습니다.");
             return;
         }
-
         if (!subjectId) {
             return;
         }
+        (async ()=>await fetchAndUpdateUserData())();
 
-        void fetchAndUpdateUserData();
+
     }, [userPagePocket,myId]);
 
     const handleSelectType = (type: string) => {
@@ -148,6 +162,13 @@ const Profile: React.FC = () => {
 
     return (
         <>
+            {showModal && (
+                <LoginRecommandModal
+                    open={showModal}
+                    onClose={handleCancel}
+                    onConfirm={handleConfirm}
+                />
+            )}
             {subjectId ? (
                 <>
                     <ProfileNavBar myId={myId} userPage={userPagePocket?.userPage} />
@@ -172,7 +193,7 @@ const Profile: React.FC = () => {
                 </>
             ) : (
                 <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                    존재하지 않는 회원입니다.
+                    로그인 하시면 자신의 프로필을 확인할 수 있습니다.
                 </div>
             )}
         </>

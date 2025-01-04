@@ -5,7 +5,6 @@ import Postcode from "./pages/auth/Postcode.tsx";
 import Profile from "./pages/user/Profile.tsx";
 import FindUserId from "./pages/auth/FindUserId.tsx";
 import FollowRelationshipList from "./pages/user/FollowRelationshipList.tsx";
-import PersonalInfo from "./pages/user/PersonalInfo.tsx";
 import ResetPwd from "./pages/auth/UpdatePwd.tsx";
 import ChatroomList from "./pages/chat/ChatroomList.tsx";
 import Chatroom from "./pages/chat/Chatroom.tsx";
@@ -77,13 +76,6 @@ export const AppRoutes: React.FC = () => {
                 <FooterLayout>
                     <FollowRelationshipList/>
                 </FooterLayout>
-            }></Route>
-            <Route path="personalInfo" element={
-                <PrivateRoute>
-                    <FooterLayout>
-                        <PersonalInfo/>
-                    </FooterLayout>
-                </PrivateRoute>
             }></Route>
 
         </Route>
