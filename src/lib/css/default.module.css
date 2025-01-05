@@ -5,6 +5,12 @@
     align-items: center !important; /* 세로 방향 중앙 정렬 */
 }
 
+.flexLeft {
+    display: flex !important;
+    justify-content: left !important;
+    align-items: center !important; /* 세로 방향 중앙 정렬 */
+}
+
 .rootFont *{
     font-family: "Money", serif !important;
 }

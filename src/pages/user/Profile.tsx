@@ -12,7 +12,7 @@ import ProfileImageCropper from "./component/ProfileImageCropper.tsx";
 import useProfileImage from "./hook/useProfileImage.tsx";
 import {useLoginModal, useRequireLogin} from "../common/hook/useRequireLogin.ts";
 import {LoginRecommandModal} from "../common/components/LoginRecommandModal.tsx";
-
+import d from "../../lib/css/default.module.css";
 
 const Profile: React.FC = () => {
 
@@ -161,7 +161,7 @@ const Profile: React.FC = () => {
 
 
     return (
-        <>
+        <div className={`${d.rootFont}`}>
             {showModal && (
                 <LoginRecommandModal
                     open={showModal}
@@ -196,7 +196,7 @@ const Profile: React.FC = () => {
                     로그인 하시면 자신의 프로필을 확인할 수 있습니다.
                 </div>
             )}
-        </>
+        </div>
     );
 };
 

@@ -16,7 +16,7 @@ import {
     encryptData,
     decryptData, setSessionItem, getSessionItem,
 } from '../../lib/crypto.ts';
-
+import d from "../../lib/css/default.module.css";
 const FollowRelationshipList: React.FC = () => {
     const location = useLocation();
     //만약에 location.state가 없다면 문제 생겼다고 알려야함
@@ -233,13 +233,13 @@ const FollowRelationshipList: React.FC = () => {
 
 
     return (
-        <>
+        <div className={`${d.rootFont}`}>
             <Row className="d-flex align-items-center w-100" style={styles.header}>
                 <Col xs={1} className="d-flex align-items-center justify-content-center">
                     <button onClick={() => window.history.back()}>←</button> {/* 뒤로가기 버튼 */}
                 </Col>
-                <Col xs={11}>
-                    <h4>{userPage?.user?.nickname || "유저닉네임이 없음"}</h4> {/* 유저 닉네임 */}
+                <Col xs={11} className={`${d.flexLeft}`}>
+                    <h4 style={{margin:"0px"}}>{userPage?.user?.nickname || "유저닉네임이 없음"}</h4> {/* 유저 닉네임 */}
                 </Col>
             </Row>
 
@@ -357,7 +357,7 @@ const FollowRelationshipList: React.FC = () => {
                     )
                 )}
             </Row>
-        </>
+        </div>
     );
 };
 
