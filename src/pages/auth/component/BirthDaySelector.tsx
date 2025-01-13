@@ -103,11 +103,11 @@ const BirthdaySelector: React.FC = () => {
                             borderRadius: "5px",
                             width:"100%",
                             height:"100%",
-                            fontSize: "1.4vh",
+                            fontSize: "1.2vh",
                         }),
                         placeholder: (provided) => ({
                             ...provided,
-                            fontSize: "1vh",
+                            fontSize: "2vh",
                         })
                     }}
                     menuPortalTarget={null}

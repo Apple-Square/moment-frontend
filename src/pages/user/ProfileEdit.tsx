@@ -250,14 +250,14 @@ const ProfileEdit = () => {
         userPage: location.state?.userPage
     });
     const myId = useAppSelector(state => state.auth.user.id);
-    const isAuthTaskFinished = useAppSelector(state => state.auth.isAuthTaskFinished);
+    const isFirstAuthTaskFinished = useAppSelector(state => state.auth.isFirstAuthTaskFinished);
     const [showPersonalInfo, setShowPersonalInfo] = useState(false);
 
     const navigate = useNavigate();
 
     useEffect(() => {
 
-        if(isAuthTaskFinished !== ThreeValueBoolean.True){
+        if(isFirstAuthTaskFinished !== ThreeValueBoolean.True){
             return;
         }
 
@@ -271,7 +271,7 @@ const ProfileEdit = () => {
             void navigate(`/user/profile`);
             return;
         }
-    }, [userPagePocket, myId, navigate, isAuthTaskFinished]);
+    }, [userPagePocket, myId, navigate, isFirstAuthTaskFinished]);
 
     // useProfileImage 훅을 사용하여 이미지 관련 로직을 처리
     const {

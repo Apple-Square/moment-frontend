@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {tokenManager} from '../../lib/axiosInstance.ts';
 import {loginRequest, logoutRequest} from "../../pages/auth/function/authAxios.ts"
 import {AuthState, LoginThunkArgs, ThreeValueBoolean} from "../../interface/OtherInterface.ts";
-import {getErrorMessage, isError, setErrorMessage} from "../../lib/ErrorUtil.ts";
+import {gerServerErrorMessage, getErrorMessage, getErrorStatus, isError, setErrorMessage} from "../../lib/ErrorUtil.ts";
 import {clearAllCookies} from "../../pages/common/function/cookie.ts";
 import {isAxiosError} from "axios";
 
@@ -37,28 +37,28 @@ export const loginThunk
 
             //response가 에러를 담은 객체라면
             if(isError(response)){
-                throw response;
+                return thunkAPI.rejectWithValue(getErrorMessage(response));
             }
 
-            console.log("loginThunk :: response :: "+ JSON.stringify(response, null, 2));
+            // console.log("loginThunk :: response :: "+ JSON.stringify(response, null, 2));
 
             tokenManager.setToken(response.token);
 
-            console.log("로그인요청중 :: 베어러 토큰 - "+tokenManager.getToken());
+            // console.log("로그인요청중 :: 베어러 토큰 - "+tokenManager.getToken());
 
-            console.log(JSON.stringify(response, null, 2));
+            // console.log(JSON.stringify(response, null, 2));
 
             return thunkAPI.fulfillWithValue(response);
 
-        } catch (error) {
+        } catch (error : unknown) {
             console.log("loginThunk에서 에러");
             console.log(JSON.stringify(error, null, 2));
-            console.log(getErrorMessage(error));
+            console.log(gerServerErrorMessage(error));
 
-            if(isAxiosError(error) && !error.response) {
-                setErrorMessage(error, "네트워크 오류 : \n서버에 문제가 있어요");
+            if(isAxiosError(error) && error.response &&!error.response.data) {
+                return thunkAPI.rejectWithValue(gerServerErrorMessage(error.response.data));
             }
-                return thunkAPI.rejectWithValue(getErrorMessage(error));
+            return thunkAPI.rejectWithValue(gerServerErrorMessage(error));
         }
 })
 
@@ -97,8 +97,8 @@ const initialState : AuthState = {
     // token : "",
     isAuthenticated: false,
     shouldRedirect: false, // 리다이렉트 필요하면 true, 그리고 !shouldRedirect라면 로직수행 다른 Redirect와 꼬이지 않게 해줌
-    loading: false, //이거 언젠가 제거해야 함. isFinished로 바꿨음. loading. Refactoring
-    isAuthTaskFinished : ThreeValueBoolean.False,
+    loading: false, //이거 언젠가 제거해야 함. isFirstAuthTaskFinished로 바꿨음. Refactoring 필요
+    isFirstAuthTaskFinished : ThreeValueBoolean.False,
     //첫 리덕스 처리가 완료 되었는지 아닌지. 처음에 false이고 로그인 중이면 loading 처리 완료되면 무조건 true로 바꿔짐.
     error: null,
 }
@@ -122,7 +122,7 @@ const authSlice = createSlice({
             }
             state.isAuthenticated = action.payload.isAuthenticated;
             // state.isRedirected = action.payload.isRedirected;
-            state.isAuthTaskFinished = ThreeValueBoolean.True;
+            state.isFirstAuthTaskFinished = ThreeValueBoolean.True;
             state.loading = action.payload.loading;
             state.error = action.payload.error;
         },
@@ -158,7 +158,7 @@ const authSlice = createSlice({
         builder
             .addCase(loginThunk.pending, (state) => {
                 state.loading = true;//이거 지워야함...
-                state.isAuthTaskFinished = ThreeValueBoolean.Loading;
+                state.isFirstAuthTaskFinished = ThreeValueBoolean.Loading;
                 state.error = null;
             })
             .addCase(loginThunk.fulfilled, (state, action) => {
@@ -169,12 +169,12 @@ const authSlice = createSlice({
                     ...action.payload.data.user
                 };
                 state.loading = false;
-                state.isAuthTaskFinished = ThreeValueBoolean.True;
+                state.isFirstAuthTaskFinished = ThreeValueBoolean.True;
                 // state.token = action.payload.token;
             })
             .addCase(loginThunk.rejected, (state, action) => {
                 state.loading = false;
-                state.isAuthTaskFinished = ThreeValueBoolean.True;
+                state.isFirstAuthTaskFinished = ThreeValueBoolean.True;
                 state.isAuthenticated = false;
                 state.error = action.error.message || `로그인 실패 :: 에러메세지 없음`;
             })
@@ -201,7 +201,7 @@ const authSlice = createSlice({
             .addCase(logoutThunk.rejected, (state, action) => {
                 state.loading = false;
                 state.isAuthenticated = false;
-                state.isAuthTaskFinished = ThreeValueBoolean.False;
+                state.isFirstAuthTaskFinished = ThreeValueBoolean.False;
                 state.error = action.error.message || '로그아웃 실패 :: 에러메세지 없음';
             });
     }

@@ -5,8 +5,7 @@ import Postcode from "./pages/auth/Postcode.tsx";
 import Profile from "./pages/user/Profile.tsx";
 import FindUserId from "./pages/auth/FindUserId.tsx";
 import FollowRelationshipList from "./pages/user/FollowRelationshipList.tsx";
-import PersonalInfo from "./pages/user/PersonalInfo.tsx";
-import UpdatePwd from "./pages/auth/UpdatePwd.tsx";
+import ResetPwd from "./pages/auth/UpdatePwd.tsx";
 import ChatroomList from "./pages/chat/ChatroomList.tsx";
 import Chatroom from "./pages/chat/Chatroom.tsx";
 import MainFeed from "./pages/feed/MainFeed.tsx";
@@ -26,6 +25,8 @@ import FeedDetail from "./pages/feed/FeedDetail.tsx";
 // import MomentList from "./pages/feed/components/MomentList.tsx";
 import MomentScroll from "./pages/feed/MomentScroll.tsx";
 import EditFeed from "./pages/feed/EditFeed.tsx";
+import Error500 from "./pages/error/Error500.tsx";
+import Error404 from "./pages/error/Error404.tsx";
 
 
 export const AppRoutes: React.FC = () => {
@@ -49,13 +50,17 @@ export const AppRoutes: React.FC = () => {
     return (<Routes>
         <Route path="/" element={<MainFeed/>}></Route>
         <Route path="/test" element={<Test/>}></Route>
+        <Route path="/error">
+            <Route path="500" element={<Error500/>}></Route>
+            <Route path="404" element={<Error404/>}></Route>
+        </Route>
         <Route path="/auth" element={<BackgroundEffect />}>
             <Route path="authMain" element={<AuthMain/>}></Route>
             <Route path="findUserId" element={<FindUserId/>}></Route>
             <Route path="postcode" element={<Postcode/>}></Route>
             <Route path="signUp" element={<SignUp/>}></Route>
-            <Route path="updatePwd" element={<UpdatePwd/>}></Route>
-            <Route path="emailVerification" element={<EmailVerification/>}></Route>
+            <Route path="reset-password" element={<ResetPwd/>}></Route>
+            <Route path="emailVerification/:type" element={<EmailVerification/>}></Route>
         </Route>
         <Route path="/user" element={<BackgroundEffect />}>
             <Route path="profile" element={
@@ -72,13 +77,6 @@ export const AppRoutes: React.FC = () => {
                 <FooterLayout>
                     <FollowRelationshipList/>
                 </FooterLayout>
-            }></Route>
-            <Route path="personalInfo" element={
-                <PrivateRoute>
-                    <FooterLayout>
-                        <PersonalInfo/>
-                    </FooterLayout>
-                </PrivateRoute>
             }></Route>
 
         </Route>

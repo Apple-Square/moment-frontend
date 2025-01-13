@@ -5,7 +5,7 @@ const TitleHeader = () => {
     return (
         <div className={`${styles.titleheader}`}>
             <div className={`${styles.title}`}>
-                <h1>monent</h1>
+                <h1>moment</h1>
             </div>
             {/* <div className={`${styles.searchBtn}`}>
                 <SvgSearch fill='gray' />

@@ -15,7 +15,7 @@
 /*}*/
 .emailButton {
     background-color: #FFFFFF !important;
-    color: #989898 !important;
+    color: #000000 !important;
     border: 1px solid #989898 !important;
 }
 .emailButton:active {
@@ -39,6 +39,7 @@
 .backButton:active {
     background-color: #eaeaea; /* 클릭 시 배경색 */
 }
+
 .container {
     display: flex;
     justify-content: center;
@@ -48,6 +49,25 @@
     height: 100%;
     margin: 0 auto; /* 중앙 정렬을 위해 좌우 마진을 자동으로 설정 */
     padding: 0 20px; /* 내부 패딩 설정 */
+}
+
+.container2 {
+    display: flex !important;
+    justify-content: flex-start !important;  /* 'start'를 'flex-start'로 수정 */
+    align-items: stretch !important;
+    flex-direction: column !important;
+    width: 100vw !important;
+    height: 100% !important;
+    max-width: 512px !important;
+    min-height: 100vh !important;
+    padding: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+}
+.container2::-webkit-scrollbar {
+    display: none; /* 스크롤바 숨기기 */
 }
 .momentLogoNTextImg img {
     width: 100%;

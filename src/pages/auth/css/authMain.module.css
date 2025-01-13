@@ -29,8 +29,7 @@
     display: block; /* 이미지가 컨테이너 내에서 블록처럼 동작하도록 */
     height: 1%;
 }
-.kakaoButtonImg,
-.googleButtonImg {
+.oauthButtonImg {
     max-height: 100%; /* 부모 요소(Row)의 100%를 넘지 않도록 제한 */
     width: 100%; /* 비율을 유지하면서 크기를 조정 */
     height: 100%; /* 부모 요소의 높이에 맞춤 */
