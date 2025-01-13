@@ -4,7 +4,7 @@ import { Row, Col, Image, Button } from 'react-bootstrap';
 import {useAppSelector} from "../../redux/store/hooks.ts";
 import {useImmer} from "use-immer";
 import {
-    FollowListPocket,
+    FollowListPocket, followRequest,
     getFollowersRequest,
     getFollowingsRequest,
     UserOfFollowList, UserPage
@@ -18,9 +18,8 @@ import {
 } from '../../lib/crypto.ts';
 import d from "../../lib/css/default.module.css";
 const FollowRelationshipList: React.FC = () => {
-    const location = useLocation();
-    //만약에 location.state가 없다면 문제 생겼다고 알려야함
 
+    const location = useLocation();
     const pageSize = 10;
     const me = useAppSelector((state) => state.auth.user);//// Redux에서 사용자 ID 가져오기
     const [listType, setListType] = useState('follower');
@@ -103,8 +102,7 @@ const FollowRelationshipList: React.FC = () => {
                     draft.followingCount = userPage.followingCount;
                 });
             } else {
-                console.log("자기 프로필로 이동합니다. 데이터가 없습니다.");
-                //만약 어디에도 데이터가 없다면 자기의 프로필로 이동한다. 왜냐하면 url로 치고 들어올 수도 있기 때문
+                //만약 어디에도 데이터가 없다면...
                 updateUserPage((draft)=>{
                     draft.user.id = me.id;
                     draft.user.nickname = me.nickname;
@@ -126,7 +124,10 @@ const FollowRelationshipList: React.FC = () => {
         try {
             let data: FollowListPocket | Error;
 
+            if (!userPage) return null;
+
             if (listType === 'follower') {
+                console.log(JSON.stringify(userPage, null, 2)+" ");
                 data = await getFollowersRequest(userPage.user.id,pageSize,followerListCursor);
                 if (data instanceof Error) {
                     console.error('팔로워 목록 가져오기 실패: ', data);
@@ -216,11 +217,8 @@ const FollowRelationshipList: React.FC = () => {
 
     const handleSearchChange = () => {
         // 검색 기능 구현
-        // 로대쉬 디바운스로 너무 잦은 검색은 막아야함
+        // 디바운스로 너무 잦은 검색은 막아야함
     }
-
-
-    // 팔로워 또는 팔로잉 리스트 데이터 (여기서는 가상 데이터로 설정)
 
     // 피드 실행 대기중
     if (loading && (followerList.content.length === 0 || followingList.content.length === 0)) {
@@ -231,12 +229,17 @@ const FollowRelationshipList: React.FC = () => {
         );
     }
 
+    const testfunc = async () => {
+        const response = await followRequest("hello");
+
+    }
 
     return (
         <div className={`${d.rootFont}`}>
             <Row className="d-flex align-items-center w-100" style={styles.header}>
                 <Col xs={1} className="d-flex align-items-center justify-content-center">
                     <button onClick={() => window.history.back()}>←</button> {/* 뒤로가기 버튼 */}
+                    <button onClick={testfunc}>클릭</button>
                 </Col>
                 <Col xs={11} className={`${d.flexLeft}`}>
                     <h4 style={{margin:"0px"}}>{userPage?.user?.nickname || "유저닉네임이 없음"}</h4> {/* 유저 닉네임 */}

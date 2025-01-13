@@ -20,21 +20,22 @@ import layout from "../common/css/layout.module.css";
 import {kakaoLoginRequest, naverLoginRequest} from "./function/authAxios.ts";
 import d from "../../lib/css/default.module.css";
 
-const debouncedUpdateLoginState = debounce((updateLoginState : Updater<LoginState>,name : string, value : string) => {
-        updateLoginState(draft => {
-            draft[name as keyof LoginState] = value;
-            console.log(`유저 onChange\ndraft :: ${JSON.stringify(draft)}\nname :: ${name}\nvalue :: ${value}`);
-            let error = "";
-            if(name === "username"){
-                error = userValidator.validateUsername(value);
-            } else {
-                error = userValidator.validatePassword(value);
-            }
+const debouncedValidateInput = debounce((name: string, value: string, updateLoginState: Updater<LoginState>) => {
+    let error = "";
 
-            draft[(name + "Error") as keyof LoginState] = error;//name + "Error" 필드가 기존에 존재해야만 함.
+    if (name === "username") {
+        error = userValidator.validateUsername(value);
+    } else {
+        error = userValidator.validatePassword(value);
+    }
 
-        });
-}, 10);
+    // 에러 메시지 상태 업데이트
+    updateLoginState(draft => {
+        draft[(name + "Error") as keyof LoginState] = error;
+    });
+
+    console.log(`유효성 검사\nname :: ${name}\nvalue :: ${value}\nerror :: ${error}`);
+}, 300);  // 300ms 디바운스 적용
 
 
 /**
@@ -136,14 +137,20 @@ const LoginArea: React.FC<{
 
     const handleUsernameChange = useCallback(<T extends HTMLInputElement>(e: ChangeEvent<T>) => {
         const { name, value } = e.target;
-        debouncedUpdateLoginState(updateLoginState,name, value);
-    }, [debouncedUpdateLoginState,updateLoginState]);
+        updateLoginState(draft => {
+            draft[name as keyof LoginState] = value;
+        })
+        debouncedValidateInput(name, value, updateLoginState);
+    }, [debouncedValidateInput,updateLoginState]);
 
 
     const handlePasswordChange = useCallback((e : ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        debouncedUpdateLoginState(updateLoginState,name, value);
-    }, [debouncedUpdateLoginState,updateLoginState]);
+        updateLoginState(draft => {
+            draft[name as keyof LoginState] = value;
+        })
+        debouncedValidateInput(updateLoginState,name, value);
+    }, [debouncedValidateInput,updateLoginState]);
 
     /**
      * loginThunk > userAxios > axiosInstance
