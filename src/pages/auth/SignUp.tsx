@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {Form, Col, Container, Row, Button, OverlayTrigger, Tooltip} from "react-bootstrap";
-import st from "./css/signUp.module.css"
+import st from "./css/signUp.module.css";
+import d from "../../lib/css/default.module.css";
 import MomentLogoNTextImg from "./component/MomentLogoNTextImg.tsx";
 import {IoMdArrowRoundBack} from "react-icons/io";
 import BirthdaySelector from "./component/BirthDaySelector.tsx";
@@ -18,6 +19,7 @@ import {
 } from "./function/authAxios.ts";
 import {SESSON_STORAGE_KEY, SESSON_STORAGE_REFRESH_TIME} from "./key/key.ts";
 import DaumPostcode from "react-daum-postcode";
+import {showToast} from "../../lib/ToastNotification.ts";
 
 interface SignUpInfo {
     nickname : string;
@@ -387,6 +389,9 @@ export const SignUp:React.FC = () => {
 
         if (response === true) {
             navigate('/auth/authMain');
+            showToast("success","회원가입에 성공하셨습니다.");
+        } else if (response instanceof Error) {
+            showToast("error",response?.message);
         }
     }
 
@@ -405,8 +410,8 @@ export const SignUp:React.FC = () => {
     };
 
     return !postCodeMode ?
-        (<Container className={`${st.container}`}>
-            <Row className="d-flex justify-content-between align-items-center w-100 mb-4">
+        (<Container className={`${st.container} ${d.rootFont}`}>
+            <Row className="d-flex justify-content-between align-items-center w-100 mb-4 mt-4">
                 <Col xs="auto" style={{height: "auto"}}>
                     <div
                         className={`${st.backButton}`}

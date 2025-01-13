@@ -35,7 +35,7 @@
     align-items: center;
 }
 
-/* 화면 너비가 308px 미만일 때 font-size 줄이기 */
+/* 화면 너비가 308px 미만일 때 fonts-size 줄이기 */
 @media (max-width: 307px) {
     .footerIcon {
         font-size: 4.5vh;

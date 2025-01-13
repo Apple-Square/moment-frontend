@@ -20,14 +20,20 @@ const hasStatus = (error: unknown): error is { status: number } => {
  * 어느 때는 배열이고 어느 때는 string인 에러메세지를 안전하게 받는다.
  * @param error
  */
-export const getErrorMessage = (error: unknown): string => {
+export const gerServerErrorMessage = (error: unknown): string => {
     if (isError(error)) {
-        return extractMessageWhenAlsoArray(error);
+        return extractServerMessage(error);
     }
     return "알 수 없는 에러";
 };
+export const getErrorMessage = (error : unknown) : string => {
+    if (isError(error)) {
+        return extractMessage(error);
+    }
+    return "알 수 없는 에러"
+}
 
-const extractMessageWhenAlsoArray = (error: any): string => {
+const extractServerMessage = (error: any): string => {
     try {
         const responseData = error.response?.data;
         if (Array.isArray(responseData.message)) {
@@ -36,7 +42,21 @@ const extractMessageWhenAlsoArray = (error: any): string => {
             return responseData.message;
         }
     } catch (e) {
-        console.error("BadRequest 메시지 추출 실패:", e);
+        console.error("메시지 추출 실패:", e);
+    }
+    return "에러 메세지 추출 실패";
+};
+
+const extractMessage = (error: any): string => {
+    try {
+        const responseData = error;
+        if (Array.isArray(responseData.message)) {
+            return responseData.message.join(", ");
+        } else if (typeof responseData.message === "string") {
+            return responseData.message;
+        }
+    } catch (e) {
+        console.error("메시지 추출 실패:", e);
     }
     return "잘못된 요청입니다. 입력값을 확인해주세요.";
 };
@@ -68,7 +88,11 @@ export const setErrorName = (error: unknown, name: string): void => {
 // AxiosError를 Error로 변환하는 함수
 export const castError = (error: unknown): Error => {
     if (isAxiosError(error)) {
-        const axiosError = new Error(error.message);  // Error로 변환
+        console.log(JSON.stringify(error, null, 2));
+
+
+        const message = error.message || "An unknown Axios error occurred";
+        const axiosError = new Error(message);  // Error로 변환
         // AxiosError의 모든 속성을 Error 객체에 복사
         (axiosError as any).config = error.config;
         (axiosError as any).request = error.request;

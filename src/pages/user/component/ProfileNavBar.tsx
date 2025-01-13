@@ -52,7 +52,6 @@ export const ProfileNavBar: React.FC<ProfileNavBarProps> = ({
                 <Navbar.Toggle aria-controls="basic-navbar-nav" style={styles.navbarToggle} />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto mx-auto">
-                        <Nav.Link href="#profile">즐겨찾기</Nav.Link>
                         { myId === userPage?.user.id &&
                             <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>}
                     </Nav>

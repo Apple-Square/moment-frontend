@@ -7,16 +7,16 @@ const MySwal = withReactContent(Swal);
 
 /**
  *
- * @param type : "success" | "error" | "warning" | "info" | "question"
- * @param title : string
+ * @param type : "" | "success" | "error" | "warning" | "info" | "question"
+ * @param text : string
  * @param milisecondtimer : number
  */
-export const showToast = (type, title, milisecondtimer, titleFontSize = '18px', bodyFontSize = '14px') => {
+export const showToast = (type, text, milisecondtimer = 1000, titleFontSize = '18px', bodyFontSize = '14px') => {
     MySwal.fire({
         toast: true,
         position: 'top',
         icon: type,
-        title: title,
+        title: text,
         showConfirmButton: false,
         timer: milisecondtimer,
         timerProgressBar: true,
@@ -45,4 +45,27 @@ export const showToast = (type, title, milisecondtimer, titleFontSize = '18px', 
             }
         },
     });
+};
+
+export const showAlert = (type, text, titleFontSize = '18px', bodyFontSize = '14px') => {
+    MySwal.fire({
+        title: text,
+        icon : type,
+        allowOutsideClick: false,
+        width : "300px",
+        didOpen: (popup) => {
+            const titleElement = popup.querySelector('.swal2-title') as HTMLElement | null;
+            const htmlContainerElement = popup.querySelector('.swal2-html-container') as HTMLElement | null;
+
+            // title 폰트 크기 설정
+            if (titleElement && titleElement) {
+                titleElement.style.fontSize = titleFontSize;
+            }
+
+            // 본문 폰트 크기 설정
+            if (htmlContainerElement) {
+                htmlContainerElement.style.fontSize = bodyFontSize;
+            }
+        },
+    },)
 };

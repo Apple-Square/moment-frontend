@@ -14,7 +14,7 @@ export interface AuthState {
     //token : string;
     isAuthenticated: boolean;
     shouldRedirect : boolean;
-    isAuthTaskFinished : ThreeValueBoolean;
+    isFirstAuthTaskFinished : ThreeValueBoolean;
     loading: boolean;
     error: unknown;
 }

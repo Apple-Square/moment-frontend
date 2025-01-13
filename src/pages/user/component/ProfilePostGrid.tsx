@@ -7,7 +7,7 @@ type ProfilePostGridProps = {
 
 export const ProfilePostGrid: React.FC<ProfilePostGridProps> = ({ posts, selectedType }) => {
     return (
-        <div style={styles.grid}>1
+        <div style={styles.grid}>
             {posts.map((post, index) => (
                 <div key={index} style={styles.gridItem}>
                     {selectedType === 'videos' ? (
