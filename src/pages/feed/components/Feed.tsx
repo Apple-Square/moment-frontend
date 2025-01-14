@@ -60,7 +60,7 @@ const Feed: React.FC<FeedProps> = ({
     const { commentOpen, setCommentOpen } = useContext(CommentModalContext);
     const { feedMenuOpen, setFeedMenuOpen } = useContext(FeedMenuContext);
     const [likedState, setLikedState] = useState<boolean>(liked);
-    
+
 
     const navi = useNavigate();
     // const locationPath = useLocation();
@@ -72,13 +72,13 @@ const Feed: React.FC<FeedProps> = ({
     };
 
     const deleteFeed = async () => {
-            try {
-                const response = await deleteFeedRequest(id);
-                // console.log(response.message);
-            } catch (error) {
-                console.error('Unexpected error:', error);
-            }
-        };
+        try {
+            const response = await deleteFeedRequest(id);
+            // console.log(response.message);
+        } catch (error) {
+            console.error('Unexpected error:', error);
+        }
+    };
 
     const handleClickComment = () => {
         setCommentOpen(true);
@@ -98,6 +98,7 @@ const Feed: React.FC<FeedProps> = ({
 
     const handleClickUpdateFeed = () => {
         // post feed
+        navi(`/feed/editFeed/${id}`);
         return;
     }
 
@@ -163,12 +164,26 @@ const Feed: React.FC<FeedProps> = ({
                     modules={[Pagination]}
                     slidesPerView={1}
                     onSwiper={(swiper) => {
-                        console.log(swiper);
+                        // console.log(swiper);
                     }}
                 >
                     {urls.map((url, index) => (
                         <SwiperSlide key={index}>
-                            <img className={styles.contentImg} src={url} alt={`Content${index}`} />
+                            {mediaType === "VIDEO" ? (
+                                <video
+                                    className={styles.contentMedia}
+                                    src={url}
+                                    controls
+                                    autoPlay
+                                    muted
+                                />
+                            ) : (
+                                <img
+                                    className={styles.contentMedia}
+                                    src={url}
+                                    alt={`Content${index}`}
+                                />
+                            )}
                         </SwiperSlide>
                     ))}
                 </Swiper>

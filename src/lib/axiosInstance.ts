@@ -30,7 +30,7 @@ export const tokenManager = (() => {
 export const axiosInstance = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
-    timeout : 10000,
+    timeout : 100000,
     headers: {
         'Content-Type': 'application/json',
     },

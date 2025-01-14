@@ -18,8 +18,8 @@ type ContentsData = {
     address: string;
 };
 
-
 const EditFeed: React.FC = () => {
+    const [postId, setPostId] = useState<number>(-1);
     // const [media, setMedia] = useState<File[]>([]);  // 미디어 수정 금지
     const [text, setText] = useState('');
     const [placeOpen, setPlaceOpen] = useState<boolean>(false);       // '위치'버튼을 눌렀을 때 창 처리 state
@@ -30,12 +30,16 @@ const EditFeed: React.FC = () => {
 
     const navi = useNavigate()
 
+    const { id } = useParams<{ id: string }>();
+
     useEffect(() => {
-        const { id } = useParams<{ id: string }>();
-        const nId = Number(id); // casting
+
+        if (!id) return;
+            setPostId(Number(id)); // postId 설정, casting
+        
         const fetchFeed = async () => {
             try {
-                const response = await getFeedIDRequest(nId);
+                const response = await getFeedIDRequest(postId);
                 if ('data' in response) { // AxiosResponse인지 확인
                     const media = response.data.post.urls;
                     const mediaType = response.data.post.mediaType;
@@ -49,13 +53,6 @@ const EditFeed: React.FC = () => {
                         media: media,
                         address: originAddr
                     });
-                    if (origin) {
-                        setText(origin.text);
-                        setNewTags(origin.tags);
-                        setPlace(origin.address);
-                    }
-
-
                     console.log('fetching complete.')
                 } else {
                     console.error('Error fetching feeds:', response);
@@ -66,24 +63,32 @@ const EditFeed: React.FC = () => {
         }
 
         fetchFeed()
-    }, []);
+    }, [postId]);
 
-    const handleSubmit = () => {        /* 수정하기 create -> update */
+    useEffect(() => {
+        if (origin) {
+            setText(origin.text);
+            setNewTags(origin.tags);
+            setPlace(origin.address);
+        }
+    }, [origin]);
+
+    const handleUpdate = () => {
         if (text) {
             const argurls = undefined;
             const argfiles = undefined;
             const argtext = (origin?.text != text) ? text : undefined;
             const argtags = (origin?.tags != newTags) ? newTags : undefined;
             const argaddr = (origin?.address != place) ? place : undefined;
-            
-            updateFeedRequest(argurls, argfiles, argtext, argtags, argaddr).then(response => {
+
+            updateFeedRequest(postId, argurls, argfiles, argtext, argtags, argaddr).then(response => {
                 if ('data' in response) {
                     console.log('게시글 수정 성공:', response.data);
+                    navi('/');
                 }
-            })
-                .catch(error => {
-                    console.error('게시글 수정 실패:', error);
-                });
+            }).catch(error => {
+                console.error('게시글 수정 실패:', error);
+            });
 
             // console.log('Media:', media);
             console.log('Text:', text);
@@ -108,7 +113,7 @@ const EditFeed: React.FC = () => {
             <Row className={`p-0 m-0 ${styles.row}`}>
                 <Col className="p-0">
                     {(origin?.media) &&
-                    (<UrlViewer media={origin?.media} type={origin.mediaType} />)}
+                        (<UrlViewer media={origin?.media} type={origin.mediaType} />)}
                 </Col>
             </Row>
             <Row className={`p-0 ${styles.row} ${styles.textArea}`}>
@@ -133,7 +138,7 @@ const EditFeed: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    <button className={styles.btn} onSubmit={handleSubmit}>
+                    <button className={styles.btn} onClick={handleUpdate}>
                         수정하기
                     </button>
                 </Col>

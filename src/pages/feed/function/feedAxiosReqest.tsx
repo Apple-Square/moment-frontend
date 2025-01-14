@@ -4,7 +4,7 @@ import {
     axiosInstanceWithFormDataAndToken, tokenManager
 } from "../../../lib/axiosInstance.ts";
 import { objectDeepDigger } from "../../../lib/deepLog.ts";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { castError } from "../../../lib/ErrorUtil.ts";
 
 export interface UserProfile {
@@ -41,6 +41,12 @@ interface FeedResponse {
 interface FeedIDResponse {
     timeStamp: string;
     post: Feed;
+    message: string;
+}
+
+interface FeedUpdateResponse {
+    timeStamp: string;
+    id: number;
     message: string;
 }
 
@@ -142,7 +148,7 @@ export const createFeedRequest = async (
  */
 export const deleteFeedRequest = async (postId: number): Promise<AxiosResponse<FeedResponse> | Error> => {
     try {
-        const response = await axiosInstanceWithAccessToken.delete<FeedResponse>(`posts/${postId}}`);
+        const response = await axiosInstanceWithAccessToken.delete<FeedResponse>(`posts/${postId}`);
         console.log(`deleteFeedRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
@@ -153,20 +159,21 @@ export const deleteFeedRequest = async (postId: number): Promise<AxiosResponse<F
 
 /**
  * 게시글 수정
- * @param urls - 기존 파일 (선택)
+ * @param urls - ////////////////////////// 사용 안 함 ////////////////////// 기존 파일 (선택)
  * @param files ////////////////////////// 사용 안 함 ////////////////////// - 새로 추가되는 파일 리스트 (Image[] | Video) (선택)
  * @param content - 게시글 내용 (선택) : front단에서는 text contents 필수
  * @param tags - 태그 리스트 (선택)
  * @param address - 주소 정보 (선택)
  * @returns AxiosResponse
  */
-export const updateFeedRequest = async (    // 수정하기 1230
+export const updateFeedRequest = async (
+    postId: number,
     urls?: string[], // 기존 첨부 파일 리스트
     files?: File[], // 첨부 파일 리스트
     content?: string, // 게시글 내용
     tags?: string[], // 태그 리스트
     address?: string // 주소
-): Promise<AxiosResponse<{ success: boolean; postId: number }> | Error> => {
+): Promise<AxiosResponse<FeedUpdateResponse> | Error> => {
     // 파일 유효성 검사
     if (files) {
         if (files.some(file => file.type.startsWith('image')) && files.some(file => file.type.startsWith('video'))) {
@@ -182,7 +189,6 @@ export const updateFeedRequest = async (    // 수정하기 1230
         }
     }
 
-    // FormData 생성
     const formData = new FormData();
     if (urls) urls.forEach(urls => formData.append('urls', urls))   // 기존 파일 변경사항 적용
     if (files) files.forEach(file => formData.append('files', file));   // 새 파일 추가
@@ -192,15 +198,15 @@ export const updateFeedRequest = async (    // 수정하기 1230
     if (address) formData.append('address', address); // 주소 변경
 
     try {
-        const response = await axiosInstanceWithFormDataAndToken.patch<{ success: boolean; postId: number }>(
-            '/posts/${postId}',
+        const response = await axiosInstanceWithFormDataAndToken.patch<FeedUpdateResponse>(
+            `/posts/${postId}`,
             formData
         );
 
-        console.log(`createPostRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
+        console.log(`updateFeedRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
-        console.error(`createPostRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
+        console.error(`updateFeedRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
     }
 };

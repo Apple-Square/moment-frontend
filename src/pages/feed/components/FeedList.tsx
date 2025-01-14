@@ -3,7 +3,7 @@ import Feed from './Feed';
 import styles from "../css/FeedList.module.css";
 import { Col, Container, Row } from "react-bootstrap";
 import { getFeedRequest } from "../function/feedAxiosReqest";
-import { tempFeedData } from '../temp/tempData';
+// import { tempFeedData } from '../temp/tempData';
 
 
 const FeedList: React.FC = () => {
@@ -35,7 +35,7 @@ const FeedList: React.FC = () => {
 
     return (
         <Container className={`${styles.container} px-0`}>
-            {tempFeedData.map((feed, index) => (        // tempFeedData 적용중. 서버 테스트시 feedData로 변경 요망
+            {feedData.map((feed, index) => (        // tempFeedData 적용중. 서버 테스트시 feedData로 변경 요망
                 <Row key={index} className={`${styles.feedRow} px-0`}>
                     <Col className='p-0'>
                         <Feed
