@@ -82,7 +82,7 @@
     padding-top: 100%;
     /* 1:1 Aspect Ratio */
     overflow: hidden;
-    background-color: darkgray;
+    background-color: #000;
 }
 
 .imgSlide {
@@ -93,7 +93,7 @@
     height: 100%;
 }
 
-.contentImg {
+.contentMedia {
     position: absolute;
     top: 0;
     left: 0;

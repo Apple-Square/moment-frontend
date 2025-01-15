@@ -48,7 +48,7 @@ export const axiosInstance = axios.create({
 export const axiosInstanceWithAccessToken = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
-    timeout : 10000,
+    timeout : 100000,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -56,7 +56,7 @@ export const axiosInstanceWithAccessToken = axios.create({
 export const axiosInstanceWithFormData = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
-    timeout : 10000,
+    timeout : 100000,
 });
 
 export const axiosInstanceWithFormDataAndToken = axios.create({

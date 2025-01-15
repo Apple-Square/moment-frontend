@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Feed from './Feed';
 import styles from "../css/FeedList.module.css";
 import { Col, Container, Row } from "react-bootstrap";
-import { getFeedRequest } from "../function/feedAxiosReqest";
+import { deleteFeedRequest, getFeedRequest } from "../function/feedAxiosReqest";
 // import { tempFeedData } from '../temp/tempData';
 
 
@@ -25,8 +25,17 @@ const FeedList: React.FC = () => {
         }
     };
 
+    const deleteFeed = async (id) => {
+        try {
+            const response = await deleteFeedRequest(id);
+            setFeedData(p => p.filter(feed => feed.id !== id));
+        } catch (error) {
+            console.error('Unexpected error:', error);
+        }
+    };
+
     useEffect(() => {
-        fetchFeeds(); // 초기 로딩 시 호출
+        fetchFeeds();
     }, []);
 
     if (isLoading) {
@@ -58,6 +67,7 @@ const FeedList: React.FC = () => {
                             likeCount={feed.likeCount}
                             liked={feed.liked}
                             commented={feed.commented}
+                            deleteFeed={deleteFeed}
                         />
                     </Col>
                 </Row>

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styles from "../css/Feed.module.css";
-// import CommentList from './CommentList';
 import Comment from './Comment';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -11,10 +10,9 @@ import 'swiper/css';
 import SvgLike from './SvgLike';
 import SvgMenu from './SvgMenu';
 import { CommentModalContext } from '../../../context/CommentModalContext';
-// import { Col, Container, Row } from 'react-bootstrap';
 import { trandingComment } from '../temp/tempData';
 import { FeedMenuContext } from '../../../context/FeedMenuContext';
-import { deleteFeedRequest } from '../function/feedAxiosReqest';
+// import { deleteFeedRequest } from '../function/feedAxiosReqest';
 
 interface FeedProps {
     id: number;
@@ -36,6 +34,7 @@ interface FeedProps {
     likeCount: number;
     liked: boolean;
     commented: boolean;
+    deleteFeed: (id) => any
 }
 
 const Feed: React.FC<FeedProps> = ({
@@ -53,7 +52,8 @@ const Feed: React.FC<FeedProps> = ({
     commentCount,
     likeCount,
     liked,
-    commented
+    commented,
+    deleteFeed
 }) => {
     // const [visibleComment, setVisibleComment] = useState<boolean>(false);
     // const [slidePosition, setSlidePosition] = useState<number>(0);
@@ -71,14 +71,14 @@ const Feed: React.FC<FeedProps> = ({
         },
     };
 
-    const deleteFeed = async () => {
-        try {
-            const response = await deleteFeedRequest(id);
-            // console.log(response.message);
-        } catch (error) {
-            console.error('Unexpected error:', error);
-        }
-    };
+    // const deleteFeed = async () => {
+    //     try {
+    //         const response = await deleteFeedRequest(id);
+    //         // console.log(response.message);
+    //     } catch (error) {
+    //         console.error('Unexpected error:', error);
+    //     }
+    // };
 
     const handleClickComment = () => {
         setCommentOpen(true);
@@ -103,7 +103,8 @@ const Feed: React.FC<FeedProps> = ({
     }
 
     const handleClickDeleteFeed = () => {
-        deleteFeed()    // 추후 확인 팝업 추가해야 함. ex) 정말 삭제하시겠습니까?
+        deleteFeed(id);   // 추후 확인 팝업 추가해야 함. ex) 정말 삭제하시겠습니까?
+        setFeedMenuOpen(false);
         return;
     }
 
@@ -163,9 +164,9 @@ const Feed: React.FC<FeedProps> = ({
                     pagination={pagination}
                     modules={[Pagination]}
                     slidesPerView={1}
-                    onSwiper={(swiper) => {
-                        // console.log(swiper);
-                    }}
+                    // onSwiper={(swiper) => {
+                    //     console.log(swiper);
+                    // }}
                 >
                     {urls.map((url, index) => (
                         <SwiperSlide key={index}>
