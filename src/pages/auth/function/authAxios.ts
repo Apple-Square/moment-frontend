@@ -343,24 +343,28 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<
             }
         }
 */
-export const logoutRequest = async () : Promise<AxiosResponse<any, any> | undefined> => {
+export const logoutRequest = async () : Promise<AxiosResponse<any, any> | Error> => {
     try{
         const response = await axiosInstanceWithAccessToken.post(`/auth/logout`);
         // console.log("logout 응답 :: " + JSONColor.stringify(response));
         return response;
     } catch (error) {
         console.log("로그아웃 요청 에러 :: " + error);
-        throw castError(error)
+        return castError(error)
     }
 }
 
-export const refreshRequest = async () : Promise<AxiosResponse<any, any> | undefined> => {
+export const refreshRequest = async () : Promise<AxiosResponse<any, any> | Error> => {
     try {
-        const response = await axiosInstance.post("/auth/refresh");
+        const response = await axiosInstance.post("/auth/refresh",{}, {
+                headers: {
+                    'X-Skip-Interceptor': 'true'
+                }
+            });
         console.log("refresh 응답 :: " + JSONColor.stringify(response));
         return response;
     } catch (error) {
         console.log("refresh 요청 에러 :: " + error);
-        throw castError(error)
+        return castError(error)
     }
 }

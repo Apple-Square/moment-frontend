@@ -175,7 +175,7 @@ export const SignUp:React.FC = () => {
 
     const handleChange = (key, value) => {
         if (key in stateMap) {
-            // 상태 업데이트
+            // 상태 업데이트 setNickname와 같은 함수가 실행 됨.
             stateMap[key as keyof typeof stateMap](value);
 
             // 검증 로직 추가
@@ -187,7 +187,7 @@ export const SignUp:React.FC = () => {
                 case "nickname":
                     errorMessage = userValidator.validateNickname(value);
                     setNicknameSecondSuccess(false);
-                    setNickname(value);
+                    // setNickname(value);
                     setNicknameError(errorMessage || "");
                     if (!errorMessage) setNicknameFirstSuccess(true)
                     else setNicknameFirstSuccess(false);
@@ -195,14 +195,14 @@ export const SignUp:React.FC = () => {
                 case "userId":
                     errorMessage = userValidator.validateUsername(value);
                     setUserIdSecondSuccess(false);
-                    setUserId(value);
+                    // setUserId(value);
                     setUserIdError(errorMessage || "");
                     if (!errorMessage) setUserIdFirstSuccess(true);
                     else setUserIdFirstSuccess(false);
                     break;
                 case "pwd":
                     errorMessage = userValidator.validatePassword(value);
-                    setPwd(value);
+                    // setPwd(value);
                     if (errorMessage) {
                         setPwdError(errorMessage);
                         setPwdSuccess(false);
@@ -213,14 +213,14 @@ export const SignUp:React.FC = () => {
                     break;
                 case "pwd2":
                     errorMessage = userValidator.validatePasswordConfirm(pwd, value);
-                    setPwd2(value);
+                    // setPwd2(value);
                     setPwd2Error(errorMessage || "");
                     setPwd2Success(errorMessage === "");
                     break;
                 case "email":
                     errorMessage = userValidator.validateEmail(value);
                     setEmailSecondSuccess(false);
-                    setEmail(value);
+                    // setEmail(value);
                     setEmailError(errorMessage || "");
                     if (!errorMessage) setEmailFirstSuccess(true);
                     else setEmailFirstSuccess(false);
