@@ -1,10 +1,10 @@
 .commentModal {
     position: fixed;
-    max-width: 768px;
+    max-width: 512px;
     width: 100%;
     height: 0vh;    /* hide on close */
     left: auto;
-    bottom: 10vh;
+    bottom: 8.5vh;      /* 와 진짜 주먹구구식으로 코딩했다 */
     background-color: #f0f0f0;
     transition: height 0.3s ease;
     overflow: hidden;
