@@ -58,6 +58,7 @@ const Feed: React.FC<FeedProps> = ({
     // const [visibleComment, setVisibleComment] = useState<boolean>(false);
     // const [slidePosition, setSlidePosition] = useState<number>(0);
     const { commentOpen, setCommentOpen } = useContext(CommentModalContext);
+    const { target, setTarget } = useContext(CommentModalContext);
     const { feedMenuOpen, setFeedMenuOpen } = useContext(FeedMenuContext);
     const [likedState, setLikedState] = useState<boolean>(liked);
 
@@ -82,6 +83,7 @@ const Feed: React.FC<FeedProps> = ({
 
     const handleClickComment = () => {
         setCommentOpen(true);
+        setTarget(id);
         // setVisibleComment(!visibleComment);
         // navi('/feed/FeedDetail');   // navi point
     }
@@ -97,7 +99,6 @@ const Feed: React.FC<FeedProps> = ({
     }
 
     const handleClickUpdateFeed = () => {
-        // post feed
         navi(`/feed/editFeed/${id}`);
         return;
     }
@@ -208,13 +209,15 @@ const Feed: React.FC<FeedProps> = ({
                 <p>{content}</p>
             </div>
             <div>
-                <Comment
-                    profileImg={trandingComment.profileImg}
-                    author={trandingComment.author}
-                    likes={trandingComment.likes}
-                    contents={trandingComment.contents}
+                {/* <Comment
+                    id={trandingComment.id}
+                    regDate={trandingComment.regDate}
+                    content={trandingComment.content}
+                    writer={trandingComment.writer}
+                    likeCount={trandingComment.likeCount}
+                    liked={trandingComment.liked}
                     onClick={handleClickComment}
-                />
+                /> */}
             </div>
 
         </div>

@@ -216,8 +216,47 @@ export const tempFeedData: any[] = [    // Feed[]
 
 // dummy
 export const trandingComment = {
-    profileImg: "https://via.placeholder.com/50",
-    author: "John Doe",
-    likes: 124,
-    contents: "This is a sample comment. It provides an example of how a comment might look in the UI."
-}
+    id: -1,
+    regDate: "2024-11-06 16:15:30.123456",
+    content: "This is a sample comment. It provides an example of how a comment might look in the UI.",
+    writer: {
+        id: "F4L5MxEpLdpd6Wq",
+        nickname: "강남산메뚜기",
+        profileImage: "https://via.placeholder.com/50",
+    },
+    likeCount: 124,
+    liked: false,
+};
+
+export const tempCommentData = [
+    {
+        profileImg: "https://via.placeholder.com/50",
+        author: "John Doe",
+        likes: 12,
+        contents: "This is a sample comment. It provides an example of how a comment might look in the UI."
+    },
+    {
+        profileImg: "https://via.placeholder.com/50",
+        author: "Jane Smith",
+        likes: 9,
+        contents: "I really enjoyed reading this post. Looking forward to more content like this!"
+    },
+    {
+        profileImg: "https://via.placeholder.com/50",
+        author: "Alice Johnson",
+        likes: 0,
+        contents: "Great insights! I hadn't thought about this topic in that way before."
+    },
+    {
+        profileImg: "https://via.placeholder.com/50",
+        author: "Bob Brown",
+        likes: 3,
+        contents: "Thanks for sharing this information. It was very helpful and informative."
+    },
+    {
+        profileImg: "https://via.placeholder.com/50",
+        author: "Charlie Davis",
+        likes: 1,
+        contents: "I appreciate the effort you put into writing this. Keep up the good work!"
+    }
+];

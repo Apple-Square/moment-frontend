@@ -11,7 +11,8 @@ import { FeedMenuContext } from '../../context/FeedMenuContext';
 
 const MainFeed: React.FC = () => {
     const [commentOpen, setCommentOpen] = useState<boolean>(false);
-    const [feedMenuOpen, setFeedMenuOpen] = useState<boolean>(false)
+    const [target, setTarget] = useState<number | null>(null);
+    const [feedMenuOpen, setFeedMenuOpen] = useState<boolean>(false);
 
     // modal 오픈 시 main scroll lock
     useEffect(() => {
@@ -31,7 +32,7 @@ const MainFeed: React.FC = () => {
             </Row>
             <Row className={`${styles.viewer} px-0 mx-0`}>
                 <Col className='p-0'>
-                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen }}>
+                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen, target, setTarget }}>
                         <FeedMenuContext.Provider value={{ feedMenuOpen, setFeedMenuOpen }}>
                             <FeedList />
                         </FeedMenuContext.Provider>
@@ -40,8 +41,8 @@ const MainFeed: React.FC = () => {
             </Row>
             <Row className={`${styles.cmodalRow} p-0 m-0`}>
                 <Col className='p-0'>
-                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen }}>
-                        <CommentModal id={0} /> {/* dummy id */}
+                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen, target, setTarget }}>
+                        <CommentModal id={target} /> {/* dummy id */}
                     </CommentModalContext.Provider>
                 </Col>
             </Row>

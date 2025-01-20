@@ -4,10 +4,11 @@ import CommentList from "./CommentList";
 import { CommentModalContext } from "../../../context/CommentModalContext";
 
 interface CommentModalProps {
-    id: number;
+    id: number | null;
 }
 
 const CommentModal: React.FC<CommentModalProps> = ({ id }) => {
+    const { target } = useContext(CommentModalContext);
     const { commentOpen, setCommentOpen } = useContext(CommentModalContext);
     const [slidePosition, setSlidePosition] = useState<number>(0);
 
@@ -55,7 +56,7 @@ const CommentModal: React.FC<CommentModalProps> = ({ id }) => {
             >
                 <div className={styles.barHr} />
             </div>
-            {commentOpen && <CommentList />} {/* get with id */}
+            {commentOpen && <CommentList target={target} />} {/* get with id */}
         </div>
     );
 }
