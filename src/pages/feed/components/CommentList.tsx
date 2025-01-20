@@ -28,6 +28,15 @@ const CommentList: React.FC<CommentListProps> = ({ target }) => {
             setIsLoading(false); // 로딩 상태 해제
         }
     };
+    
+    const deleteComment = async (id) => {
+            try {
+                // const response = await deleteFeedRequest(id);
+                setCommentData(p => p.filter(feed => feed.id !== id));
+            } catch (error) {
+                console.error('Unexpected error:', error);
+            }
+        };
 
     useEffect(() => {
         fetchComments();
@@ -39,7 +48,7 @@ const CommentList: React.FC<CommentListProps> = ({ target }) => {
 
     return (
         <>
-            <AddComment />
+            <AddComment postId={target} fetchComment={fetchComments}/>
             <Container className={`${styles.container} p-0`}>
                 {commentData.map((comment, index) => (
                     <Row key={index} className={`${styles.commentRow} mb-3 px-0`}>

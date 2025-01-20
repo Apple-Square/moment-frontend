@@ -34,7 +34,7 @@ interface FeedProps {
     likeCount: number;
     liked: boolean;
     commented: boolean;
-    deleteFeed: (id) => any
+    deleteFeed: (id: number) => any;
 }
 
 const Feed: React.FC<FeedProps> = ({
