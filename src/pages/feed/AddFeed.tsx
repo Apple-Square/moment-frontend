@@ -6,9 +6,10 @@ import MediaUploader from './components/MediaUploader';
 import TextInput from './components/TextInput';
 import SearchPlace from './components/PlaceSearch';
 import TagInput from './components/TagInput';
+import { createFeedRequest } from './function/feedAxiosReqest';
 
 const AddFeed: React.FC = () => {
-    const [media, setMedia] = useState<File[]>([]);;
+    const [media, setMedia] = useState<File[]>([]);
     const [text, setText] = useState('');
     const [placeOpen, setPlaceOpen] = useState<boolean>(false);       // '위치'버튼을 눌렀을 때 창 처리 state
     const [place, setPlace] = useState<string>('');     // 게시글에 붙는 장소 태그
@@ -17,11 +18,22 @@ const AddFeed: React.FC = () => {
 
     const navi = useNavigate()
 
-    const handleSubmit = () => {
+    const handlePublish = () => {
         if (media && text) {
-            // server
+            createFeedRequest(media, text, tags, place)     // backend point
+                .then(response => {
+                    if ('data' in response) {
+                        console.log('게시글 작성 성공:', response.data);
+                        navi('/');
+                    }
+                })
+                .catch(error => {
+                    console.error('게시글 작성 실패:', error);
+                });
+
             console.log('Media:', media);
             console.log('Text:', text);
+            
         } else {
             alert('이미지와 내용을 모두 입력해주세요.');
         }
@@ -67,7 +79,7 @@ const AddFeed: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    <button className={styles.btn} onSubmit={handleSubmit}>
+                    <button className={styles.btn} onClick={handlePublish}>
                         완료하기
                     </button>
                 </Col>

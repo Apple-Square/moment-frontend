@@ -31,27 +31,63 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ contents, onMediaChange }
         setPreviewList(updatedPreviewList);
     }
 
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            const fileArray = [...contents, ...Array.from(event.target.files)];
+    // const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (event.target.files && event.target.files[0]) {
+    //         const fileArray = [...contents, ...Array.from(event.target.files)];
 
-            if (fileArray.length > 10) {
-                alert("미디어는 10개까지만 첨부 가능합니다.");
-                const limitedArray = fileArray.slice(0, 10);
-                onMediaChange(limitedArray);
-                await updatePreviewList(limitedArray);
-            } else {
-                onMediaChange(fileArray);
-                await updatePreviewList(fileArray);
+    //         if (fileArray.length > 10) {
+    //             alert("미디어는 10개까지만 첨부 가능합니다.");
+    //             const limitedArray = fileArray.slice(0, 10);
+    //             onMediaChange(limitedArray);
+    //             await updatePreviewList(limitedArray);
+    //         } else {
+    //             onMediaChange(fileArray);
+    //             await updatePreviewList(fileArray);
+    //         }
+
+    //         console.log(contents)
+    //     } else {
+    //         setPreviewList(previewList);
+    //         onMediaChange(contents);    // 업로드 없을 시 변화 없음
+    //         // if (swiperRef.current) {
+    //         //     swiperRef.current.slideTo(0);
+    //         // }
+    //     }
+    // };
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            const newFiles = Array.from(event.target.files);
+            const fileTypes = contents.map(file => file.type.split('/')[0]);
+            const newFileTypes = newFiles.map(file => file.type.split('/')[0]);
+
+            if (
+                fileTypes.includes('image') && newFileTypes.includes('video') ||
+                fileTypes.includes('video') && newFileTypes.includes('image') ||
+                newFileTypes.includes('video') && newFileTypes.includes('image')
+            ) {
+                alert("이미지와 비디오는 동시에 업로드할 수 없습니다.");
+                return;
             }
 
-            console.log(contents)
-        } else {
-            setPreviewList(previewList);
-            onMediaChange(contents);    // 업로드 없을 시 변화 없음
-            // if (swiperRef.current) {
-            //     swiperRef.current.slideTo(0);
-            // }
+            if (newFileTypes.includes('video')) {
+                if (newFiles.length > 1 || contents.length > 0) {
+                    alert("비디오는 최대 1개까지만 업로드할 수 있습니다.");
+                    return;
+                }
+            }
+
+            if (newFileTypes.includes('image')) {
+                const totalImages = contents.filter(file => file.type.startsWith('image')).length + newFiles.length;
+                if (totalImages > 10) {
+                    alert("이미지는 최대 10개까지만 업로드할 수 있습니다.");
+                    return;
+                }
+            }
+
+            const updatedContents = [...contents, ...newFiles];
+            onMediaChange(updatedContents);
+            await updatePreviewList(updatedContents);
         }
     };
 

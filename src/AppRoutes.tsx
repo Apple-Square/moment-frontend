@@ -22,8 +22,9 @@ import {FooterLayout} from "./pages/common/layoutComponents/FooterLayout.tsx";
 import ProfileEdit from "./pages/user/ProfileEdit.tsx";
 import FeedDetail from "./pages/feed/FeedDetail.tsx";
 // import Moment from "./pages/feed/components/Moment.tsx";
-import MomentList from "./pages/feed/components/MomentList.tsx";
+// import MomentList from "./pages/feed/components/MomentList.tsx";
 import MomentScroll from "./pages/feed/MomentScroll.tsx";
+import EditFeed from "./pages/feed/EditFeed.tsx";
 import Error500 from "./pages/error/Error500.tsx";
 import Error404 from "./pages/error/Error404.tsx";
 
@@ -98,6 +99,7 @@ export const AppRoutes: React.FC = () => {
         </Route>
         <Route path="/moment" element={<MomentScroll />}></Route>
         <Route path="/feed/addFeed" element={<AddFeed />}></Route>    {/* 개별 경로 설정 */}
+        <Route path="/feed/editFeed/:id" element={<EditFeed />}></Route>
     </Routes>)
 }
 
