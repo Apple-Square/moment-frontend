@@ -13,18 +13,17 @@ import { CommentMenuContext } from '../../context/CommentMenuContext';
 const MainFeed: React.FC = () => {
     const [commentOpen, setCommentOpen] = useState<boolean>(false);
     const [target, setTarget] = useState<number | null>(null);
-    const [feedMenuOpen, setFeedMenuOpen] = useState<boolean>(false);
-    const [commentMenuOpen, setCommentMenuOpen] = useState<boolean>(false);
+    const [targetFeed, setTargetFeed] = useState<number | null>(null);
     const [targetComment, setTargetComment] = useState<number | null>(null);
 
     // modal 오픈 시 main scroll lock
     useEffect(() => {
-        if (commentOpen || feedMenuOpen || commentMenuOpen) {
+        if (commentOpen || targetFeed || targetComment) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "auto";
         }
-    }, [commentOpen, feedMenuOpen]);
+    }, [commentOpen, targetFeed, targetComment]);
 
     return (
         <Container className={`${styles.container} px-0`}>
@@ -36,7 +35,7 @@ const MainFeed: React.FC = () => {
             <Row className={`${styles.viewer} px-0 mx-0`}>
                 <Col className='p-0'>
                     <CommentModalContext.Provider value={{ commentOpen, setCommentOpen, target, setTarget }}>
-                        <FeedMenuContext.Provider value={{ feedMenuOpen, setFeedMenuOpen }}>
+                        <FeedMenuContext.Provider value={{ targetFeed, setTargetFeed }}>
                             <FeedList />
                         </FeedMenuContext.Provider>
                     </CommentModalContext.Provider>
@@ -44,7 +43,7 @@ const MainFeed: React.FC = () => {
             </Row>
             <Row className={`${styles.cmodalRow} p-0 m-0`}>
                 <Col className='p-0'>
-                    <CommentMenuContext.Provider value={{commentMenuOpen, setCommentMenuOpen, targetComment, setTargetComment}}>
+                    <CommentMenuContext.Provider value={{ targetComment, setTargetComment }}>
                         <CommentModalContext.Provider value={{ commentOpen, setCommentOpen, target, setTarget }}>
                             <CommentModal id={target} />
                         </CommentModalContext.Provider>

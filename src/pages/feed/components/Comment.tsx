@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../css/Comment.module.css";
 import SvgLike from "./SvgLike";
 import SvgCommentMenu from "./SvgCommentMenu";
@@ -37,7 +37,16 @@ const Comment: React.FC<CommentProps> = ({
 }) => {
     const [likedState, setLikedState] = useState(liked);
     const [isEdited, setIsEdited] = useState(false);
-    const { commentMenuOpen, setCommentMenuOpen } = useContext(CommentMenuContext)
+    const [commentMenuOpen, setCommentMenuOpen] = useState(false);
+    const { targetComment, setTargetComment } = useContext(CommentMenuContext);
+
+    useEffect(() => {
+        if (targetComment && targetComment == id) {
+            setCommentMenuOpen(true);
+        } else {
+            setCommentMenuOpen(false);
+        }
+    },[targetComment]);
 
     const handleClickLike = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         e.stopPropagation();
@@ -47,7 +56,12 @@ const Comment: React.FC<CommentProps> = ({
     }
 
     const handleCLickCommentMenu = () => {
-        setCommentMenuOpen(!commentMenuOpen);
+        // setCommentMenuOpen(!commentMenuOpen);
+        if (!targetComment) {
+            setTargetComment(id);
+        } else {
+            setTargetComment(null);
+        }
     }
 
     const handleClickUpdateComment = () => {
@@ -56,7 +70,8 @@ const Comment: React.FC<CommentProps> = ({
 
     const handleClickDeleteComment = () => {
         deleteComment(id);
-        setCommentMenuOpen(false);
+        // setCommentMenuOpen(false);
+        setTargetComment(null);
     }
 
     return (

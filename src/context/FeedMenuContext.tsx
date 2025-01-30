@@ -1,13 +1,13 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 
 interface FeedMenuContextProps {
-    feedMenuOpen: boolean;
-    setFeedMenuOpen: Dispatch<SetStateAction<boolean>>;
+    targetFeed: number | null;
+    setTargetFeed: Dispatch<SetStateAction<number | null>>;
 }
 
 export const FeedMenuContext = createContext<FeedMenuContextProps>(
     {
-        feedMenuOpen: false,
-        setFeedMenuOpen: () => {}
+        targetFeed: null,
+        setTargetFeed: () => {}
     }
 );

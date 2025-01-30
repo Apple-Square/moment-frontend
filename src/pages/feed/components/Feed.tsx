@@ -57,11 +57,19 @@ const Feed: React.FC<FeedProps> = ({
 }) => {
     // const [visibleComment, setVisibleComment] = useState<boolean>(false);
     // const [slidePosition, setSlidePosition] = useState<number>(0);
-    const { commentOpen, setCommentOpen } = useContext(CommentModalContext);
-    const { target, setTarget } = useContext(CommentModalContext);
-    const { feedMenuOpen, setFeedMenuOpen } = useContext(FeedMenuContext);
+    const { setCommentOpen } = useContext(CommentModalContext);
+    const { setTarget } = useContext(CommentModalContext);
+    const { targetFeed, setTargetFeed } = useContext(FeedMenuContext);
     const [likedState, setLikedState] = useState<boolean>(liked);
+    const [feedMenuOpen, setFeedMenuOpen] = useState<boolean>(false);
 
+    useEffect(()=> {
+        if (targetFeed && targetFeed == id) {
+            setFeedMenuOpen(true);
+        } else {
+            setFeedMenuOpen(false);
+        }
+    }, [targetFeed])
 
     const navi = useNavigate();
     // const locationPath = useLocation();
@@ -71,15 +79,6 @@ const Feed: React.FC<FeedProps> = ({
             return `<span class="${className}"></span>`;
         },
     };
-
-    // const deleteFeed = async () => {
-    //     try {
-    //         const response = await deleteFeedRequest(id);
-    //         // console.log(response.message);
-    //     } catch (error) {
-    //         console.error('Unexpected error:', error);
-    //     }
-    // };
 
     const handleClickComment = () => {
         setCommentOpen(true);
@@ -95,7 +94,11 @@ const Feed: React.FC<FeedProps> = ({
     }
 
     const handleClickFeedMenu = () => {
-        setFeedMenuOpen(!feedMenuOpen)
+        if (!targetFeed) {
+            setTargetFeed(id);
+        } else {
+            setTargetFeed(null);
+        }
     }
 
     const handleClickUpdateFeed = () => {
@@ -105,7 +108,7 @@ const Feed: React.FC<FeedProps> = ({
 
     const handleClickDeleteFeed = () => {
         deleteFeed(id);   // 추후 확인 팝업 추가해야 함. ex) 정말 삭제하시겠습니까?
-        setFeedMenuOpen(false);
+        setTargetFeed(null);
         return;
     }
 

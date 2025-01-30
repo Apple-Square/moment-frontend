@@ -14,7 +14,7 @@ interface UpdateCommentProps {
 
 const UpdateComment: React.FC<UpdateCommentProps> = ({ commentId, originText, fetchComment, setIsEdited }) => {
     const [text, setText] = useState(originText);
-    const { setCommentMenuOpen } = useContext(CommentMenuContext);
+    const { setTargetComment } = useContext(CommentMenuContext);
 
     const handlePublish = () => {
         if (commentId) {
@@ -25,7 +25,7 @@ const UpdateComment: React.FC<UpdateCommentProps> = ({ commentId, originText, fe
                             console.log('댓글 작성 성공:', response.data);
                             setText('');
                             setIsEdited(false);
-                            setCommentMenuOpen(false);
+                            setTargetComment(null);
                             fetchComment();
                         }
                     })
@@ -39,7 +39,7 @@ const UpdateComment: React.FC<UpdateCommentProps> = ({ commentId, originText, fe
             } else {
                 console.error('수정된 내용 없음');
                 setIsEdited(false);
-                setCommentMenuOpen(false);
+                setTargetComment(null);
             }
         } else {
             console.error(`Invalid commentId {${commentId}}`);
