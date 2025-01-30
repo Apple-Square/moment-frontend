@@ -45,3 +45,37 @@
 .contentsWrapper>* {
     margin: 0;
 }
+
+.footer {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.footer>.regDate {
+    padding: 0 10px 0 0;
+    color: gray;
+    font-size: small;
+}
+
+.footer>.menu {
+    cursor: pointer;
+}
+
+.commentMenu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.commentMenu>ul {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    font-size: small;
+}
+
+.commentMenu>ul>* {
+    height: fit-content;
+}

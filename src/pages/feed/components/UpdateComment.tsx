@@ -1,25 +1,32 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import styles from "../css/AddComment.module.css";
 import { Col, Container, Row } from "react-bootstrap";
-import { createCommentRequest } from "../function/commentAxiosReqest";
+import { updateCommentRequest } from "../function/commentAxiosReqest";
+import { CommentMenuContext } from "../../../context/CommentMenuContext";
 
-interface AddFeedProps {
-    postId: number | null;
+// overide AddComment
+interface UpdateCommentProps {
+    commentId: number | null;
+    originText: string;
     fetchComment: () => {};
+    setIsEdited: (Dispatch<SetStateAction<boolean>>);
 }
 
-const AddComment: React.FC<AddFeedProps> = ({ postId, fetchComment }) => {
-    const [text, setText] = useState("");
+const UpdateComment: React.FC<UpdateCommentProps> = ({ commentId, originText, fetchComment, setIsEdited }) => {
+    const [text, setText] = useState(originText);
+    const { setCommentMenuOpen } = useContext(CommentMenuContext);
 
     const handlePublish = () => {
-        if (postId) {
-            if (text) {
-                createCommentRequest(postId, text)
+        if (commentId) {
+            if (text && text !== originText) {
+                updateCommentRequest(commentId, text)
                     .then(response => {
                         if ('data' in response) {
                             console.log('댓글 작성 성공:', response.data);
                             setText('');
-                            fetchComment()
+                            setIsEdited(false);
+                            setCommentMenuOpen(false);
+                            fetchComment();
                         }
                     })
                     .catch(error => {
@@ -27,11 +34,15 @@ const AddComment: React.FC<AddFeedProps> = ({ postId, fetchComment }) => {
                     });
 
                 console.log('Text:', text);
-            } else {
+            } else if (!text) {
                 alert('내용을 입력해주세요.');
+            } else {
+                console.error('수정된 내용 없음');
+                setIsEdited(false);
+                setCommentMenuOpen(false);
             }
         } else {
-            console.error(`Invalid PostID {${postId}}`);
+            console.error(`Invalid commentId {${commentId}}`);
         }
     }
 
@@ -55,4 +66,4 @@ const AddComment: React.FC<AddFeedProps> = ({ postId, fetchComment }) => {
     );
 }
 
-export default AddComment;
+export default UpdateComment;

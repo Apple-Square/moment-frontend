@@ -4,7 +4,7 @@ import Comment from "./Comment";
 import AddComment from "./AddComment";
 import { tempCommentData } from "../temp/tempData";
 import { useEffect, useState } from "react";
-import { getCommentRequest } from "../function/commentAxiosReqest";
+import { getCommentRequest, deleteCommentRequest } from "../function/commentAxiosReqest";
 
 interface CommentListProps {
     target: number | null;
@@ -29,9 +29,9 @@ const CommentList: React.FC<CommentListProps> = ({ target }) => {
         }
     };
     
-    const deleteComment = async (id) => {
+    const deleteComment = async (id: number) => {
             try {
-                // const response = await deleteFeedRequest(id);
+                const response = await deleteCommentRequest(id);
                 setCommentData(p => p.filter(feed => feed.id !== id));
             } catch (error) {
                 console.error('Unexpected error:', error);
@@ -60,6 +60,8 @@ const CommentList: React.FC<CommentListProps> = ({ target }) => {
                                 writer={comment.writer}
                                 likeCount={comment.likeCount}
                                 liked={comment.liked}
+                                fetchComment={fetchComments}
+                                deleteComment={deleteComment}
                             />
                         </Col>
                     </Row>

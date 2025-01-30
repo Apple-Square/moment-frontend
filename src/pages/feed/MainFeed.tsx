@@ -8,15 +8,18 @@ import CommentModal from './components/CommentModal';
 // import NaviBar from '../common/components/NaviBar';
 import { CommentModalContext } from '../../context/CommentModalContext';
 import { FeedMenuContext } from '../../context/FeedMenuContext';
+import { CommentMenuContext } from '../../context/CommentMenuContext';
 
 const MainFeed: React.FC = () => {
     const [commentOpen, setCommentOpen] = useState<boolean>(false);
     const [target, setTarget] = useState<number | null>(null);
     const [feedMenuOpen, setFeedMenuOpen] = useState<boolean>(false);
+    const [commentMenuOpen, setCommentMenuOpen] = useState<boolean>(false);
+    const [targetComment, setTargetComment] = useState<number | null>(null);
 
     // modal 오픈 시 main scroll lock
     useEffect(() => {
-        if (commentOpen || feedMenuOpen) {
+        if (commentOpen || feedMenuOpen || commentMenuOpen) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "auto";
@@ -41,9 +44,11 @@ const MainFeed: React.FC = () => {
             </Row>
             <Row className={`${styles.cmodalRow} p-0 m-0`}>
                 <Col className='p-0'>
-                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen, target, setTarget }}>
-                        <CommentModal id={target} /> {/* dummy id */}
-                    </CommentModalContext.Provider>
+                    <CommentMenuContext.Provider value={{commentMenuOpen, setCommentMenuOpen, targetComment, setTargetComment}}>
+                        <CommentModalContext.Provider value={{ commentOpen, setCommentOpen, target, setTarget }}>
+                            <CommentModal id={target} />
+                        </CommentModalContext.Provider>
+                    </CommentMenuContext.Provider>
                 </Col>
             </Row>
             <Row className={`${styles.navRow} p-0 m-0`}>
@@ -52,7 +57,7 @@ const MainFeed: React.FC = () => {
                     <Footer />
                 </Col>
             </Row>
-        </Container>
+        </Container >
     );
 };
 

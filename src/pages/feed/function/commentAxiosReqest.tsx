@@ -93,13 +93,13 @@ export const createCommentRequest = async (
 /**
  * 게시글 삭제
  */
-export const deleteFeedRequest = async (postId: number): Promise<AxiosResponse<CommentResponse> | Error> => {
+export const deleteCommentRequest = async (commentId: number): Promise<AxiosResponse<CommentResponse> | Error> => {
     try {
-        const response = await axiosInstanceWithAccessToken.delete<CommentResponse>(`posts/${postId}`);
-        console.log(`deleteFeedRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
+        const response = await axiosInstanceWithAccessToken.delete<CommentResponse>(`comments/${commentId}`);
+        console.log(`deleteCommentRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
     } catch (error) {
-        console.error(`deleteFeedRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
+        console.error(`deleteCommentRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
     }
 }
