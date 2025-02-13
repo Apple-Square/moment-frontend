@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState, useRef} from "react";
 import {Form, Col, Container, Row, Button, OverlayTrigger, Tooltip} from "react-bootstrap";
 import st from "./css/signUp.module.css";
 import d from "../../lib/css/default.module.css";
@@ -169,6 +169,11 @@ export const SignUp:React.FC = () => {
                 setPwd2Error("");
                 setPwd2Success(true);
             }
+        } else if (pwd2) {
+            setPwd2Error("비밀번호가 일치하지 않습니다.");
+            setPwd2Success(false);
+        } else if (pwd) {
+            
         }
     }, [pwd, pwd2]);
 
@@ -201,14 +206,18 @@ export const SignUp:React.FC = () => {
                     else setUserIdFirstSuccess(false);
                     break;
                 case "pwd":
-                    errorMessage = userValidator.validatePassword(value);
-                    // setPwd(value);
-                    if (errorMessage) {
-                        setPwdError(errorMessage);
+                    if (value === "") {
+                        setPwdError("");
                         setPwdSuccess(false);
                     } else {
-                        setPwdError("");
-                        setPwdSuccess(true);
+                        errorMessage = userValidator.validatePassword(value);
+                        if (errorMessage) {
+                            setPwdError(errorMessage);
+                            setPwdSuccess(false);
+                        } else {
+                            setPwdError("");
+                            setPwdSuccess(true);
+                        }
                     }
                     break;
                 case "pwd2":
@@ -425,22 +434,6 @@ export const SignUp:React.FC = () => {
             </Row>
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
                 <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                            nicknameError ? (
-                                <Tooltip
-                                    style={{
-                                        position: "absolute",
-                                        zIndex: 1050, // Bootstrap 기본 z-index 값
-                                        top: "0",
-                                        left: "100%",
-                                        marginLeft: "8px", // 툴팁 간격
-                                    }}
-                                >{nicknameError}</Tooltip>
-                            ) : <></>
-                        }
-                    >
                         <div style={{position: "relative", width: "100%", padding: "0px"}}>
                             <Form.Control
                                 type="text"
@@ -465,29 +458,10 @@ export const SignUp:React.FC = () => {
                                 {nicknameError ? nicknameError : ""}
                         </span>
                         </div>
-                    </OverlayTrigger>
                 </div>
             </Row>
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
                 <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                            userIdError ? (
-                                <Tooltip
-                                    style={{
-                                        position: "absolute",
-                                        zIndex: 1050, // Bootstrap 기본 z-index 값
-                                        top: "0",
-                                        left: "100%",
-                                        marginLeft: "8px", // 툴팁 간격
-                                    }}
-                                >{userIdError}</Tooltip>
-                            ) : (
-                                <></>
-                            )
-                        }
-                    >
                         <div style={{position: "relative", width: "100%", padding: "0px"}}>
                             <Form.Control
                                 type="text"
@@ -512,29 +486,10 @@ export const SignUp:React.FC = () => {
                                 {userIdError ? userIdError : ""}
                             </span>
                         </div>
-                    </OverlayTrigger>
                 </div>
             </Row>
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
                 <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                            pwdError ? (
-                                <Tooltip
-                                    style={{
-                                        position: "absolute",
-                                        zIndex: 1050, // Bootstrap 기본 z-index 값
-                                        top: "0",
-                                        left: "100%",
-                                        marginLeft: "8px", // 툴팁 간격
-                                    }}
-                                >{pwdError}</Tooltip>
-                            ) : (
-                                <></>
-                            )
-                        }
-                    >
                         <div style={{position: "relative", width: "100%", padding: "0px"}}>
                             <Form.Control
                                 type="password"
@@ -559,30 +514,11 @@ export const SignUp:React.FC = () => {
                                 {pwdError ? pwdError : ""}
                             </span>
                         </div>
-                    </OverlayTrigger>
                 </div>
             </Row>
 
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
                 <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                            pwd2Error ? (
-                                <Tooltip
-                                    style={{
-                                        position: "absolute",
-                                        zIndex: 1050, // Bootstrap 기본 z-index 값
-                                        top: "0",
-                                        left: "100%",
-                                        marginLeft: "8px", // 툴팁 간격
-                                    }}
-                                >{pwd2Error}</Tooltip>
-                            ) : (
-                                <></>
-                            )
-                        }
-                    >
                         <div style={{position: "relative", width: "100%", padding: "0px"}}>
                             <Form.Control
                                 type="password"
@@ -603,11 +539,10 @@ export const SignUp:React.FC = () => {
                                     fontSize: "0.6rem",
                                 }}
                             >
-                          {pwd2Success ? "일치합니다" + JSON.stringify(pwd2Success, null, 2) : ""}
+                          {pwd2Success &&"일치합니다"}
                                 {pwd2Error ? pwd2Error : ""}
                         </span>
                         </div>
-                    </OverlayTrigger>
                 </div>
             </Row>
 
@@ -619,21 +554,6 @@ export const SignUp:React.FC = () => {
             </Row>
             <Row className={`w-100 mb-2 ${st.h8} `} style={{minWidth: "300px"}}>
                 <div style={{paddingRight: "12px", paddingLeft: "12px"}}>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                            (!emailSendSuccess && emailError) ? (
-                                <Tooltip
-                                    style={{
-                                        position: "absolute",
-                                        zIndex: 1050, // Bootstrap 기본 z-index 값
-                                        top: "0",
-                                        left: "100%",
-                                        marginLeft: "8px", // 툴팁 간격
-                                    }}>{emailError}</Tooltip>
-                            ) : (
-                                <></>)}
-                    >
                         <div style={{position: "relative", width: "100%", padding: "0px"}}>
                             <Row className="w-100 justify-content-end">
                                 <Col xs={10}>
@@ -676,7 +596,6 @@ export const SignUp:React.FC = () => {
                                 </Col>
                             </Row>
                         </div>
-                    </OverlayTrigger>
                 </div>
             </Row>
 
@@ -730,24 +649,6 @@ export const SignUp:React.FC = () => {
 
             <Row className={`w-100 mb-2 ${st.h8}`} style={{minWidth: "300px"}}>
                 <Col>
-                    <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                            <Tooltip
-                                id="tooltip-example"
-                                style={{
-                                    position: "absolute",
-                                    zIndex: 1050, // Bootstrap 기본 z-index 값
-                                    top: "0",
-                                    left: "100%",
-                                    marginLeft: "8px", // 툴팁 간격
-                                }}
-                            >
-                                {address || "주소가 입력되지 않았습니다."}
-                            </Tooltip>
-                        }
-                        container={document.body} // 툴팁을 body에 추가
-                    >
                         <Form.Control
                             type="text"
                             placeholder="주소지"
@@ -761,7 +662,6 @@ export const SignUp:React.FC = () => {
                             onClick={changePostCodeMode}
                             readOnly
                         />
-                    </OverlayTrigger>
                 </Col>
             </Row>
             <Row className={`w-100 ${st.h8}`} style={{minWidth: "300px"}}>
