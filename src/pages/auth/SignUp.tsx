@@ -173,7 +173,8 @@ export const SignUp:React.FC = () => {
             setPwd2Error("비밀번호가 일치하지 않습니다.");
             setPwd2Success(false);
         } else if (pwd) {
-            
+            setPwd2Error("");
+            setPwd2Success(false);
         }
     }, [pwd, pwd2]);
 
