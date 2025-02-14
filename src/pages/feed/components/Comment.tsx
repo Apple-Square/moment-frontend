@@ -1,51 +1,128 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../css/Comment.module.css";
 import SvgLike from "./SvgLike";
+import SvgCommentMenu from "./SvgCommentMenu";
+import { CommentMenuContext } from "../../../context/CommentMenuContext";
+import UpdateComment from "./UpdateComment";
+import { deleteCommentRequest } from "../function/commentAxiosReqest";
 
-interface CommentProps {
-    // user 객체
-    profileImg: string
-    author: string;
-    //
-    likes: number;
-    contents: string;
-    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+interface UserProfile {
+    id: string;
+    nickname: string;
+    profileImage: string;
 }
 
-const Comment: React.FC<CommentProps> = ({ profileImg, author, likes, contents, onClick = () => { } }) => {
-    const [liked, setLiked] = useState(false);
+interface CommentProps {
+    id: number;
+    regDate: string;
+    content: string;
+    writer: UserProfile;
+    likeCount: number;
+    liked: boolean;
+    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    fetchComment?: () => any;
+    deleteComment: (id: number) => any;
+}
+
+const Comment: React.FC<CommentProps> = ({
+    id,
+    regDate,
+    content,
+    writer,
+    likeCount,
+    liked,
+    onClick = () => { },
+    fetchComment = () => { },
+    deleteComment
+}) => {
+    const [likedState, setLikedState] = useState(liked);
+    const [isEdited, setIsEdited] = useState(false);
+    const [commentMenuOpen, setCommentMenuOpen] = useState(false);
+    const { targetComment, setTargetComment } = useContext(CommentMenuContext);
+
+    useEffect(() => {
+        if (targetComment && targetComment == id) {
+            setCommentMenuOpen(true);
+        } else {
+            setCommentMenuOpen(false);
+        }
+    },[targetComment]);
 
     const handleClickLike = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         e.stopPropagation();
-        setLiked(!liked);
-        // post like (liked ? 1 : -1)
+        setLikedState(!likedState);
+        // post like (likedState ? 1 : -1)
         // get like
     }
 
+    const handleCLickCommentMenu = () => {
+        // setCommentMenuOpen(!commentMenuOpen);
+        if (!targetComment) {
+            setTargetComment(id);
+        } else {
+            setTargetComment(null);
+        }
+    }
+
+    const handleClickUpdateComment = () => {
+        setIsEdited(true);
+    }
+
+    const handleClickDeleteComment = () => {
+        deleteComment(id);
+        // setCommentMenuOpen(false);
+        setTargetComment(null);
+    }
+
     return (
-        <div className={styles.container} onClick={onClick}>
-            <div className={styles.header}>
-                <div className={`${styles.profile} px-2 py-1`}>
-                    <img className={styles.profileImg} src={profileImg} alt="Profile" />
-                    <span className={styles.author}>{author}</span>
-                </div>
-                <div className={`${styles.action}`}>
-                    <span className={styles.likes}>
-                        <SvgLike
-                            className={styles.likeBtn}
-                            onClick={handleClickLike}
-                            style={{ "width": "1rem", "height": "auto" }}
-                            fill={liked ? "blue" : "black"}
+        <>
+            {(!isEdited) ? (<div className={styles.container} onClick={onClick}>
+                <div className={styles.header}>
+                    {/* UserProfile */}
+                    <div className={`${styles.profile} px-2 py-1`}>
+                        <img
+                            className={styles.profileImg}
+                            src={writer.profileImage}
+                            alt={`${writer.nickname}'s profile`}
                         />
-                        {likes}
+                        <span className={styles.author}>{writer.nickname}</span>
+                    </div>
+                    <div className={styles.action}>
+                        <span className={styles.likes}>
+                            <SvgLike
+                                className={styles.likeBtn}
+                                onClick={handleClickLike}
+                                style={{ width: "1rem", height: "auto" }}
+                                fill={likedState ? "blue" : "black"}
+                            />
+                            {likeCount}
+                        </span>
+                    </div>
+                </div>
+                <div className={styles.contentsWrapper}>
+                    <p>{content}</p>
+                </div>
+                <div className={styles.footer}>
+                    <span className={styles.regDate}>{regDate}</span>
+                    <span className={styles.menu} onClick={handleCLickCommentMenu}> {/* hover시 icon 나타나게 해야 할 듯 */}
+                        <SvgCommentMenu
+                            className={styles.menuBtn}
+                            size={20}
+                        />
                     </span>
                 </div>
-            </div>
-            <div className={`${styles.contentsWrapper}`}>
-                <p>{contents}</p>
-            </div>
+                {commentMenuOpen && (
+                    <div className={`${styles.commentMenu} p-2`}>
+                        <ul>
+                            <li onClick={handleClickUpdateComment}>댓글 수정</li>
+                            <li onClick={handleClickDeleteComment}>댓글 삭제</li>
+                        </ul>
+                    </div>)}
+            </div>) : (
+                <UpdateComment commentId={id} originText={content} fetchComment={fetchComment} setIsEdited={setIsEdited} />
+            )}
+        </>
 
-        </div>
     );
 }
 

@@ -1,3 +1,11 @@
+/**
+ * Unused Page
+ * 추후에 재사용하기 위해서는 버그 수정 필요.
+ * Feed Component Props 수정
+ * dummy 파일 분리
+ * css 일관성 변경
+ */
+
 import React from "react";
 import Feed from "./components/Feed";
 import { Col, Container, Row } from "react-bootstrap";
@@ -21,7 +29,7 @@ const FeedDetail: React.FC = () => {
         <Container className={`${styles.container} p-0`}>
             <Row className={`${styles.feedRow} px-0`}>
                 <Col /*xs={12} md={8} lg={4}*/ className='p-0'>
-                    <Feed
+                    {/* <Feed
                         profileImg={dummy.profileImg}
                         author={dummy.author}
                         location={dummy.location}
@@ -31,7 +39,7 @@ const FeedDetail: React.FC = () => {
                         comments={dummy.comments}
                         shares={dummy.shares}
                         timeAgo={dummy.timeAgo}
-                    />
+                    /> */}
                 </Col>
             </Row>
         </Container>

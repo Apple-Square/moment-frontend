@@ -7,18 +7,23 @@ import { Footer } from '../common/components/Footer';
 import CommentModal from './components/CommentModal';
 // import NaviBar from '../common/components/NaviBar';
 import { CommentModalContext } from '../../context/CommentModalContext';
+import { FeedMenuContext } from '../../context/FeedMenuContext';
+import { CommentMenuContext } from '../../context/CommentMenuContext';
 
 const MainFeed: React.FC = () => {
     const [commentOpen, setCommentOpen] = useState<boolean>(false);
+    const [target, setTarget] = useState<number | null>(null);
+    const [targetFeed, setTargetFeed] = useState<number | null>(null);
+    const [targetComment, setTargetComment] = useState<number | null>(null);
 
     // modal 오픈 시 main scroll lock
     useEffect(() => {
-        if (commentOpen) {
+        if (commentOpen || targetFeed || targetComment) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "auto";
         }
-    }, [commentOpen]);
+    }, [commentOpen, targetFeed, targetComment]);
 
     return (
         <Container className={`${styles.container} px-0`}>
@@ -29,16 +34,20 @@ const MainFeed: React.FC = () => {
             </Row>
             <Row className={`${styles.viewer} px-0 mx-0`}>
                 <Col className='p-0'>
-                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen }}>
-                        <FeedList />
+                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen, target, setTarget }}>
+                        <FeedMenuContext.Provider value={{ targetFeed, setTargetFeed }}>
+                            <FeedList />
+                        </FeedMenuContext.Provider>
                     </CommentModalContext.Provider>
                 </Col>
             </Row>
             <Row className={`${styles.cmodalRow} p-0 m-0`}>
                 <Col className='p-0'>
-                    <CommentModalContext.Provider value={{ commentOpen, setCommentOpen }}>
-                        <CommentModal id={0} /> {/* dummy id */}
-                    </CommentModalContext.Provider>
+                    <CommentMenuContext.Provider value={{ targetComment, setTargetComment }}>
+                        <CommentModalContext.Provider value={{ commentOpen, setCommentOpen, target, setTarget }}>
+                            <CommentModal id={target} />
+                        </CommentModalContext.Provider>
+                    </CommentMenuContext.Provider>
                 </Col>
             </Row>
             <Row className={`${styles.navRow} p-0 m-0`}>
@@ -47,7 +56,7 @@ const MainFeed: React.FC = () => {
                     <Footer />
                 </Col>
             </Row>
-        </Container>
+        </Container >
     );
 };
 
