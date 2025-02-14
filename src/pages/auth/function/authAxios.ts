@@ -147,27 +147,40 @@ export const accountRecoveryRequest = async (email : string):Promise<string | Er
 
 export const signUpRequest = async (nickname, userId, pwd, year, month, day, gender, email, address: string): Promise<boolean | Error> => {
     try {
-        console.log("\n",nickname, " ", userId, " ", pwd, " ", year, " ", month, " ", day, " ", gender, " ", email, " ", address);
+        console.log("\n", nickname, " ", userId, " ", pwd, " ", year, " ", month, " ", day, " ", gender, " ", email, " ", address);
 
-        const yearValue = year?.value || ""; // 2024
-        const monthValue = month?.value.toString().padStart(2, "0") || ""; // 05
-        const dayValue = day?.value.toString().padStart(2, "0") || ""; // 27
-        const genderValue = gender?.value || ""; // 'MALE'
-
-        console.log("yearValue :: ", yearValue);
-        console.log("monthValue :: ", monthValue);
-        console.log("dayValue :: ", dayValue);
-        console.log("genderValue :: ", genderValue);
-
-        const response = await axiosInstance.post<minimalDto>(`/auth/signup`, {
+        const yearValue = year?.value ?? undefined; // undefined로 설정
+        const monthValue = month?.value ? month.value.toString().padStart(2, "0") : undefined; // undefined로 설정
+        const dayValue = day?.value ? day.value.toString().padStart(2, "0") : undefined; // undefined로 설정
+        const birthValue = (yearValue && monthValue && dayValue) ? `${yearValue}-${monthValue}-${dayValue}` : undefined; // undefined로 설정
+        const genderValue = gender?.value ?? undefined; // undefined로 설정
+        const requestData: any = {
             nickname: nickname,
             username: userId,
             password: pwd,
-            birth: `${yearValue}-${monthValue}-${dayValue}`, // '2024-05-27'
-            gender: genderValue,
             email: email,
-            address: address,
-        });
+        };
+
+        console.log("자 보자보자\n");
+        console.log("yearValue :: ", JSON.stringify(yearValue, null, 2));
+        console.log("monthValue :: ", JSON.stringify(monthValue, null, 2));
+        console.log("dayValue :: ", JSON.stringify(dayValue, null, 2));
+        console.log("birthValue :: ", JSON.stringify(birthValue, null, 2));
+        console.log("requestData :: ", JSON.stringify(requestData, null, 2));
+
+        if (birthValue) {
+            requestData.birth = birthValue;
+        }
+        if (genderValue) {
+            requestData.gender = genderValue;
+        }
+        if (address) {
+            requestData.address = address;
+        }
+
+        console.log("Request Data :: ", requestData);
+
+        const response = await axiosInstance.post<minimalDto>(`/auth/signup`, requestData);
 
         return (response.status === 201);
     } catch (error: unknown) {
