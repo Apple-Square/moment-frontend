@@ -71,7 +71,6 @@ const InputField: React.FC<{
                 >
                     <Col className="position-relative d-flex justify-content-center">
                         <Form.Control
-
                             type={type}
                             placeholder={placeholder}
                             name={name}

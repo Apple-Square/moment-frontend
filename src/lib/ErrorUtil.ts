@@ -90,8 +90,13 @@ export const castError = (error: unknown): Error => {
     if (isAxiosError(error)) {
         console.log(JSON.stringify(error, null, 2));
 
+        if (!error.response) {
+            return new Error("네트워크 에러");
+        }
 
-        const message = error.message || "An unknown Axios error occurred";
+        const message = error.message || "알 수 없는 axios 에러 발생";
+
+
         const axiosError = new Error(message);  // Error로 변환
         // AxiosError의 모든 속성을 Error 객체에 복사
         (axiosError as any).config = error.config;

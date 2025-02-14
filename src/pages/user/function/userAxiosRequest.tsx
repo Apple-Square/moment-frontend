@@ -28,7 +28,7 @@ interface updateProfileImageResponse {
  */
 export const getMeRequest = async () : Promise<AxiosResponse<GetMeResponse> | Error> => {
     try {
-        console.log("getMeRequest\n"+tokenManager.getToken());
+        // console.log("getMeRequest\n"+tokenManager.getToken());
         const response = await axiosInstanceWithAccessToken.get(`users/me`);
         console.log(`meRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response;
@@ -139,15 +139,19 @@ export interface User {
 export const getProfileRequest = async (userId : string) : Promise<UserPagePocket | Error> => {
     try {
         let response;
+        console.log(userId);
+        console.trace("trace : ");
+
         if(tokenManager.getToken() !== ""){
+            // response
             response = await axiosInstanceWithAccessToken.get(`users/${userId}`);
         } else {
             response = await axiosInstance.get(`users/${userId}`);
         }
-        console.log(`getUserInfoRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
+        console.log(`getProfileRequest에서 response :: ${JSON.stringify(response, null, 2)}`);
         return response.data;
     } catch (error) {
-        console.error(`getUserInfoRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
+        console.error(`getProfileRequest에서 에러 :: ${JSON.stringify(error, null, 2)}`);
         return castError(error);
     }
 }

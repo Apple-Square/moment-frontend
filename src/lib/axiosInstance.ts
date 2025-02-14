@@ -27,10 +27,13 @@ export const tokenManager = (() => {
  * timeout : 10000
  * headers : 'Content-Type': 'application/json'
  */
+
+const TIME_OUT_VALUE = 100000;
+
 export const axiosInstance = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
-    timeout : 100000,
+    timeout : TIME_OUT_VALUE,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -48,7 +51,7 @@ export const axiosInstance = axios.create({
 export const axiosInstanceWithAccessToken = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
-    timeout : 100000,
+    timeout : TIME_OUT_VALUE,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -56,16 +59,14 @@ export const axiosInstanceWithAccessToken = axios.create({
 export const axiosInstanceWithFormData = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
-    timeout : 100000,
+    timeout : TIME_OUT_VALUE,
 });
 
 export const axiosInstanceWithFormDataAndToken = axios.create({
     baseURL : import.meta.env.VITE_APP_BASE_URL,
     withCredentials: true,
-    timeout : 10000,
+    timeout : TIME_OUT_VALUE,
 });
-
-let refreshingAvailable : boolean = true;
 
 /**
  * Axios 인터셉터: 요청을 보내기 전에 Access Token을 Authorization 헤더에 추가
@@ -110,47 +111,62 @@ axiosInstanceWithFormDataAndToken.interceptors.request.use(
  * @param {AxiosInstance} instance - Axios 인스턴스에 인터셉터를 설정
  */
 const setUpResponseInterceptor = (instance) => {
+    let isRefreshing = false;  // Refresh 진행 여부
+    let refreshTokenPromise: Promise<void> | null = null;
+
     instance.interceptors.response.use(
-        function (response) {
-            // 성공적인 응답은 그대로 반환
-            console.log("서버로부터 2xx번호의 응답이 왔습니다\n인터셉터 작동할 것이 없습니다. - response :: ");
-            console.log(JSON.stringify(response, null, 2));
-            return response;
-        }, async function (error) {
-            if (error.response && error.response.status === 401) {
-                // 401 에러 발생: 인증 실패
-                console.log(JSONColor.stringify(`서버로부터 401번호의 응답이 왔습니다\n인터셉터 작동 - error :: ${error}\n`));
-                console.log(JSONColor.stringify(`에러 리스폰스  :: ` + error.response));
+        response => response,  // 성공 응답은 그대로 반환
 
-                // 무한 재시도를 방지하기 위해 `refreshingAvailable` 변수 사용
-                if (refreshingAvailable) {
-                    refreshingAvailable = false; // Refresh 요청 중 다른 요청이 중복되지 않도록 설정
-                    try {
-                        // Refresh Token 요청
-                        await axios.post(`${import.meta.env.VITE_APP_BASE_URL}/auth/refresh`, {}, {
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            withCredentials: true
-                        });
+        async error => {
+            const originalRequest = error.config;
 
-                        const originalRequestConfig = error.config; // 실패했던 요청을 저장
-
-                        // 일정 시간 후 다시 Refresh 요청 가능하도록 설정
-                        setTimeout(() => {
-                            refreshingAvailable = true;
-                        }, 60); // 0.06초
-
-                        // 실패했던 요청을 한 번 재시도
-                        return instance.request(originalRequestConfig);
-                    } catch (err) {
-                        // Refresh 요청 실패 시 다시 요청하지 않고 원래 에러 반환
-                        refreshingAvailable = true; // Refresh 가능 상태 복원
-                        return Promise.reject(error); // 원래 에러를 호출자에게 전달
-                    }
-                }
+            // 헤더에 있는 'X-Skip-Interceptor'로 예외 처리
+            if (originalRequest.headers['X-Skip-Interceptor'] === 'true') {
+                return Promise.reject(error);
             }
-            // 401이 아닌 에러는 그대로 호출자에게 전달
+
+            // 401 에러 발생 && 중복 재시도 방지 플래그 설정
+            if (error.response && error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;  // 중복 재시도 방지
+
+                // Refresh 중이 아니면, Refresh 요청 시작
+                if (!isRefreshing) {
+                    isRefreshing = true;
+                    refreshTokenPromise = axios.post(`${import.meta.env.VITE_APP_BASE_URL}/auth/refresh`, {}, {
+                        withCredentials: true
+                    })
+                        .then((response) => {
+                            const newAccessToken = response.headers['authorization'];
+                            if (newAccessToken) {
+                                tokenManager.setToken(newAccessToken);
+                            } else {
+                                console.error("새로운 토큰을 받아오지 못했습니다.");
+                                return Promise.reject(new Error("토큰 없음"));
+                            }
+
+                            isRefreshing = false;  // Refresh 완료
+                            console.log("리프레시 완료@@@@@@@@@@@@");
+                            refreshTokenPromise = null;
+                        })
+                        .catch(err => {
+                            isRefreshing = false;  // 실패 시 상태 복구
+                            refreshTokenPromise = null;
+
+                            // 로그인 페이지 이동 또는 로그아웃 처리
+                            return Promise.reject(err);
+                        });
+                }
+
+                // Refresh가 끝날 때까지 대기 후 실패한 요청 재시도
+                return refreshTokenPromise!.then(() => {
+                    console.log("재요청 시도 했습니다.");
+                    // console.log("재요청 Authorization 헤더:", axios.defaults.headers.common['Authorization']);
+                    originalRequest.headers['Authorization'] = `Bearer ${axios.defaults.headers.common['Authorization']}`;
+                    return instance(originalRequest);  // 토큰 갱신 후 원래 요청 재시도
+                });
+            }
+
+            // 401이 아닌 에러는 그대로 반환
             return Promise.reject(error);
         }
     );

@@ -122,7 +122,7 @@ const authSlice = createSlice({
             }
             state.isAuthenticated = action.payload.isAuthenticated;
             // state.isRedirected = action.payload.isRedirected;
-            state.isFirstAuthTaskFinished = ThreeValueBoolean.True;
+            state.isFirstAuthTaskFinished = action.payload.isFirstAuthTaskFinished;
             state.loading = action.payload.loading;
             state.error = action.payload.error;
         },
@@ -136,6 +136,10 @@ const authSlice = createSlice({
             }
             state.loading = action.payload.loading;
             // state.token = action.payload.token;
+        },
+        setIsFirstAuthTaskFinished : (state, action) => {
+            state.isFirstAuthTaskFinished = action.payload;
+            state.loading = action.payload.loading;
         },
         setAuthentication : (state , action) => {
             state.isAuthenticated = action.payload;
@@ -206,5 +210,5 @@ const authSlice = createSlice({
             });
     }
 })
-export const { setUser, setRefresh,setUserAndToken, setAuthentication, setShouldRedirect, setLoading, setError } = authSlice.actions;
+export const { setUser, setRefresh, setIsFirstAuthTaskFinished,setUserAndToken, setAuthentication, setShouldRedirect, setLoading, setError } = authSlice.actions;
 export default authSlice.reducer;
