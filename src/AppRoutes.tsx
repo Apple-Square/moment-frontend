@@ -74,9 +74,7 @@ export const AppRoutes: React.FC = () => {
                 </FooterLayout>
             } />
             <Route path="followRelationshipList" element={
-                <FooterLayout>
                     <FollowRelationshipList/>
-                </FooterLayout>
             }></Route>
 
         </Route>

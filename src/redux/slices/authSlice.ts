@@ -5,6 +5,7 @@ import {AuthState, LoginThunkArgs, ThreeValueBoolean} from "../../interface/Othe
 import {gerServerErrorMessage, getErrorMessage, getErrorStatus, isError, setErrorMessage} from "../../lib/ErrorUtil.ts";
 import {clearAllCookies} from "../../pages/common/function/cookie.ts";
 import {isAxiosError} from "axios";
+import axios, { AxiosError } from "axios";
 
 
 /**
@@ -71,9 +72,14 @@ export const logoutThunk = createAsyncThunk(
             const response = await logoutRequest();
 
             return thunkAPI.fulfillWithValue(response);
-        } catch (error) {
+        } catch (error: unknown) {
             console.error("로그아웃 실패 :: ", error);
-            return thunkAPI.rejectWithValue(error || "알 수 없는 에러");
+
+            if (axios.isAxiosError(error)) {
+                return thunkAPI.rejectWithValue(error.response?.data?.message || "알 수 없는 에러");
+            }
+
+            return thunkAPI.rejectWithValue("알 수 없는 에러");
         }
     }
 );
@@ -180,7 +186,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.isFirstAuthTaskFinished = ThreeValueBoolean.True;
                 state.isAuthenticated = false;
-                state.error = action.error.message || `로그인 실패 :: 에러메세지 없음`;
+                state.error = action.payload || `로그인 실패 :: 에러메세지 없음`;
             })
             .addCase(logoutThunk.pending, (state) => {
                 state.loading = true;
@@ -206,7 +212,7 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.isAuthenticated = false;
                 state.isFirstAuthTaskFinished = ThreeValueBoolean.False;
-                state.error = action.error.message || '로그아웃 실패 :: 에러메세지 없음';
+                state.error = action.payload || '로그아웃 실패 :: 에러메세지 없음';
             });
     }
 })

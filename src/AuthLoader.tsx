@@ -3,7 +3,6 @@ import {useEffect, useState} from "react";
 import {refreshRequest} from "./pages/auth/function/authAxios.ts";
 import {getMeRequest} from "./pages/user/function/userAxiosRequest.tsx";
 import {setRefresh, setIsFirstAuthTaskFinished, setAuthentication} from "./redux/slices/authSlice.ts";
-import {merge} from "chart.js/helpers";
 import {AxiosError, AxiosResponse} from "axios";
 import {tokenManager} from "./lib/axiosInstance.ts";
 import {showToast} from "./lib/ToastNotification.ts";
@@ -18,66 +17,54 @@ import {ThreeValueBoolean} from "./interface/OtherInterface.ts";
 export const AuthLoader = ({children}) => {
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.auth);
-    const [token,setToken] = useState(tokenManager.getToken());
+    const [token, setToken] = useState(tokenManager.getToken());
 
     useEffect(() => {
-
-        console.log("확인 : auth.isAuthenticated :: " + auth.isAuthenticated + " //token :: " + token + "//auth.loading :: " + auth.loading);
-        //있으면 하지마. 셋다 있으면 하지마.
-        if (auth.isAuthenticated && token && !auth.loading) {
-            console.log("머지");
+        // refresh 작업이 이미 완료되었다면 더 이상 호출하지 않음
+        if (auth.isFirstAuthTaskFinished === ThreeValueBoolean.True) {
             return;
         }
-        console.log("뭐임;;;");
 
-        //없으면 해
+        // refresh 작업 중이면 중복 호출 방지
+        if (auth.isAuthenticated && token && auth.loading) {
+            return;
+        }
+
         const fetchData = async () => {
-            // console.log(JSON.stringify(auth, null, 2));
             const response = await refreshRequest();
-            // console.log(JSON.stringify(response, null, 2));
             if (response instanceof Error) {
-                console.error(response.message);
+                console.error("토큰 갱신 실패:", response.message);
                 dispatch(setIsFirstAuthTaskFinished(ThreeValueBoolean.True));
                 dispatch(setAuthentication(false));
-            }
-            else if (response?.status === 200 && response?.headers?.authorization) {
-
-                console.log(response.headers.authorization);
+            } else if (response?.status === 200 && response?.headers?.authorization) {
+                console.log("인증 토큰을 성공적으로 받았습니다.");
                 tokenManager.setToken(response.headers.authorization);
-                // getMeRequest 호출
-                // console.log(tokenManager.getToken());
-                const userResponse = await getMeRequest();
-                console.log(JSON.stringify(userResponse, null, 2));
 
-                // 에러 객체 처리
+                const userResponse = await getMeRequest();
                 if (userResponse instanceof Error) {
-                    // 에러를 발생시킨 것이 AxiosError인 경우
                     if (userResponse instanceof AxiosError) {
                         console.error("AuthLoader :: AxiosError 발생:", userResponse.response);
                     } else {
                         console.error("AuthLoader :: Error 발생:", userResponse.message);
                     }
-                    return; // 에러 발생 시 실행 중단
+                    return;
                 }
 
-                // userResponse가 AxiosResponse인지 확인
                 if ((userResponse as AxiosResponse).data?.user) {
-                    showToast("success","로그인 되었습니다. 테스트용", 1000);
+                    console.log("사용자 데이터를 성공적으로 가져왔습니다.");
+                    showToast("success", "로그인 되었습니다. 테스트용", 1000);
                     dispatch(setRefresh({
                         user: (userResponse as AxiosResponse).data.user,
-                        // token: response.headers.authorization,
-                        isAuthenticated : true,
-                        isFirstAuthTaskFinished : ThreeValueBoolean.True,
-                        // isRedirected : true,
-                        // loading : false,
-                        loading : true,
-                        error : null,
+                        isAuthenticated: true,
+                        isFirstAuthTaskFinished: ThreeValueBoolean.True,
+                        loading: true,
+                        error: null,
                     }));
                 } else {
-                    console.error("AuthLoader :: 유효하지 않은 사용자 데이터:", userResponse);
+                    console.error("AuthLoader :: 유효하지 않은 사용자 데이터");
                 }
             } else {
-                console.log("refresh 권한이 없음");
+                console.log("인증 토큰 갱신에 실패했습니다.");
                 dispatch(setIsFirstAuthTaskFinished(ThreeValueBoolean.True));
                 dispatch(setAuthentication(false));
             }
@@ -86,12 +73,7 @@ export const AuthLoader = ({children}) => {
         fetchData();
     }, [dispatch, auth.isAuthenticated, token]);
 
-    // useEffect(() => {
-        // console.log("AuthLoader :: "+JSON.stringify(auth, null, 2));
-    // },[auth]);
-
     if (auth?.isFirstAuthTaskFinished === ThreeValueBoolean.False) {
-        // 인증 상태 확인 중 로딩 화면
         return null;
     }
     return <>{children}</>

@@ -6,11 +6,12 @@ import {getSessionItem, setSessionItem} from "../../../lib/crypto.ts";
 import {SESSON_STORAGE_KEY, SESSON_STORAGE_REFRESH_TIME} from "../key/key.ts";
 import lodash from "lodash";
 interface OptionType {
-    value: string;
+    value: string | null;
     label: string;
 }
 
 const genderOptions: OptionType[] = [
+    { value: null, label: "성별" },
     { value: "MALE", label: "남" },
     { value: "FEMALE", label: "여" },
 ];

@@ -74,7 +74,11 @@ export const getErrorStatus = (error: unknown): number => {
     return -1;
 }
 export const setErrorMessage = (error: unknown, message: string): void => {
-    if (isError(error)) {
+    if (isAxiosError(error)) {
+        if (error.response && typeof error.response.data === 'object') {
+            (error.response.data as { message?: string }).message = message;
+        }
+    } else if (isError(error)) {
         error.message = message;
     }
 };
@@ -88,14 +92,15 @@ export const setErrorName = (error: unknown, name: string): void => {
 // AxiosError를 Error로 변환하는 함수
 export const castError = (error: unknown): Error => {
     if (isAxiosError(error)) {
-        console.log(JSON.stringify(error, null, 2));
-
+        console.log(Object.getOwnPropertyDescriptors(error));
         if (!error.response) {
             return new Error("네트워크 에러");
         }
 
-        const message = error.message || "알 수 없는 axios 에러 발생";
-
+        // message 속성에 안전하게 접근
+        const message = error.response?.data && typeof error.response.data === 'object' && 'message' in error.response.data
+            ? (error.response.data as { message: string }).message
+            : "알 수 없는 axios 에러 발생";
 
         const axiosError = new Error(message);  // Error로 변환
         // AxiosError의 모든 속성을 Error 객체에 복사
