@@ -145,7 +145,7 @@ export interface User {
 }
 
 export interface UserPage {
-    user: Pick<User, 'id' | 'nickname' | 'profileImage' | 'intro'>; // 필요한 속성만 선택
+    user: Pick<User, 'id' | 'nickname' | 'profileImage' | 'intro' | 'regDate' | 'birth' | 'gender' | 'address'>; // 필요한 속성만 선택
     postCount: number;
     followerCount: number;
     followingCount: number;

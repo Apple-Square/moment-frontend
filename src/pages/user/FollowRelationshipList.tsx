@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Row, Col, Image, Button } from 'react-bootstrap';
 import {useAppSelector} from "../../redux/store/hooks.ts";
 import {useImmer} from "use-immer";
@@ -25,6 +25,7 @@ const FollowRelationshipList: React.FC = () => {
 
     const location = useLocation();
     const pageSize = 10;
+    const navigate = useNavigate();
     const me = useAppSelector((state) => state.auth.user);//// Redux에서 사용자 ID 가져오기
     const [listType, setListType] = useState<'follower' | 'following'>('follower');
     const [followerListCursor, setFollowerListCursor] = useState<number>(0);
@@ -38,6 +39,10 @@ const FollowRelationshipList: React.FC = () => {
             nickname: '',
             profileImage: '',
             intro: '',
+            regDate: '',
+            birth: '',
+            gender: '',
+            address: '',
         },
         followerCount: 0,
         followingCount: 0,
@@ -145,53 +150,55 @@ const FollowRelationshipList: React.FC = () => {
     // 처음에는 2개 다 실행된다 처음에는 fetch하고 update해야 한다.
     
 
-    // 공통: 최소 2초 로딩을 위한 헬퍼 함수
-    const withMinLoadingTime = async (startTime: number) => {
-        const elapsed = Date.now() - startTime;
-        if (elapsed < 2000) {
-        await new Promise(resolve => setTimeout(resolve, 2000 - elapsed));
-        }
-    };
+// 공통: 최소 2초 로딩을 위한 헬퍼 함수
+const withMinLoadingTime = async (startTime: number) => {
+  const elapsed = Date.now() - startTime;
+  if (elapsed < 2000) {
+    await new Promise(resolve => setTimeout(resolve, 2000 - elapsed));
+  }
+};
 
-    // 팔로워 목록 업데이트 (useCallback으로 메모이제이션)
 // 팔로워 목록 업데이트 (useCallback으로 메모이제이션)
 const fetchAndUpdateFollowerList = useCallback(async () => {
   if (!userPage.user.id) return;
   if (loadingFollower) return;
-  // 콘텐츠가 이미 있고 더 이상 가져올 데이터가 없으면 fetch하지 않음.
   if (followerList.content.length > 0 && !followerList.hasNext) return;
 
-  console.log(followerList.content.length);
-  console.log(followerList.hasNext);
-  console.log("팔로워 목록 실행");
-  setLoadingFollower(true);
+  const isInitial = followerList.content.length === 0;
+  // 초기가 아니라면 로딩 상태를 표시
+  if (!isInitial) {
+    setLoadingFollower(true);
+  }
   const startTime = Date.now();
   const data = await fetchFollowList('follower');
-
+  
+  // 초기 호출이 아니라면 최소 2초 대기
+  if (!isInitial) {
+    await withMinLoadingTime(startTime);
+  }
+  
   if (data) {
     if (data.content.length > 0) {
       updateFollowerList((draft) => {
         draft.content.push(...data.content);
-        // API가 전달한 hasNext 값으로 업데이트 (마지막 페이지인 경우 false)
         draft.hasNext = data.hasNext;
       });
       const lastItem = data.content[data.content.length - 1];
       setFollowerListCursor(lastItem.followId);
       setNextFollowerCursor(lastItem.followId);
-      // 데이터가 추가된 경우에만 최소 로딩 시간을 기다림
-      await withMinLoadingTime(startTime);
     } else {
-      // 추가 데이터가 없으면 바로 hasNext를 false 처리
       updateFollowerList((draft) => {
         draft.hasNext = false;
       });
     }
   }
-  setLoadingFollower(false);
+  if (!isInitial) {
+    setLoadingFollower(false);
+  }
 }, [
   userPage.user.id,
   followerList.content,
-  followerList.hasNext, // 최신 hasNext 값을 반영
+  followerList.hasNext,
   loadingFollower,
   updateFollowerList,
   fetchFollowList,
@@ -203,11 +210,17 @@ const fetchAndUpdateFollowingList = useCallback(async () => {
   if (loadingFollowing) return;
   if (followingList.content.length > 0 && !followingList.hasNext) return;
 
-  console.log("팔로잉 목록 실행");
-  setLoadingFollowing(true);
+  const isInitial = followingList.content.length === 0;
+  if (!isInitial) {
+    setLoadingFollowing(true);
+  }
   const startTime = Date.now();
   const data = await fetchFollowList('following');
 
+  if (!isInitial) {
+    await withMinLoadingTime(startTime);
+  }
+  
   if (data) {
     if (data.content.length > 0) {
       updateFollowingList((draft) => {
@@ -217,22 +230,24 @@ const fetchAndUpdateFollowingList = useCallback(async () => {
       const lastItem = data.content[data.content.length - 1];
       setFollowingListCursor(lastItem.followId);
       setNextFollowingCursor(lastItem.followId);
-      await withMinLoadingTime(startTime);
     } else {
       updateFollowingList((draft) => {
         draft.hasNext = false;
       });
     }
   }
-  setLoadingFollowing(false);
+  if (!isInitial) {
+    setLoadingFollowing(false);
+  }
 }, [
   userPage.user.id,
   followingList.content,
-  followingList.hasNext, // 최신 hasNext 값을 반영
+  followingList.hasNext,
   loadingFollowing,
   updateFollowingList,
   fetchFollowList,
 ]);
+
 
 
 
@@ -295,14 +310,15 @@ const fetchAndUpdateFollowingList = useCallback(async () => {
         const handleScroll = () => {
             if (
                 window.innerHeight + document.documentElement.scrollTop >=
-                document.documentElement.offsetHeight - 50
+                document.documentElement.scrollHeight - 50
             ) {
+            console.log("스크롤 bottom 도달");
                 if (listType === 'follower') {
                     if (
                         followerList.hasNext &&
                         !loadingFollower
                     ) {
-                        console.log("스크롤 bottom 도달 → fetchAndUpdateFollowerList 실행");
+                        console.log("fetchAndUpdateFollowerList 실행");
                         fetchAndUpdateFollowerList();
                     }
                 } else if (listType === 'following') {
@@ -310,7 +326,7 @@ const fetchAndUpdateFollowingList = useCallback(async () => {
                         followingList.hasNext &&
                         !loadingFollowing
                     ) {
-                        console.log("스크롤 bottom 도달 → fetchAndUpdateFollowingList 실행");
+                        console.log("fetchAndUpdateFollowingList 실행");
                         fetchAndUpdateFollowingList();
                     }
                 }
@@ -370,9 +386,6 @@ const fetchAndUpdateFollowingList = useCallback(async () => {
                     <Row
                         className="w-100 m-0 p-5"
                     >
-
-
-                        {/* 검색창 */}
                         <input type="text"
                                placeholder="검색"
                                style={{ width: '100%',
@@ -386,27 +399,30 @@ const fetchAndUpdateFollowingList = useCallback(async () => {
                     <Row className="w-100 m-0">
   {listType === 'follower' && (
     <>
-      {loadingFollower ? (
-        // 로딩 중에는 목록 대신 스피너만 렌더링
-        <LoadingSpinner />
+      {followerList.content.length === 0 ? (
+        // 초기 로딩 상태: 목록이 없으면 로딩 컴포넌트를 보여줌
+        <Loading />
       ) : (
-        // 로딩이 끝났으면 목록 데이터를 렌더링
-        followerList.content.length === 0 ? (
-          <FollowListNotFound />
-        ) : (
-          followerList.content.map((user: UserOfFollowList, index: number) => (
+        // 목록이 있으면 목록과 함께 추가 로딩 스피너(있을 경우)를 보여줌
+        <>
+          {followerList.content.map((user: UserOfFollowList, index: number) => (
             <Col
               key={index}
               xs={12}
               className="d-flex align-items-center justify-content-between p-2 border-bottom"
             >
               <div className="d-flex align-items-center">
-                <Image
-                  src={user.profileImage || '/images/defaultProfileImage.jpg'}
-                  roundedCircle
-                  width="50"
-                  height="50"
-                />
+              <Image
+                        // 클릭 시 navigate 호출, location.state에 userId 전달
+                        onClick={() =>
+                          navigate('/user/profile', { state: { userId: user.followId } })
+                        }
+                        src={user.profileImage || "/images/defaultProfileImage.jpg"}
+                        roundedCircle
+                        width="50"
+                        height="50"
+                        style={{ cursor: 'pointer' }}
+                      />
                 <div className="ms-3">
                   <p className="fw-bold mb-0">{user.nickname}</p>
                 </div>
@@ -428,33 +444,37 @@ const fetchAndUpdateFollowingList = useCallback(async () => {
                 )}
               </div>
             </Col>
-          ))
-        )
+          ))}
+          {loadingFollower && <LoadingSpinner />}
+        </>
       )}
     </>
   )}
 
   {listType === 'following' && (
     <>
-      {loadingFollowing ? (
-        <LoadingSpinner />
+      {followingList.content.length === 0 ? (
+        <Loading />
       ) : (
-        followingList.content.length === 0 ? (
-          <FollowListNotFound />
-        ) : (
-          followingList.content.map((user: UserOfFollowList, index: number) => (
+        <>
+          {followingList.content.map((user: UserOfFollowList, index: number) => (
             <Col
               key={index}
               xs={12}
               className="d-flex align-items-center justify-content-between p-2 border-bottom"
             >
               <div className="d-flex align-items-center">
-                <Image
-                  src={user.profileImage || '/images/defaultProfileImage.jpg'}
-                  roundedCircle
-                  width="50"
-                  height="50"
-                />
+              <Image
+                        // 클릭 시 navigate 호출, location.state에 userId 전달
+                        onClick={() =>
+                          navigate('/user/profile', { state: { userId: user.followId } })
+                        }
+                        src={user.profileImage || '/images/defaultProfileImage.jpg'}
+                        roundedCircle
+                        width="50"
+                        height="50"
+                        style={{ cursor: 'pointer' }}
+                      />
                 <div className="ms-3">
                   <p className="fw-bold mb-0">{user.nickname}</p>
                 </div>
@@ -476,12 +496,14 @@ const fetchAndUpdateFollowingList = useCallback(async () => {
                 )}
               </div>
             </Col>
-          ))
-        )
+          ))}
+          {loadingFollowing && <LoadingSpinner />}
+        </>
       )}
     </>
   )}
 </Row>
+
 
                 </div>
             </div>
@@ -516,8 +538,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
-    },
+        // 고정 높이를 제거하거나 최소 높이로 변경
+        minHeight: '100vh',
+        // 추가로 Footer 높이 만큼의 여백을 확보
+        paddingBottom: '60px',
+      },
     footer: {
         position: 'fixed',
         bottom: 0,
