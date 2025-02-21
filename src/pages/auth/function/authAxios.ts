@@ -9,6 +9,7 @@ import {
     setErrorMessage
 } from "../../../lib/ErrorUtil.ts";
 import {AxiosResponse} from "axios";
+import axios, { AxiosError } from "axios";
 
 export interface CheckDto {
     timeStamp: string;
@@ -48,32 +49,43 @@ export interface kakaoResponseDto {
 //     }
 // };
 export const naverLoginRequest = async () : Promise<void> => {
+    try {
         const response = await axiosInstance.get(`/oauth/naver/login`, {
             validateStatus: (status) => status === 302 || status < 400,
         });
-        // 네이버 로그인 URL로 리다이렉트
         const redirectUrl = response.data;
 
         if (redirectUrl) {
-            window.location.href = redirectUrl; // 브라우저에서 리다이렉트
+            window.location.href = redirectUrl;
         } else {
             throw new Error("네이버 로그인 URL이 반환되지 않았습니다.");
         }
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            console.error("네이버 로그인 요청 실패:", error.response?.data?.message);
+        }
+    }
 }
 
 export const kakaoLoginRequest = async () : Promise<void> => {
+    try {
         const response = await axiosInstance.get(`/oauth/kakao/login`, {
             validateStatus: (status) => status === 302 || status < 400,
         });
         const redirectUrl = response.data;
-        console.log(JSON.stringify("리다이렉트 유알엘", null, 2));
-        console.log(JSON.stringify(redirectUrl, null, 2));
+
+        console.log("리다이렉트 URL:", redirectUrl);
 
         if (redirectUrl) {
-            window.location.href = redirectUrl; // 브라우저에서 리다이렉트
+            window.location.href = redirectUrl;
         } else {
             throw new Error("카카오 로그인 URL이 반환되지 않았습니다.");
         }
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            console.error("카카오 로그인 요청 실패:", error.response?.data?.message);
+        }
+    }
 }
 
 // export const kakaoLoginRequest = (): void => {
@@ -92,34 +104,34 @@ export const passwordRecoveryRequest = async (token : string, newPassword : stri
 
         return (response.status === 200);
     } catch (error : unknown) {
-
         const status = getErrorStatus(error);
 
         if (status === 410) {
-            console.log(JSON.stringify(error, null, 2));
+            if (error instanceof AxiosError) {
+                console.log("에러 메시지:", error.response?.data?.message);
+            }
             setErrorMessage(error, "이미 비밀번호를 \n 변경하셨거나 만료되었습니다.");
-            console.log(JSON.stringify(gerServerErrorMessage(error), null, 2));
         }
 
         return castError(error);
-
     }
 }
 
 export const accountRecoveryRequest = async (email : string):Promise<string | Error> => {
     try {
-        const response = await axiosInstance.post(`/auth/account/recovery`,
-            email);
+        const response = await axiosInstance.post(`/auth/account/recovery`, email);
 
-        response.data.message = "계정 복구 메일을 전송했습니다.";
+        console.log("응답 메시지:", response.data.message);
 
         return response.data.message;
     } catch (error : unknown) {
-
-        if(getErrorStatus(error) === 400) {
+        if (getErrorStatus(error) === 400) {
             setErrorMessage(error,"올바른 형식의 이메일 주소이어야 합니다.");
         }
 
+        if (error instanceof AxiosError) {
+            console.error("계정 복구 요청 실패:", error.response?.data?.message);
+        }
         return castError(error);
     }
 }
@@ -147,26 +159,17 @@ export const accountRecoveryRequest = async (email : string):Promise<string | Er
 
 export const signUpRequest = async (nickname, userId, pwd, year, month, day, gender, email, address: string): Promise<boolean | Error> => {
     try {
-        console.log("\n", nickname, " ", userId, " ", pwd, " ", year, " ", month, " ", day, " ", gender, " ", email, " ", address);
-
-        const yearValue = year?.value ?? undefined; // undefined로 설정
-        const monthValue = month?.value ? month.value.toString().padStart(2, "0") : undefined; // undefined로 설정
-        const dayValue = day?.value ? day.value.toString().padStart(2, "0") : undefined; // undefined로 설정
-        const birthValue = (yearValue && monthValue && dayValue) ? `${yearValue}-${monthValue}-${dayValue}` : undefined; // undefined로 설정
-        const genderValue = gender?.value ?? undefined; // undefined로 설정
+        const yearValue = year?.value ?? undefined;
+        const monthValue = month?.value ? month.value.toString().padStart(2, "0") : undefined;
+        const dayValue = day?.value ? day.value.toString().padStart(2, "0") : undefined;
+        const birthValue = (yearValue && monthValue && dayValue) ? `${yearValue}-${monthValue}-${dayValue}` : undefined;
+        const genderValue = gender?.value ?? undefined;
         const requestData: any = {
             nickname: nickname,
             username: userId,
             password: pwd,
             email: email,
         };
-
-        console.log("자 보자보자\n");
-        console.log("yearValue :: ", JSON.stringify(yearValue, null, 2));
-        console.log("monthValue :: ", JSON.stringify(monthValue, null, 2));
-        console.log("dayValue :: ", JSON.stringify(dayValue, null, 2));
-        console.log("birthValue :: ", JSON.stringify(birthValue, null, 2));
-        console.log("requestData :: ", JSON.stringify(requestData, null, 2));
 
         if (birthValue) {
             requestData.birth = birthValue;
@@ -178,15 +181,17 @@ export const signUpRequest = async (nickname, userId, pwd, year, month, day, gen
             requestData.address = address;
         }
 
-        console.log("Request Data :: ", requestData);
-
         const response = await axiosInstance.post<minimalDto>(`/auth/signup`, requestData);
+
+        console.log("응답 메시지:", response.data.message);
 
         return (response.status === 201);
     } catch (error: unknown) {
         const status = getErrorStatus(error);
 
-        console.log(error);
+        if (axios.isAxiosError(error)) {
+            console.error("회원가입 요청 실패:", error.response?.data?.message);
+        }
         if (status === 500) {
             setErrorMessage(error, "서버에 문제가 있습니다.");
         }
@@ -201,11 +206,16 @@ export const validateEmailAuthCodeRequest = async (email, authCode : string) : P
             email : email,
             code : authCode
         });
-        return (response.status === 200)
-    } catch (error : unknown) {
 
+        console.log("응답 메시지:", response.data.message);
+
+        return (response.status === 200);
+    } catch (error : unknown) {
         const status = getErrorStatus(error);
 
+        if (error instanceof AxiosError) {
+            console.error("이메일 인증 코드 검증 요청 실패:", error.response?.data?.message);
+        }
         if (status === 500) {
             setErrorMessage(error, "서버에 문제가 있습니다.");
         }
@@ -216,13 +226,15 @@ export const validateEmailAuthCodeRequest = async (email, authCode : string) : P
 
 export const sendEmailRequest = async (email : string) : Promise<boolean | Error> => {
     try {
-        console.log(JSON.stringify(email, null, 2));
-        const response = await axiosInstance.post<minimalDto>(`/auth/email/code`, {
-          email
-        });
-        return (response.status === 200)
+        const response = await axiosInstance.post<minimalDto>(`/auth/email/code`, { email });
+
+        console.log("응답 메시지:", response.data.message);
+
+        return (response.status === 200);
     } catch (error : unknown) {
-        console.log(`sendEmailRequest 에러: ${JSON.stringify(error, null, 2)}`);
+        if (error instanceof AxiosError) {
+            console.error("이메일 전송 요청 실패:", error.response?.data?.message);
+        }
         setErrorMessage(error, "서버에 문제가 생겼습니다.");
         return castError(error);
     }
@@ -233,17 +245,19 @@ export const checkUserIdRequest = async (username: string): Promise<CheckDto | E
         const response = await axiosInstance.get<CheckDto>(`/auth/username/validation`, {
             params: { username },
         });
-        console.log("checkUserIdRequest 응답:", response.data);
+
+        console.log("응답 메시지:", response.data.message);
+
         return response.data;
     } catch (error: unknown) {
-        // 에러 상태 확인 및 메시지 설정
-        console.log(`checkUserIdRequest 에러: ${JSON.stringify(error, null, 2)}`);
+        if (error instanceof AxiosError) {
+            console.error("아이디 중복 검사 요청 실패:", error.response?.data?.message);
+        }
 
         const status = getErrorStatus(error);
 
-        // 상태 코드에 따른 에러 메시지 설정
         if (status === 400) {
-            setErrorMessage(error, gerServerErrorMessage(error)); // 배열을 스트링으로 바꿨음
+            setErrorMessage(error, gerServerErrorMessage(error));
         } else if (status === 409) {
             setErrorMessage(error, "이미 존재하는 아이디입니다.");
         } else {
@@ -259,14 +273,17 @@ export const checkEmailRequest = async (email: string) : Promise<CheckDto | Erro
         const response = await axiosInstance.get<CheckDto>(`/auth/email/validation`, {
             params : {email},
         });
-        console.log("checkUserIdRequest 응답 : ", response.data);
+
+        console.log("응답 메시지:", response.data.message);
+
         return response.data;
     } catch (error : unknown) {
-        console.log(`checkUserIdRequest 에러 : ${JSON.stringify(error, null, 2)}`);
+        if (error instanceof AxiosError) {
+            console.error("이메일 중복 검사 요청 실패:", error.response?.data?.message);
+        }
 
         const status = getErrorStatus(error);
 
-        // 상태 코드에 따른 에러 메시지 설정
         if (status === 400) {
             setErrorMessage(error, "잘못된 요청 형식입니다. 이메일을 확인하세요.");
         } else if (status === 409) {
@@ -281,22 +298,20 @@ export const checkEmailRequest = async (email: string) : Promise<CheckDto | Erro
 
 export const checkNicknameRequest = async (nickname: string): Promise<CheckDto | Error> => {
     try {
-        // GET 요청 수행
-
-        console.log("들어가있는 값 :: " + JSON.stringify(nickname, null, 2));
-
         const response = await axiosInstance.get<CheckDto>(`/auth/nickname/validation`, {
             params: { nickname },
         });
 
-        console.log("checkNicknameRequest 응답:", response.data);
-        return response.data; // 성공 시 CheckDto 반환
+        console.log("응답 메시지:", response.data.message);
+
+        return response.data;
     } catch (error: unknown) {
-        console.log(`checkNicknameRequest 에러 : ${JSON.stringify(error, null, 2)}`);
+        if (error instanceof AxiosError) {
+            console.error("닉네임 중복 검사 요청 실패:", error.response?.data?.message);
+        }
 
         const status = getErrorStatus(error);
 
-        // 상태 코드에 따른 에러 메시지 설정
         if (status === 400) {
             const errorMessage = gerServerErrorMessage(error);
             setErrorMessage(error, errorMessage);
@@ -306,7 +321,7 @@ export const checkNicknameRequest = async (nickname: string): Promise<CheckDto |
             setErrorMessage(error, "닉네임 중복 검사 중 오류가 발생했습니다.");
         }
 
-        return castError(error); // 에러 객체 반환
+        return castError(error);
     }
 };
 
@@ -326,17 +341,18 @@ const extractBadRequestMessage = (error: any): string => {
 
 export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<LoginResponseDto | Error> => {
     try {
-        // console.log("login 요청 :: " + JSONColor.stringify(loginRequestDto,null,2));
         const response = await axiosInstance.post(`/auth/login`, loginRequestDto);
-        console.log("authAxios :: login 응답 :: " + JSONColor.stringify(response,null,2));
+
+        console.log("응답 메시지:", response.data.message);
 
         return {
             data: response.data,
-            token: response.headers['authorization'], // 필요한 정보만 추출
+            token: response.headers['authorization'],
         }
     } catch (error : unknown) {
-        // console.log(`디티오 `+JSON.stringify(loginRequestDto, null, 2));
-        console.log(`loginRequest에서 에러 :: ${JSONColor.stringify(error)}`);
+        if (error instanceof AxiosError) {
+            console.error("로그인 요청 실패:", error.response?.data?.message);
+        }
         if(getErrorStatus(error) === 401){
             setErrorMessage(error, "아이디 또는 비밀번호 오류");
         } else {
@@ -359,10 +375,14 @@ export const loginRequest = async (loginRequestDto : LoginRequestDto) : Promise<
 export const logoutRequest = async () : Promise<AxiosResponse<any, any> | Error> => {
     try{
         const response = await axiosInstanceWithAccessToken.post(`/auth/logout`);
-        // console.log("logout 응답 :: " + JSONColor.stringify(response));
+
+        console.log("응답 메시지:", response.data.message);
+
         return response;
     } catch (error) {
-        console.log("로그아웃 요청 에러 :: " + error);
+        if (error instanceof AxiosError) {
+            console.error("로그아웃 요청 실패:", error.response?.data?.message);
+        }
         return castError(error)
     }
 }
@@ -370,14 +390,18 @@ export const logoutRequest = async () : Promise<AxiosResponse<any, any> | Error>
 export const refreshRequest = async () : Promise<AxiosResponse<any, any> | Error> => {
     try {
         const response = await axiosInstance.post("/auth/refresh",{}, {
-                headers: {
-                    'X-Skip-Interceptor': 'true'
-                }
-            });
-        console.log("refresh 응답 :: " + JSONColor.stringify(response));
+            headers: {
+                'X-Skip-Interceptor': 'true'
+            }
+        });
+
+        console.log("응답 메시지:", response.data.message);
+
         return response;
     } catch (error) {
-        console.log("refresh 요청 에러 :: " + error);
+        if (error instanceof AxiosError) {
+            console.error("토큰 갱신 요청 실패:", error.response?.data?.message);
+        }
         return castError(error)
     }
 }
