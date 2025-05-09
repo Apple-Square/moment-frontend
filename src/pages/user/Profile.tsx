@@ -30,9 +30,9 @@ const Profile: React.FC = () => {
                 intro : "",
                 profileImage : "",
             },
-            postCount : "",
-            followerCount : "",
-            followingCount : "",
+            postCount : 0,
+            followerCount : 0,
+            followingCount : 0,
             followed: false
         }
     });
@@ -75,14 +75,21 @@ const Profile: React.FC = () => {
         closeCropper
     } = useProfileImage(userPagePocket?.userPage, updateUserPagePocket,myId);
 
-    const fetchAndUpdateUserData = async () : Promise<void> => {
-        try{
-            const data : UserPagePocket | Error = await getProfileRequest(subjectId);
+    const fetchAndUpdateUserData = async (): Promise<void> => {
+        try {
+            const data: UserPagePocket | Error = await getProfileRequest(subjectId);
             if (data instanceof Error) {
                 console.error("프로필 정보를 가져오는 중 에러 발생:", data.message);
                 return;
             }
-            console.log(`프로필 정보를 가져오는 중 성공: ${JSONColor.stringify(data, null, 2)}`);
+
+            // 타입 가드를 사용하여 message 속성에 안전하게 접근
+            if ('message' in data) {
+                console.log(`프로필 정보를 가져오는 중 : ${JSONColor.stringify(data.message, null, 2)}`);
+            } else {
+                console.log(`프로필 정보를 가져오는 중 : ${JSONColor.stringify(data.userPage.user.id, null, 2)}`);
+            }
+
             updateUserPagePocket(draft => {
                 draft.userPage = data.userPage;
             });
@@ -120,6 +127,8 @@ const Profile: React.FC = () => {
         following: 441,
         profilePicUrl: 'path_to_profile_picture.jpg',
         postImages: [`${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
+            `${import.meta.env.BASE_URL}images/pikachu.jpg`,
             `${import.meta.env.BASE_URL}images/pikachu.jpg`,
             `${import.meta.env.BASE_URL}images/pikachu.jpg`,
             `${import.meta.env.BASE_URL}images/pikachu.jpg`,

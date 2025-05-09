@@ -69,7 +69,13 @@ export const SignUp:React.FC = () => {
      */
     const [email, setEmail] = useState(""); // 이메일 값
     const [emailError, setEmailError] = useState("");
+    /**
+     * 이메일 입력 검증 성공 여부
+     */
     const [emailFirstSuccess, setEmailFirstSuccess] = useState(false);
+    /**
+     * 이메일 중복 검증 성공 여부
+     */
     const [emailSecondSuccess, setEmailSecondSuccess] = useState(false);
     const [emailSendSuccess, setEmailSendSuccess] = useState(false);
     const [emailAuthCode, setEmailAuthCode] = useState("");
@@ -371,7 +377,7 @@ export const SignUp:React.FC = () => {
     };
 
     const changePostCodeMode = () => {
-        setPostCodeMode(true);
+        setPostCodeMode(prevMode => !prevMode);
     };
 
     const navBack = () => {
@@ -395,13 +401,24 @@ export const SignUp:React.FC = () => {
 
     };
     const handleSignUp = async () => {
-        const response = await signUpRequest(nickname, userId, pwd, savedInfo?.year, savedInfo?.month, savedInfo?.day, savedInfo?.gender, email, address);
+        const response = await signUpRequest(
+            nickname, 
+            userId, 
+            pwd, 
+            savedInfo?.year, 
+            savedInfo?.month, 
+            savedInfo?.day, 
+            savedInfo?.gender, 
+            email, 
+            address
+        );
 
         if (response === true) {
             navigate('/auth/authMain');
             showToast("success","회원가입에 성공하셨습니다.");
         } else if (response instanceof Error) {
             showToast("error",response?.message);
+            console.error(response?.message); // 에러 메시지를 콘솔에 출력
         }
     }
 
@@ -568,6 +585,7 @@ export const SignUp:React.FC = () => {
                                         isInvalid={!emailSendSuccess && !!emailError}
                                         isValid={emailSendSuccess}
                                         style={{fontSize: "0.6rem"}}
+                                        readOnly={emailAuthSuccess}
                                     />
                                     <span
                                         style={{
@@ -578,10 +596,10 @@ export const SignUp:React.FC = () => {
                                             fontSize: "0.6rem",
                                         }}
                                     >
-                                    {sendLoading && "보내는 중"}
+                                        {sendLoading && "보내는 중"}
                                         {(!emailSendSuccess && !sendLoading && !!emailError) && emailError}
                                         {(!sendLoading && !emailError && emailSecondSuccess && !emailSendSuccess) ? "사용가능. 이메일 전송을 해주세요." : ""}
-                                        {emailSendSuccess ? "이메일에서 인증코드를 확인해주세요." : ""}
+                                        {emailSendSuccess && !emailError ? "이메일에서 인증코드를 확인해주세요." : ""}
                                     </span>
                                 </Col>
                                 <Col xs={2} style={{padding: "0px 0px 0px 8px", marginLeft: "auto"}}>
@@ -590,7 +608,7 @@ export const SignUp:React.FC = () => {
                                         className={`w-100 mb-3 ${st.emailButton} ${st.h100}`}
                                         style={{minWidth: "50px", padding: "0px"}}
                                         onClick={sendEmail}
-                                        disabled={emailAuthSuccess || sendLoading || !!emailError}
+                                        disabled={emailAuthSuccess || sendLoading || !!emailError || !emailFirstSuccess || !emailSecondSuccess}
                                     >
                                         전송
                                     </Button>
@@ -673,15 +691,30 @@ export const SignUp:React.FC = () => {
                         ${st.borderRadius}
                         ${st.loginButton}
                         d-flex align-items-center justify-content-center `}
-                        disabled={!nicknameSecondSuccess || !userIdSecondSuccess || !pwdSuccess || !pwd2Success
-                            || !emailAuthSuccess || !address || !savedInfo?.gender
-                            || !savedInfo?.year || !savedInfo?.month || !savedInfo?.day || !!pwd2Error || !!pwdError || !!userIdError || !!nicknameError}
+                        disabled={
+                            !nicknameSecondSuccess || 
+                            !userIdSecondSuccess || 
+                            !pwdSuccess || 
+                            !pwd2Success || 
+                            !emailAuthSuccess || 
+                            !!pwd2Error || 
+                            !!pwdError || 
+                            !!userIdError || 
+                            !!nicknameError || 
+                            !((savedInfo?.year && savedInfo?.month && savedInfo?.day) || 
+                              (!savedInfo?.year && !savedInfo?.month && !savedInfo?.day)) // 생일 유효성 검사 추가
+                        }
                         onClick={handleSignUp}
                     >회원가입 하기</Button>
                 </Col>
             </Row>
 
         </Container>) : <div>
+                    <div
+                        className={`${st.backButton}`}
+                        onClick={changePostCodeMode}>
+                        <IoMdArrowRoundBack size={32}/>
+                    </div>
             <DaumPostcode
                 theme={themeObj}
                 onComplete={handleComplete}

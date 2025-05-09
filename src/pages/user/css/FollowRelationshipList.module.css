@@ -1,0 +1,9 @@
+.content::-webkit-scrollbar {
+    display: none;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 50px;
+}

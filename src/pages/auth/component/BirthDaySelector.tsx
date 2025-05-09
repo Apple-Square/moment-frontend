@@ -8,32 +8,41 @@ import {SESSON_STORAGE_KEY, SESSON_STORAGE_REFRESH_TIME} from "../key/key.ts";
 
 // 연도 생성 함수
 interface OptionType {
-    value: number;
+    value: number | null;
     label: string;
 }
 
 const generateYears = () => {
     const currentYear = new Date().getFullYear();
-    return Array.from({ length: 100 }, (_, i) => ({
-        value: currentYear - i,
-        label: `${currentYear - i}`,
-    }));
+    return [
+        { value: null, label: "생년" },
+        ...Array.from({ length: 100 }, (_, i) => ({
+            value: currentYear - i,
+            label: `${currentYear - i}`,
+        })),
+    ];
 };
 
 // 월 생성 함수
 const generateMonths = () => {
-    return Array.from({ length: 12 }, (_, i) => ({
-        value: i + 1,
-        label: `${i + 1}`.padStart(2, "0"),
-    }));
+    return [
+        { value: null, label: "월" },
+        ...Array.from({ length: 12 }, (_, i) => ({
+            value: i + 1,
+            label: `${i + 1}`.padStart(2, "0"),
+        })),
+    ];
 };
 
 // 일 생성 함수
 const generateDays = () => {
-    return Array.from({ length: 31 }, (_, i) => ({
-        value: i + 1,
-        label: `${i + 1}`.padStart(2, "0"),
-    }));
+    return [
+        { value: null, label: "일" },
+        ...Array.from({ length: 31 }, (_, i) => ({
+            value: i + 1,
+            label: `${i + 1}`.padStart(2, "0"),
+        })),
+    ];
 };
 
 

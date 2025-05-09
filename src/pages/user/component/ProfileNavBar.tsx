@@ -26,8 +26,10 @@ export const ProfileNavBar: React.FC<ProfileNavBarProps> = ({
     }
 
 
-    useEffect(()=> {
-        console.log("확인하자 :: " + JSON.stringify(userPage, null, 2) + " 그리고 " +myId)
+    useEffect(()=> { 
+        if(userPage.user.id) {
+            console.log("userId 조회 완료");
+        }
     }, [myId, userPage])
 
     return (

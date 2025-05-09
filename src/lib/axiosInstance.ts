@@ -1,5 +1,4 @@
 import axios from "axios";
-import {JSONColor, objectDeepDigger, objectDigger} from "./deepLog.ts";
 
 
 /**
